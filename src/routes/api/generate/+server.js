@@ -15,7 +15,7 @@ export async function POST({ request }) {
     await fs.writeFile('/Users/braypolkinghorne/Documents/code/Rake/testing/crossplane-learning/test.json', JSON.stringify(resources)); // Write the JSON string to a file
 
     let result = await new Promise((resolve, reject) => {
-      exec('python3 /Users/braypolkinghorne/Documents/code/Rake/testing/crossplane-learning/translate.py', (error, stdout, stderr) => {
+      exec('python3 /Users/braypolkinghorne/Documents/code/Rake/testing/crossplane-learning/translate.py run', (error, stdout, stderr) => {
         if (error) {
           console.error(`exec error: ${error}`);
           reject({
@@ -29,6 +29,7 @@ export async function POST({ request }) {
           status: 200,
           body: 'success'
         });
+        console.log(stdout);
       });
     });
     return new Response(JSON.stringify(result));

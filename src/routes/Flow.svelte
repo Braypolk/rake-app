@@ -16,7 +16,7 @@
   import { onDragOver, onDrop } from "./dnd.svelte";
   import "@xyflow/svelte/dist/style.css";
 
-  const { screenToFlowCoordinate, getIntersectingNodes } = useSvelteFlow();
+  const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
   const panOnDrag = [1, 2];
   const proOptions = { hideAttribution: true };
 
@@ -27,7 +27,7 @@
   function handleDrop(e: DragEvent) {
     const temp = onDrop(
       e,
-      screenToFlowCoordinate({ x: e.clientX, y: e.clientY })
+      screenToFlowPosition({ x: e.clientX, y: e.clientY })
     );
     if (temp) {
       $nodes = temp;

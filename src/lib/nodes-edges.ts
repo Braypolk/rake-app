@@ -47,17 +47,18 @@ const nodes = writable<Node[]>([
     position: { x: 0, y: 0 },
     parentNode: '0',
     // data is used to store the current color value
-    data: { name: 'some-bray-bucket', location: 'US', public: false },
+    // data: { name: writable('some-bray-bucket'), location: writable('US'), publicState: writable(false), status: writable('unsynced') },
+    data: { name: 'some-bray-bucket', location:'US', publicState: false, status: 'unsynced' },
   }
 ]);
 
 const edges = writable([
-  {
-    id: "1-3",
-    type: "smoothstep",
-    source: "1",
-    target: "2",
-  },
+  // {
+  //   id: "1-3",
+  //   type: "smoothstep",
+  //   source: "1",
+  //   target: "2",
+  // },
 ]);
 
 export { nodes, edges, getId };

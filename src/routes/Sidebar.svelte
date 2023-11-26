@@ -14,8 +14,15 @@
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const handleGetNE = () => {
-    let ne = { nodes: $nodes, edges: $edges };
+  const deploy = async () => {
+    // change all status to syncing
+    nodes.update((currentNodes) => {
+      currentNodes.map((node) => {
+        node.data = { ...node.data, status: "syncing" };
+      });
+      return currentNodes;
+    });
+    // console.log($nodes[1].data.status);
     const resources = $nodes.map((node) => {
       const { parentNode, ...rest } = node;
       return {
@@ -24,25 +31,38 @@
         project: parseInt(parentNode),
       };
     });
-    runPythonFile(resources);
+    const relationships = $edges.map((edge) => {});
+
+    const result = await runPythonFile(resources);
+
+    // if (result == 'success') {
+    //   // change all status to synced
+    //   nodes.update((currentNodes) => {
+    //     currentNodes.map((node) => {
+    //       node.data = { ...node.data, status: "synced" };
+    //     });
+    //     return currentNodes;
+    //   });
+    // }
   };
 
   async function runPythonFile(resources) {
     try {
       console.log(resources);
-      
+
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify(resources)
+        body: JSON.stringify(resources),
       });
 
       if (response.ok) {
         // Handle successful response
         const result = await response.json();
         console.log(result);
+        return 'success';
       } else {
         // Handle error response
         console.error("Failed to run Python file");
@@ -56,6 +76,13 @@
 <aside class="w-full bg-surface-800 py-2 px-4">
   <div class="label">You can drag these nodes to the pane on the left.</div>
   <div class="components">
+    <div
+      class="bucket-node node"
+      on:dragstart={(event) => onDragStart(event, "Bucket")}
+      draggable={true}
+    >
+      Bucket Node
+    </div>
     <div
       class="input-node node"
       on:dragstart={(event) => onDragStart(event, "input")}
@@ -85,7 +112,7 @@
       Group
     </div>
   </div>
-  <button on:click={handleGetNE}>Get Nodes and Edges</button>
+  <button on:click={deploy}>Deploy</button>
 </aside>
 
 <style>

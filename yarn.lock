@@ -367,9 +367,9 @@
   integrity sha512-ZuWOtMaHCkN9xoeEMr1ubW2nGWsp4nIql+OPQRstu4ypeZ+zk3YKqQT0CXVe/PYqrKpZAi+J9mTs05TKwjXSRA==
 
 "@types/d3-quadtree@*":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@types/d3-quadtree/-/d3-quadtree-3.0.5.tgz#2bc3884742e8b53dbc41175b0720373f3aae04a2"
-  integrity sha512-Cb1f3jyNBnvMMkf4KBZ7IgAQVWd9yzBwYcrxGqg3aPCUgWELAS+nyeB7r76aqu1e3+CGDjhk4BrWaFBekMwigg==
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@types/d3-quadtree/-/d3-quadtree-3.0.6.tgz#d4740b0fe35b1c58b66e1488f4e7ed02952f570f"
+  integrity sha512-oUzyO1/Zm6rsxKRHA1vH0NEDG58HrT5icx/azi9MF1TWdtttWl0UIUsjEQBBh+SIkrpd21ZjEv7ptxWys1ncsg==
 
 "@types/d3-random@*":
   version "3.0.3"
@@ -377,9 +377,9 @@
   integrity sha512-Imagg1vJ3y76Y2ea0871wpabqp613+8/r0mCLEBfdtqC7xMSfj9idOnmBYyMoULfHePJyxMAw3nWhJxzc+LFwQ==
 
 "@types/d3-scale-chromatic@*":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@types/d3-scale-chromatic/-/d3-scale-chromatic-3.0.2.tgz#e44c0031d0a8fb6efff8b17b0c4a2e680741cdaf"
-  integrity sha512-kpKNZMDT3OAX6b5ct5nS/mv6LULagnUy4DmS6yyNjclje1qVe7vbjPwY3q1TGz6+Wr2IUkgFatCzqYUl54fHag==
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@types/d3-scale-chromatic/-/d3-scale-chromatic-3.0.3.tgz#fc0db9c10e789c351f4c42d96f31f2e4df8f5644"
+  integrity sha512-laXM4+1o5ImZv3RpFAsTRn3TEkzqkytiOY0Dz0sq5cnd1dtNlk6sHLon4OvqaiJb28T0S/TdsBI3Sjsy+keJrw==
 
 "@types/d3-scale@*":
   version "4.0.8"
@@ -394,9 +394,9 @@
   integrity sha512-cuHoUgS/V3hLdjJOLTT691+G2QoqAjCVLmr4kJXR4ha56w1Zdu8UUQ5TxLRqudgNjwXeQxKMq4j+lyf9sWuslg==
 
 "@types/d3-shape@*":
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/@types/d3-shape/-/d3-shape-3.1.5.tgz#ab2f9c1485667be729b68bf2d9219858bc6d4009"
-  integrity sha512-dfEWpZJ1Pdg8meLlICX1M3WBIpxnaH2eQV2eY43Y5ysRJOTAV9f3/R++lgJKFstfrEOE2zdJ0sv5qwr2Bkic6Q==
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/@types/d3-shape/-/d3-shape-3.1.6.tgz#65d40d5a548f0a023821773e39012805e6e31a72"
+  integrity sha512-5KKk5aKGu2I+O6SONMYSNflgiP0WfZIQvVUMan50wHsLG1G94JlxEVnCpQARfTtzytuY0p/9PXXZb3I7giofIA==
   dependencies:
     "@types/d3-path" "*"
 
@@ -488,19 +488,19 @@
   resolved "https://registry.yarnpkg.com/@types/pug/-/pug-2.0.8.tgz#1a85ecb760f7472d9ec3bab19bfe17454c69499d"
   integrity sha512-QzhsZ1dMGyJbn/D9V80zp4GIA4J4rfAjCCxc3MP+new0E8dyVdSkR735Lx+n3LIaHNFcjHL5+TbziccuT+fdoQ==
 
-"@xyflow/svelte@^0.0.26":
-  version "0.0.26"
-  resolved "https://registry.yarnpkg.com/@xyflow/svelte/-/svelte-0.0.26.tgz#5034a4f497311db2bb6d5e2adc82d03fb6bdba15"
-  integrity sha512-u3cTMYL27k7JS/N/8lXBXCQs06X14QpCmdmHvLN8XXIHtumoFnlLHkFXhwE9f1RLmN0DHqiv8kwnLEk4ngTqWA==
+"@xyflow/svelte@^0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@xyflow/svelte/-/svelte-0.0.28.tgz#48035d94c592aacea6774546bbc9cf8e9ef508f4"
+  integrity sha512-8mCyjorsHFPnfFvTNhoCs/Cvyyk2v8IZnFqw2zJMBMdL87OD/hMxDY/zbImL6M43paojQzJFb//Rl0aWoJaBxA==
   dependencies:
     "@svelte-put/shortcut" "^3.0.0"
-    "@xyflow/system" "0.0.9"
+    "@xyflow/system" "0.0.11"
     classcat "^5.0.4"
 
-"@xyflow/system@0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@xyflow/system/-/system-0.0.9.tgz#6a0da7b456909eba017b62fe1f66840ef6ce978f"
-  integrity sha512-jtn5RaSydScUDetIhT4KNClCnbdQN8c3cpHZvV2iTo7vALx6q+w8G2b2h3jMAqE8hBpavzh9hHYdIDrQMVh+iw==
+"@xyflow/system@0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@xyflow/system/-/system-0.0.11.tgz#b7535fab7a0d95dc955593294e5ea861c6894e07"
+  integrity sha512-QllVEdguVfRHonf1kuiHTt4nwDuISF7AXY47h2mjSG+99GrRxoUBHfhEiKq9vdJMuZJOCUCtrgLuxDezgw/R3w==
   dependencies:
     "@types/d3" "^7.4.0"
     "@types/d3-drag" "^3.0.1"
