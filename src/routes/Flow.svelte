@@ -16,12 +16,13 @@
   import { onDragOver, onDrop } from "./dnd.svelte";
   import "@xyflow/svelte/dist/style.css";
 
-  const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
+  const { screenToFlowPosition, getIntersectingNodes, toObject, setViewport } =
+    useSvelteFlow();
   const panOnDrag = [1, 2];
   const proOptions = { hideAttribution: true };
 
   const nodeTypes = {
-    'Bucket': BucketNode
+    Bucket: BucketNode,
   };
 
   function handleDrop(e: DragEvent) {
@@ -33,9 +34,29 @@
       $nodes = temp;
     }
   }
+
+  function onSave() {
+    console.log(toObject());
+    localStorage.setItem("rake-test-flow", JSON.stringify(toObject()));
+  }
+
+  async function onRestore() {
+    console.log("in restore");
+    const flow = JSON.parse(localStorage.getItem("rake-test-flow"));
+    console.log(flow);
+
+    if (flow) {
+      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+      $nodes = flow.nodes;
+      $edges = flow.edges;
+      setViewport({ x, y, zoom });
+    }
+  }
 </script>
 
 <main>
+  <button on:click={onSave}>Save</button>
+  <button on:click={onRestore}>Restore</button>
   <Sidebar />
   <SvelteFlow
     class="text-on-primary-token"

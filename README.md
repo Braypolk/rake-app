@@ -1,38 +1,19 @@
-# create-svelte
+# Everything to start
+- start rancher desktop
+- minikube start --extra-config "apiserver.cors-allowed-origins=["http://\*"]"
+- kubectl proxy
+- (might have to gcloud auth application-default login)
+- yarn dev
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+easy view cluster resources with k9s
 
-## Creating a project
 
-If you're seeing this, you've probably already done this step. Congrats!
+make sure it's pointing to the correct python file (should probably change that to just be js, but idk)
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+kube-api route for crossplane resources
+http://localhost:8001/apis/storage.gcp.upbound.io/v1beta1
 
-## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+# Next step
+- get import and export working so I can save and load state

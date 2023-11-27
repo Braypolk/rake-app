@@ -34,16 +34,6 @@
     const relationships = $edges.map((edge) => {});
 
     const result = await runPythonFile(resources);
-
-    // if (result == 'success') {
-    //   // change all status to synced
-    //   nodes.update((currentNodes) => {
-    //     currentNodes.map((node) => {
-    //       node.data = { ...node.data, status: "synced" };
-    //     });
-    //     return currentNodes;
-    //   });
-    // }
   };
 
   async function runPythonFile(resources) {
