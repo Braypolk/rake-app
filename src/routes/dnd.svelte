@@ -30,24 +30,28 @@
       newNode = {
         id: `${newId}`,
         type,
-        data: { location: 'US', name: 'test', publicState: false, status: 'unsynced' },
+        data: {
+          location: "US",
+          name: "test",
+          publicState: false,
+          status: "unsynced",
+        },
         // project the screen coordinates to pane coordinates
         position: pos,
-        parentNode: '0',
+        parentNode: "0",
         // set the origin of the new node so it is centered
         origin: [0.5, 0.5],
       };
-    }
-    else {
+    } else {
       newNode = {
-      id: `${newId}`,
-      type,
-      data: { label: `Node ${newId}`, status: 'unsynced' },
-      // project the screen coordinates to pane coordinates
-      position: pos,
-      // set the origin of the new node so it is centered
-      origin: [0.5, 0.5],
-    };
+        id: `${newId}`,
+        type,
+        data: { label: `Node ${newId}`, status: "unsynced" },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
     }
 
     get(nodes).push(newNode);

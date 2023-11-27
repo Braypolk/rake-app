@@ -1,8 +1,67 @@
 <script lang="ts">
+  import { useSvelteFlow } from "@xyflow/svelte";
   import { useNodes, useEdges } from "@xyflow/svelte";
+  import { onMount } from "svelte";
+  // import { nodes, edges, getId } from "$lib/nodes-edges";
 
-  const nodes = useNodes();
-  const edges = useEdges();
+  const { toObject } = useSvelteFlow();
+
+  const nodesState = useNodes();
+  const edgesState = useEdges();
+
+  async function onSave() {
+    const flow = toObject();
+
+    try {
+      const response = await fetch("/api/flow", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          flow: flow,
+          location:
+            "/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/test.json",
+        }), //todo: will have to be changed when not using local storage
+      });
+
+      if (response.ok) {
+        console.log("Flow saved successfully");
+      } else {
+        console.error("Failed to save flow");
+      }
+    } catch (error) {
+      console.error("Error saving flow:", error);
+    }
+  }
+
+  async function onRestore() {
+    try {
+      //todo: will have to be changed when not using local storage
+      const response = await fetch(
+        "/api/flow?location=/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/test.json"
+      );
+
+      if (response.ok) {
+        console.log("Flow restored successfully");
+        const res = await response.json();
+
+        const { flow, message } = res.body;
+
+        if (flow) {
+          const { x, y, zoom, nodes, edges } = flow;
+          nodesState.set(nodes);
+          edgesState.set(edges);
+        } else {
+          console.log(message);
+        }
+      } else {
+        console.error("Failed to restore flow");
+      }
+    } catch (error) {
+      console.error("Error restoring flow:", error);
+    }
+  }
 
   const onDragStart = (event: DragEvent, nodeType: string) => {
     if (!event.dataTransfer) {
@@ -16,14 +75,14 @@
 
   const deploy = async () => {
     // change all status to syncing
-    nodes.update((currentNodes) => {
+    nodesState.update((currentNodes) => {
       currentNodes.map((node) => {
         node.data = { ...node.data, status: "syncing" };
       });
       return currentNodes;
     });
-    // console.log($nodes[1].data.status);
-    const resources = $nodes.map((node) => {
+
+    const resources = $nodesState.map((node) => {
       const { parentNode, ...rest } = node;
       return {
         ...rest,
@@ -31,9 +90,10 @@
         project: parseInt(parentNode),
       };
     });
-    const relationships = $edges.map((edge) => {});
+    const relationships = $edgesState.map((edge) => {});
 
     const result = await runPythonFile(resources);
+    onSave();
   };
 
   async function runPythonFile(resources) {
@@ -52,7 +112,7 @@
         // Handle successful response
         const result = await response.json();
         console.log(result);
-        return 'success';
+        return "success";
       } else {
         // Handle error response
         console.error("Failed to run Python file");
@@ -61,6 +121,11 @@
       console.error("Error:", error);
     }
   }
+
+  onMount(() => {
+    // load user state
+    onRestore();
+  });
 </script>
 
 <aside class="w-full bg-surface-800 py-2 px-4">
@@ -103,6 +168,8 @@
     </div>
   </div>
   <button on:click={deploy}>Deploy</button>
+  <button on:click={onSave}>Save</button>
+  <button on:click={onRestore}>Restore</button>
 </aside>
 
 <style>

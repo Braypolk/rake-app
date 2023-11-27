@@ -10,7 +10,7 @@ export async function POST({ request }) {
     type: 'Project',
     data: { name: 'xr-mcp-bray-test' },
   };
-  
+
   try {
     await fs.writeFile('/Users/braypolkinghorne/Documents/code/Rake/testing/crossplane-learning/test.json', JSON.stringify(resources)); // Write the JSON string to a file
 

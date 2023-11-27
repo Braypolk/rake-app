@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 export async function POST({ request }) {
     try {
-        let {flow, location} = await request.json();
+        let { flow, location } = await request.json();
 
         // Perform the file save operation here
         fs.writeFileSync(location, JSON.stringify(flow));
@@ -24,17 +24,17 @@ export async function POST({ request }) {
 
 // src/routes/api/restoreFlow.json.js
 
-export async function GET({url}) {
+export async function GET({ url }) {
     try {
         const filePath = resolve(url.searchParams.get('location'));
 
         if (!fs.existsSync(filePath)) {
             return new Response(JSON.stringify({
                 status: 200,
-            body: { message: 'No flow data found' }
-          }));
+                body: { message: 'No flow data found' }
+            }));
         }
-    
+
         const fileData = fs.readFileSync(filePath, 'utf8');
         const flow = JSON.parse(fileData);
 
