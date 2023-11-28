@@ -104,7 +104,7 @@
         origin: [0.5, 0.5],
       };
     }
-
+    get(nodes).push(newNode);
     return get(nodes);
   }
 </script>
