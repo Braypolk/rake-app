@@ -5,9 +5,9 @@
   type $$Props = NodeProps;
 
   export let data = {
-    location: "US",
-    name: "test",
-    publicState: false,
+    name: "",
+    description: "",
+    routingMode: "REGIONAL",
     status: "unsynced",
   };
 
@@ -16,7 +16,7 @@
     intervalId = setInterval(async () => {
       try {
         const response = await fetch(
-          `http://localhost:8001/apis/storage.gcp.upbound.io/v1beta1/buckets/${data.name}/status`
+          `http://localhost:8001/apis/compute.gcp.upbound.io/v1beta1/networks/${data.name}/status`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -35,7 +35,7 @@
           console.log("waiting...");
         }
       } catch (error) {
-        console.error("Failed to fetch bucket status:", error);
+        console.error("Failed to fetch network status:", error);
       }
     }, 5 * 1000);
   });
@@ -45,7 +45,8 @@
   });
 </script>
 
-<div class="bucket">
+<div class="network">
+  <h1 class="text-lg">Network</h1>
   {#if data.status == "unsynced"}
     <div class="unsynced">Unsynced</div>
   {:else if data.status == "syncing"}
@@ -55,9 +56,9 @@
   {/if}
   <Handle type="target" position={Position.Left} />
 
-  <label for="bucket-name">Name</label>
+  <label for="network-name">Name</label>
   <input
-    id="bucket-name"
+    id="network-name"
     class="nodrag"
     on:input={(evt) => {
       data.name = evt.target?.value;
@@ -69,28 +70,34 @@
       }
     }}
   />
+  
+  <label for="description">Description</label>
+  <input
+    id="description"
+    class="nodrag"
+    on:input={(evt) => {
+      data.description = evt.target?.value;
+    }}
+    value={data.description}
+    on:keydown={(evt) => {
+      if (evt.key === "Delete" || evt.key === "Backspace") {
+        evt.stopPropagation();
+      }
+    }}
+  />
 
-  <label for="location">Location:</label>
+  <label for="routingMode">Routing Mode:</label>
   <select
-    id="location"
+    id="routingMode"
+    value={data.routingMode}
     on:change={(evt) => {
-      data.location = evt.target?.value;
+      data.routingMode = evt.target?.value;
     }}
   >
-    <option>US</option>
-    <option>EU</option>
+    <option>REGIONAL</option>
+    <option>GLOBAL</option>
   </select>
 
-  <div style="display: block;">
-    <input
-      id="publicState"
-      type="checkbox"
-      name="publicState"
-      on:change={(evt) => {
-        data.publicState = evt.target?.checked;
-      }}
-    />Public
-  </div>
   <Handle
     type="source"
     position={Position.Right}
@@ -101,7 +108,7 @@
 </div>
 
 <style>
-  .bucket {
+  .network {
     padding: 1rem;
     background: #eee;
     border-radius: 0.125rem;

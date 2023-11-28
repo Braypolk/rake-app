@@ -13,7 +13,3 @@ make sure it's pointing to the correct python file (should probably change that 
 
 kube-api route for crossplane resources
 http://localhost:8001/apis/storage.gcp.upbound.io/v1beta1
-
-
-# Next step
-- get import and export working so I can save and load state

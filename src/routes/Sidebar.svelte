@@ -11,6 +11,7 @@
 
   async function onSave() {
     const flow = toObject();
+    console.log('flow', flow);
 
     try {
       const response = await fetch("/api/flow", {
@@ -50,6 +51,7 @@
 
         if (flow) {
           const { x, y, zoom, nodes, edges } = flow;
+
           nodesState.set(nodes);
           edgesState.set(edges);
         } else {
@@ -128,48 +130,50 @@
   });
 </script>
 
-<aside class="w-full bg-surface-800 py-2 px-4">
-  <div class="label">You can drag these nodes to the pane on the left.</div>
-  <div class="components">
+<aside class="w-full bg-surface-800 py-2 px-4 flex justify-between">
+  <div class="components flex items-center justify-center">
+    <!-- TODO: eventually this group will be a project node -->
     <div
-      class="bucket-node node"
-      on:dragstart={(event) => onDragStart(event, "Bucket")}
-      draggable={true}
-    >
-      Bucket Node
-    </div>
-    <div
-      class="input-node node"
-      on:dragstart={(event) => onDragStart(event, "input")}
-      draggable={true}
-    >
-      Input Node
-    </div>
-    <div
-      class="default-node node"
-      on:dragstart={(event) => onDragStart(event, "default")}
-      draggable={true}
-    >
-      Default Node
-    </div>
-    <div
-      class="output-node node"
-      on:dragstart={(event) => onDragStart(event, "output")}
-      draggable={true}
-    >
-      Output Node
-    </div>
-    <div
-      class="output-node node"
+      class="project node"
       on:dragstart={(event) => onDragStart(event, "group")}
       draggable={true}
     >
-      Group
+      Project
+    </div>
+    <div
+      class="bucket node"
+      on:dragstart={(event) => onDragStart(event, "Bucket")}
+      draggable={true}
+    >
+      Bucket
+    </div>
+    <div
+      class="network node"
+      on:dragstart={(event) => onDragStart(event, "Network")}
+      draggable={true}
+    >
+      Network
+    </div>
+    <div
+      class="subnetwork node"
+      on:dragstart={(event) => onDragStart(event, "Subnetwork")}
+      draggable={true}
+    >
+      Subnetwork
+    </div>
+    <div
+      class="instance node"
+      on:dragstart={(event) => onDragStart(event, "Instance")}
+      draggable={true}
+    >
+      Instance
     </div>
   </div>
-  <button on:click={deploy}>Deploy</button>
-  <button on:click={onSave}>Save</button>
-  <button on:click={onRestore}>Restore</button>
+  <div class="flex flex-col">
+    <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button>
+    <button class="px-5 py-2 text-left" on:click={onSave}>Save</button>
+    <button class="px-5 py-2 text-left" on:click={onRestore}>Restore</button>
+  </div>
 </aside>
 
 <style>

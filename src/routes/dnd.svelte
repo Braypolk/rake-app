@@ -42,6 +42,57 @@
         // set the origin of the new node so it is centered
         origin: [0.5, 0.5],
       };
+    } else if (type == "Network") {
+      newNode = {
+        id: `${newId}`,
+        type,
+        data: {
+          name: "",
+          description: "",
+          routingMode: "REGIONAL",
+          status: "unsynced",
+        },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        parentNode: "0",
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
+    } else if (type == "Subnetwork") {
+      newNode = {
+        id: `${newId}`,
+        type,
+        data: {
+          name: "",
+          ipCidrRange: "",
+          region: "us-central1",
+          status: "unsynced",
+          network: -1, // TODO: get network id from existing networks
+        },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        parentNode: "0",
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
+    } else if (type == "Instance") {
+      newNode = {
+        id: `${newId}`,
+        type,
+        data: {
+          name: "",
+          subnetwork: -1, // TOOD: get subnetwork id from existing networks
+          machineType: "e2-medium",
+          bootDisk: "debian-cloud/debian-11",
+          zone: "us-central1-a", // TODO: zone should be auto populated from subnetwork
+          status: "unsynced",
+        },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        parentNode: "0",
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
     } else {
       newNode = {
         id: `${newId}`,
@@ -54,7 +105,6 @@
       };
     }
 
-    get(nodes).push(newNode);
     return get(nodes);
   }
 </script>
