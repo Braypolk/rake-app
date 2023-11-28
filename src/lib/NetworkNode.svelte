@@ -45,7 +45,7 @@
   });
 </script>
 
-<div class="network">
+<div class="network node">
   <h1 class="text-lg">Network</h1>
   {#if data.status == "unsynced"}
     <div class="unsynced">Unsynced</div>
@@ -70,7 +70,7 @@
       }
     }}
   />
-  
+
   <label for="description">Description</label>
   <input
     id="description"
@@ -98,6 +98,11 @@
     <option>GLOBAL</option>
   </select>
 
+  <div
+    class="absolute right-0 w-5 h-5 bg-red-500 hover:cursor-move"
+    use:dragAction
+  />
+
   <Handle
     type="source"
     position={Position.Right}
@@ -106,12 +111,3 @@
     on:connectstart
   />
 </div>
-
-<style>
-  .network {
-    padding: 1rem;
-    background: #eee;
-    border-radius: 0.125rem;
-    font-size: 0.7rem;
-  }
-</style>

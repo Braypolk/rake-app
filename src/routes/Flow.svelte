@@ -15,7 +15,7 @@
   import { onDragOver, onDrop } from "./dnd.svelte";
   import "@xyflow/svelte/dist/style.css";
 
-  const { screenToFlowPosition } = useSvelteFlow();
+  const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
   const proOptions = { hideAttribution: true };
 
   const nodeTypes = {
@@ -34,6 +34,15 @@
       $nodes = temp;
     }
   }
+
+  function onNodeDrag({ detail: { node } }) {
+    const intersections = getIntersectingNodes(node).map((n) => n.id);
+    
+    $nodes.forEach((n) => {
+      n.class = intersections.includes(n.id) ? "highlight" : "bg-gray-200";
+    });
+    $nodes = $nodes;
+  }
 </script>
 
 <main>
@@ -43,9 +52,11 @@
     {nodeTypes}
     {nodes}
     {edges}
-    fitView
+    minZoom={0.2}
+    maxZoom={4}
     {proOptions}
     on:dragover={onDragOver}
+    on:nodedrag={onNodeDrag}
     on:drop={(e) => {
       handleDrop(e);
     }}

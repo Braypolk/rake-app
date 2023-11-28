@@ -1,0 +1,10 @@
+.node {
+    padding: 1rem;
+    border-radius: 0.125rem;
+    font-size: 0.7rem;
+}
+
+.highlight {
+    background-color: #ff0072 !important;
+    color: white;
+}

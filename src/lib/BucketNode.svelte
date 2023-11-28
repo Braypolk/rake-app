@@ -45,7 +45,7 @@
   });
 </script>
 
-<div class="bucket">
+<div class="bucket node">
   {#if data.status == "unsynced"}
     <div class="unsynced">Unsynced</div>
   {:else if data.status == "syncing"}
@@ -99,12 +99,3 @@
     on:connectstart
   />
 </div>
-
-<style>
-  .bucket {
-    padding: 1rem;
-    background: #eee;
-    border-radius: 0.125rem;
-    font-size: 0.7rem;
-  }
-</style>

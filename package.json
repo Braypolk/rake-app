@@ -27,6 +27,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@xyflow/svelte": "^0.0.28"
+    "@xyflow/svelte": "^0.0.28",
+    "svelte-moveable": "^0.44.0"
   }
 }

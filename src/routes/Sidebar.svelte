@@ -134,35 +134,35 @@
   <div class="components flex items-center justify-center">
     <!-- TODO: eventually this group will be a project node -->
     <div
-      class="project node"
+      class="project blob"
       on:dragstart={(event) => onDragStart(event, "group")}
       draggable={true}
     >
       Project
     </div>
     <div
-      class="bucket node"
+      class="bucket blob"
       on:dragstart={(event) => onDragStart(event, "Bucket")}
       draggable={true}
     >
       Bucket
     </div>
     <div
-      class="network node"
+      class="network blob"
       on:dragstart={(event) => onDragStart(event, "Network")}
       draggable={true}
     >
       Network
     </div>
     <div
-      class="subnetwork node"
+      class="subnetwork blob"
       on:dragstart={(event) => onDragStart(event, "Subnetwork")}
       draggable={true}
     >
       Subnetwork
     </div>
     <div
-      class="instance node"
+      class="instance blob"
       on:dragstart={(event) => onDragStart(event, "Instance")}
       draggable={true}
     >
@@ -186,7 +186,7 @@
     flex-wrap: wrap;
   }
 
-  .node {
+  .blob {
     margin-bottom: 0.5rem;
     border: 1px solid #111;
     padding: 0.5rem 1rem;

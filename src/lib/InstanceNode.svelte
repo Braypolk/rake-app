@@ -48,7 +48,7 @@
 </script>
 
 <!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
-<div class="instance">
+<div class="instance node">
   <h1 class="text-lg">Instance</h1>
   {#if data.status == "unsynced"}
     <div class="unsynced">Unsynced</div>
@@ -145,12 +145,3 @@
     on:connectstart
   />
 </div>
-
-<style>
-  .instance {
-    padding: 1rem;
-    background: #eee;
-    border-radius: 0.125rem;
-    font-size: 0.7rem;
-  }
-</style>
