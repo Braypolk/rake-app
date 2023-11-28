@@ -57,6 +57,7 @@
         parentNode: "0",
         // set the origin of the new node so it is centered
         origin: [0.5, 0.5],
+        // class: "target"
       };
     } else if (type == "Subnetwork") {
       newNode = {

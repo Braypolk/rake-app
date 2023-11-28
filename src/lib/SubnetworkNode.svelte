@@ -1,8 +1,5 @@
 <script lang="ts">
-  import { Handle, Position, type NodeProps } from "@xyflow/svelte";
-  import { onMount, onDestroy } from "svelte";
-
-  type $$Props = NodeProps;
+  import NodeTemplate from "./NodeTemplate.svelte";
 
   export let data = {
     name: "",
@@ -11,52 +8,10 @@
     status: "unsynced",
     network: Number,
   };
-
-  let intervalId: any;
-  onMount(() => {
-    intervalId = setInterval(async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8001/apis/compute.gcp.upbound.io/v1beta1/subnetworks/${data.name}/status`
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const status = await response.json();
-        if (status.status) {
-          console.log(
-            status.status.conditions[0].reason,
-            status.status.conditions[0].status
-          );
-          if (status.status.conditions[0].status) {
-            console.log("it done did sync");
-            data.status = "synced";
-          }
-        } else {
-          console.log("waiting...");
-        }
-      } catch (error) {
-        console.error("Failed to fetch subnetwork status:", error);
-      }
-    }, 5 * 1000);
-  });
-
-  onDestroy(() => {
-    clearInterval(intervalId);
-  });
 </script>
 
 <!-- TODO: subnetwork should live in network group and thus automatically know the network it should be attatched to -->
-<div class="subnetwork node">
-  <h1 class="text-lg">Subnetwork</h1>
-  {#if data.status == "unsynced"}
-    <div class="unsynced">Unsynced</div>
-  {:else if data.status == "syncing"}
-    <div class="syncing">Syncing...</div>
-  {:else if data.status == "synced"}
-    <div class="synced">Synced</div>
-  {/if}
-  <Handle type="target" position={Position.Left} />
+<NodeTemplate type="Subnetwork" data={data}>
   <label for="subnetwork-name">Name</label>
   <input
     id="subnetwork-name"
@@ -155,12 +110,4 @@
     <option>us-west3</option>
     <option>us-west4</option>
   </select>
-
-  <Handle
-    type="source"
-    position={Position.Right}
-    on:connect
-    on:connectend
-    on:connectstart
-  />
-</div>
+</NodeTemplate>
