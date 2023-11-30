@@ -2,16 +2,16 @@
   import NodeTemplate from "./NodeTemplate.svelte";
 
   export let data = {
-    name: "",
-    ipCidrRange: "",
+    name: String,
+    ipCidrRange: String,
+    network: Number,
     region: "us-central1",
     status: "unsynced",
-    network: Number,
   };
 </script>
 
 <!-- TODO: subnetwork should live in network group and thus automatically know the network it should be attatched to -->
-<NodeTemplate type="Subnetwork" data={data}>
+<NodeTemplate type="Subnetwork" provider="compute" data={data}>
   <label for="subnetwork-name">Name</label>
   <input
     id="subnetwork-name"

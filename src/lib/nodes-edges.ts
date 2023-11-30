@@ -1,23 +1,13 @@
 import { writable } from "svelte/store";
 import type { Node, Edge } from '@xyflow/svelte';
 
-let id = 0;
-const getId = () => {
-  id = id + 1;
-  return id;
-};
+const nodeId = writable(-1);
 
-// TODO: eventually want this to be empty
-const nodes = writable<Node[]>([
-  {
-    id: `${id}`,
-    type: 'group',
-    data: {},
-    position: { x: 0, y: 0 },
-    style: 'width: 270px; height: 440px; resize: both; overflow: auto;'
-  }
-]);
+const nodes = writable<Node[]>([]);
+const edges = writable<Edge[]>([]);
 
-const edges = writable([]);
+function incrementNodeId() {
+  nodeId.update((value) => value + 1);
+}
 
-export { nodes, edges, getId };
+export { nodes, edges, nodeId, incrementNodeId };

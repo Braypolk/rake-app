@@ -7,18 +7,20 @@
     useSvelteFlow,
   } from "@xyflow/svelte";
   import Sidebar from "./Sidebar.svelte";
-  import { nodes, edges, getId } from "$lib/nodes-edges";
-  import NetworkNode from "$lib/NetworkNode.svelte";
-  import SubnetworkNode from "$lib/SubnetworkNode.svelte";
-  import InstanceNode from "$lib/InstanceNode.svelte";
-  import BucketNode from "$lib/BucketNode.svelte";
+  import { nodes, edges } from "/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/nodes-edges";
+  import NetworkNode from "$lib/nodeComponents/NetworkNode.svelte";
+  import SubnetworkNode from "$lib/nodeComponents/SubnetworkNode.svelte";
+  import InstanceNode from "$lib/nodeComponents/InstanceNode.svelte";
+  import BucketNode from "$lib/nodeComponents/BucketNode.svelte";
   import { onDragOver, onDrop } from "./dnd.svelte";
   import "@xyflow/svelte/dist/style.css";
+  import ProjectNode from "$lib/nodeComponents/ProjectNode.svelte";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
   const proOptions = { hideAttribution: true };
 
   const nodeTypes = {
+    Project: ProjectNode,
     Bucket: BucketNode,
     Instance: InstanceNode,
     Network: NetworkNode,
@@ -36,8 +38,12 @@
   }
 
   function onNodeDrag({ detail: { node } }) {
-    const intersections = getIntersectingNodes(node).map((n) => n.id);
-    
+    const intersections = getIntersectingNodes(node).map((n) => {
+      if (n.id != node.parentNode) {
+        return n.id;
+      }
+    });
+
     $nodes.forEach((n) => {
       n.class = intersections.includes(n.id) ? "highlight" : "bg-gray-200";
     });

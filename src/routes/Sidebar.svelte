@@ -1,8 +1,8 @@
 <script lang="ts">
   import { useSvelteFlow } from "@xyflow/svelte";
   import { useNodes, useEdges } from "@xyflow/svelte";
-  import { onMount } from "svelte";
-  // import { nodes, edges, getId } from "$lib/nodes-edges";
+  import { onMount, tick } from "svelte";
+  import { nodes, nodeId, incrementNodeId } from "$lib/nodes-edges";
 
   const { toObject } = useSvelteFlow();
 
@@ -11,7 +11,7 @@
 
   async function onSave() {
     const flow = toObject();
-    console.log('flow', flow);
+    console.log("flow", flow);
 
     try {
       const response = await fetch("/api/flow", {
@@ -40,7 +40,7 @@
     try {
       //todo: will have to be changed when not using local storage
       const response = await fetch(
-        "/api/flow?location=/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/test.json"
+        "/api/flow?location=/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/test.json",
       );
 
       if (response.ok) {
@@ -54,6 +54,8 @@
 
           nodesState.set(nodes);
           edgesState.set(edges);
+
+          return $nodesState.length;
         } else {
           console.log(message);
         }
@@ -124,10 +126,19 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
+  try {
     // load user state
-    onRestore();
-  });
+    const num = await onRestore();
+    if (num === undefined) {
+      throw new Error('Failed to restore nodeId because the value is undefined');
+    }
+    $nodeId = num;
+  } catch (error) {
+    console.error(error);
+    // Additional error handling can be done here if necessary.
+  }
+});
 </script>
 
 <aside class="w-full bg-surface-800 py-2 px-4 flex justify-between">
@@ -135,7 +146,7 @@
     <!-- TODO: eventually this group will be a project node -->
     <div
       class="project blob"
-      on:dragstart={(event) => onDragStart(event, "group")}
+      on:dragstart={(event) => onDragStart(event, "Project")}
       draggable={true}
     >
       Project

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Handle, Position, type NodeProps } from "@xyflow/svelte";
   import { onMount, onDestroy } from "svelte";
-  import { nodes } from "./nodes-edges";
+  import { nodes } from "$lib/nodes-edges";
 
   // TODO: temp until resize is released for svelteflow
   import Moveable from "svelte-moveable";
@@ -14,8 +14,9 @@
   //   this type should be singular
   export let type = "";
   $: typelower = type.toLowerCase();
-  
+  export let provider = "";
   export let data = {};
+  export let style = "";
 
   let intervalId: any;
   onMount(() => {
@@ -24,7 +25,7 @@
     intervalId = setInterval(async () => {
       try {
         const response = await fetch(
-          `http://localhost:8001/apis/compute.gcp.upbound.io/v1beta1/${typelower}s/${data.name}/status`
+          `http://localhost:8001/apis/${provider}.gcp.upbound.io/v1beta1/${typelower}s/${data.name}/status`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -45,7 +46,7 @@
       } catch (error) {
         console.error("Failed to fetch network status:", error);
       }
-    }, 5 * 1000);
+    }, 50 * 1000);
   });
 
   onDestroy(() => {
@@ -53,11 +54,11 @@
   });
 </script>
 
-<!-- bind and style are for moveable -->
+<!-- bind and height in style are for moveable and should be deleted once resize is released -->
 <div
   class={`${typelower} node`}
   bind:this={targetRef}
-  style={"height: inherit"}
+  style={`${style} height: inherit;`}
 >
   <h1 class="text-lg">{type}</h1>
   {#if data.status == "unsynced"}

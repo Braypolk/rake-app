@@ -12,7 +12,7 @@
 </script>
 
 <!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
-<NodeTemplate type="Instance" data={data}>
+<NodeTemplate type="Instance" provider="compute" data={data}>
   <label for="instance-name">Name</label>
   <input
     id="instance-name"

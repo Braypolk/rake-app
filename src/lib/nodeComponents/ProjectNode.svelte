@@ -2,17 +2,17 @@
   import NodeTemplate from "./NodeTemplate.svelte";
 
   export let data = {
-    name: "",
-    description: "",
-    routingMode: "REGIONAL",
+    name: "xr-mcp-bray-test",
+    folderIdRef: String,
     status: "unsynced",
   };
 </script>
 
-<NodeTemplate type="Network" data={data}>
-  <label for="network-name">Name</label>
+<!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
+<NodeTemplate type="Project" provider="cloudplatform" {data}>
+  <label for="project-name">Name</label>
   <input
-    id="network-name"
+    id="project-name"
     class="nodrag"
     on:input={(evt) => {
       data.name = evt.target?.value;
@@ -24,31 +24,18 @@
       }
     }}
   />
-
-  <label for="description">Description</label>
+  <label for="folder-name">Folder</label>
   <input
-    id="description"
+    id="folder-name"
     class="nodrag"
     on:input={(evt) => {
-      data.description = evt.target?.value;
+      data.folderIdRef = evt.target?.value;
     }}
-    value={data.description}
+    value={data.folderIdRef}
     on:keydown={(evt) => {
       if (evt.key === "Delete" || evt.key === "Backspace") {
         evt.stopPropagation();
       }
     }}
   />
-
-  <label for="routingMode">Routing Mode:</label>
-  <select
-    id="routingMode"
-    value={data.routingMode}
-    on:change={(evt) => {
-      data.routingMode = evt.target?.value;
-    }}
-  >
-    <option>REGIONAL</option>
-    <option>GLOBAL</option>
-  </select>
 </NodeTemplate>
