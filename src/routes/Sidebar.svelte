@@ -1,8 +1,8 @@
 <script lang="ts">
   import { useSvelteFlow } from "@xyflow/svelte";
   import { useNodes, useEdges } from "@xyflow/svelte";
-  import { onMount, tick } from "svelte";
-  import { nodes, nodeId, incrementNodeId } from "$lib/nodes-edges";
+  import { onMount } from "svelte";
+  import { nodes, edges, nodeId } from "$lib/nodes-edges";
 
   const { toObject } = useSvelteFlow();
 
@@ -51,11 +51,11 @@
 
         if (flow) {
           const { x, y, zoom, nodes, edges } = flow;
-
-          nodesState.set(nodes);
-          edgesState.set(edges);
-
-          return $nodesState.length;
+          
+          $nodes = nodes;
+          $edges = edges;
+          
+          return $nodes.length - 1;
         } else {
           console.log(message);
         }

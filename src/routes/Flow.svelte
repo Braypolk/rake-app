@@ -7,30 +7,20 @@
     useSvelteFlow,
   } from "@xyflow/svelte";
   import Sidebar from "./Sidebar.svelte";
-  import { nodes, edges } from "/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/nodes-edges";
-  import NetworkNode from "$lib/nodeComponents/NetworkNode.svelte";
-  import SubnetworkNode from "$lib/nodeComponents/SubnetworkNode.svelte";
-  import InstanceNode from "$lib/nodeComponents/InstanceNode.svelte";
-  import BucketNode from "$lib/nodeComponents/BucketNode.svelte";
+  import {
+    nodes,
+    edges,
+  } from "/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/nodes-edges";
+  import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import { onDragOver, onDrop } from "./dnd.svelte";
   import "@xyflow/svelte/dist/style.css";
-  import ProjectNode from "$lib/nodeComponents/ProjectNode.svelte";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
-  const proOptions = { hideAttribution: true };
-
-  const nodeTypes = {
-    Project: ProjectNode,
-    Bucket: BucketNode,
-    Instance: InstanceNode,
-    Network: NetworkNode,
-    Subnetwork: SubnetworkNode,
-  };
 
   function handleDrop(e: DragEvent) {
     const temp = onDrop(
       e,
-      screenToFlowPosition({ x: e.clientX, y: e.clientY })
+      screenToFlowPosition({ x: e.clientX, y: e.clientY }),
     );
     if (temp) {
       $nodes = temp;
@@ -49,6 +39,25 @@
     });
     $nodes = $nodes;
   }
+
+  function onNodeDragStop({ detail: { node } }) {
+    const intersections = getIntersectingNodes(node)
+      .filter((n) => n.id != node.parentNode)
+      .map((n) => n.id);
+
+    intersections.forEach((intersection) => {
+      // console.log(parseInt(intersection));
+      // console.log($nodes);
+
+      if ("Project" == $nodes[parseInt(intersection)].type) {
+        $nodes[node.id].parentNode = intersection;
+        // todo: currently jumps on parent change.
+        // to fix, change the position to be the mouse position
+      }
+    });
+    // if node rework, need to update all node arrays
+    $nodes = $nodes;
+  }
 </script>
 
 <main>
@@ -60,9 +69,10 @@
     {edges}
     minZoom={0.2}
     maxZoom={4}
-    {proOptions}
+    proOptions={{ hideAttribution: true }}
     on:dragover={onDragOver}
     on:nodedrag={onNodeDrag}
+    on:nodedragstop={onNodeDragStop}
     on:drop={(e) => {
       handleDrop(e);
     }}
