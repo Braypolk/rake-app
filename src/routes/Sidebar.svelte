@@ -2,7 +2,7 @@
   import { useSvelteFlow } from "@xyflow/svelte";
   import { useNodes, useEdges } from "@xyflow/svelte";
   import { onMount } from "svelte";
-  import { nodes, edges, nodeId } from "$lib/nodes-edges";
+  import { nodes, edges, sortNodes } from "$lib/nodes-edges";
 
   const { toObject } = useSvelteFlow();
 
@@ -44,18 +44,15 @@
       );
 
       if (response.ok) {
-        console.log("Flow restored successfully");
         const res = await response.json();
-
         const { flow, message } = res.body;
 
         if (flow) {
           const { x, y, zoom, nodes, edges } = flow;
-          
           $nodes = nodes;
+          sortNodes();
+
           $edges = edges;
-          
-          return $nodes.length - 1;
         } else {
           console.log(message);
         }
@@ -79,14 +76,12 @@
 
   const deploy = async () => {
     // change all status to syncing
-    nodesState.update((currentNodes) => {
-      currentNodes.map((node) => {
-        node.data = { ...node.data, status: "syncing" };
-      });
-      return currentNodes;
-    });
+    $nodes = $nodes.map((node) => ({
+      ...node,
+      data: { ...node.data, status: "syncing" },
+    }));
 
-    const resources = $nodesState.map((node) => {
+    const resources = $nodes.map((node) => {
       const { parentNode, ...rest } = node;
       return {
         ...rest,
@@ -94,9 +89,10 @@
         project: parseInt(parentNode),
       };
     });
-    const relationships = $edgesState.map((edge) => {});
+    const relationships = $edges.map((edge) => {});
 
-    const result = await runPythonFile(resources);
+    // TODO: uncomment when I actually want to test running things
+    // const result = await runPythonFile(resources);
     onSave();
   };
 
@@ -127,18 +123,14 @@
   }
 
   onMount(async () => {
-  try {
-    // load user state
-    const num = await onRestore();
-    if (num === undefined) {
-      throw new Error('Failed to restore nodeId because the value is undefined');
+    try {
+      // load user state
+      await onRestore();
+    } catch (error) {
+      console.error(error);
+      // Additional error handling can be done here if necessary.
     }
-    $nodeId = num;
-  } catch (error) {
-    console.error(error);
-    // Additional error handling can be done here if necessary.
-  }
-});
+  });
 </script>
 
 <aside class="w-full bg-surface-800 py-2 px-4 flex justify-between">

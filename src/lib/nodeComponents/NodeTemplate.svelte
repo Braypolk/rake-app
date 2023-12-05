@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Handle, Position, type NodeProps } from "@xyflow/svelte";
   import { onMount, onDestroy } from "svelte";
-  import { nodes } from "$lib/nodes-edges";
+  import { findNode, nodes } from "$lib/nodes-edges";
 
   // TODO: temp until resize is released for svelteflow
   import Moveable from "svelte-moveable";
@@ -91,7 +91,7 @@
   renderDirections={["e", "s", "se"]}
   on:resize={({ detail: e }) => {
     $nodes[
-      e.target.parentNode.getAttribute("data-id")
+      findNode(e.target.parentNode.getAttribute("data-id"))
     ].style = `width: ${e.target.style.width}; height: ${e.target.style.height};`;
 
     e.target.style.width = `${e.width}px`;

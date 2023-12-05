@@ -10,21 +10,131 @@
   import {
     nodes,
     edges,
-  } from "/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/nodes-edges";
+    incrementNodeId,
+    addNodes,
+    findNode,
+  } from "$lib/nodes-edges";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
-  import { onDragOver, onDrop } from "./dnd.svelte";
   import "@xyflow/svelte/dist/style.css";
+  import type { Node, Edge } from "@xyflow/svelte";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
 
-  function handleDrop(e: DragEvent) {
-    const temp = onDrop(
-      e,
-      screenToFlowPosition({ x: e.clientX, y: e.clientY }),
-    );
-    if (temp) {
-      $nodes = temp;
+  $: console.log($nodes);
+
+  function onDragOver(event: DragEvent) {
+    event.preventDefault();
+
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = "move";
     }
+  }
+
+  function onDrop(event: DragEvent): void {
+    event.preventDefault();
+
+    const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+    // const pos = { x: event.clientX, y: event.clientY };
+
+    if (!event.dataTransfer) {
+      return;
+    }
+
+    const type = event.dataTransfer.getData("application/svelteflow");
+    
+    let newNode: Node;
+    if (type == "Bucket") {
+      newNode = {
+        id: incrementNodeId(),
+        type,
+        data: {
+          location: "US",
+          name: "test",
+          publicState: false,
+          status: "unsynced",
+        },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        parentNode: "",
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
+    } else if (type == "Network") {
+      newNode = {
+        id: incrementNodeId(),
+        type,
+        data: {
+          name: "",
+          description: "",
+          routingMode: "REGIONAL",
+          status: "unsynced",
+        },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        parentNode: "",
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+        // class: "target"
+      };
+    } else if (type == "Subnetwork") {
+      newNode = {
+        id: incrementNodeId(),
+        type,
+        data: {
+          name: "",
+          ipCidrRange: "",
+          region: "us-central1",
+          status: "unsynced",
+          network: -1, // TODO: get network id from existing networks
+        },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        parentNode: "",
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
+    } else if (type == "Instance") {
+      newNode = {
+        id: incrementNodeId(),
+        type,
+        data: {
+          name: "",
+          subnetwork: -1, // TOOD: get subnetwork id from existing networks
+          machineType: "e2-medium",
+          bootDisk: "debian-cloud/debian-11",
+          zone: "us-central1-a", // TODO: zone should be auto populated from subnetwork
+          status: "unsynced",
+        },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        parentNode: "",
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
+    } else if (type == "Project") {
+      newNode = {
+        id: incrementNodeId(),
+        type,
+        data: { name: "", folderIdRef: "", status: "unsynced" },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
+    } else {
+      newNode = {
+        id: incrementNodeId(),
+        type,
+        data: { status: "unsynced" },
+        // project the screen coordinates to pane coordinates
+        position: pos,
+        // set the origin of the new node so it is centered
+        origin: [0.5, 0.5],
+      };
+    }
+    newNode.class = "bg-gray-200";
+    // $nodes = [...$nodes, newNode];
+    addNodes([newNode]);
   }
 
   function onNodeDrag({ detail: { node } }) {
@@ -37,6 +147,7 @@
     $nodes.forEach((n) => {
       n.class = intersections.includes(n.id) ? "highlight" : "bg-gray-200";
     });
+
     $nodes = $nodes;
   }
 
@@ -46,16 +157,12 @@
       .map((n) => n.id);
 
     intersections.forEach((intersection) => {
-      // console.log(parseInt(intersection));
-      // console.log($nodes);
-
-      if ("Project" == $nodes[parseInt(intersection)].type) {
-        $nodes[node.id].parentNode = intersection;
+      if ("Project" == $nodes[findNode(intersection)].type) {
+        $nodes[findNode(node.id)].parentNode = intersection;
         // todo: currently jumps on parent change.
-        // to fix, change the position to be the mouse position
       }
     });
-    // if node rework, need to update all node arrays
+
     $nodes = $nodes;
   }
 </script>
@@ -73,9 +180,7 @@
     on:dragover={onDragOver}
     on:nodedrag={onNodeDrag}
     on:nodedragstop={onNodeDragStop}
-    on:drop={(e) => {
-      handleDrop(e);
-    }}
+    on:drop={onDrop}
   >
     <Background bgColor="#0f161d" variant={BackgroundVariant.Cross} />
     <Controls />
