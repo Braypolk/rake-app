@@ -6,21 +6,17 @@
             "data": {
                 "name": "xr-mcp-bray-test",
                 "folderIdRef": "",
-                "status": "syncing"
+                "status": "unsynced"
             },
             "position": {
-                "x": 434,
-                "y": 188.6
+                "x": 0,
+                "y": 0
             },
-            "origin": [
-                0.5,
-                0.5
-            ],
             "class": "bg-gray-200",
             "computed": {
                 "positionAbsolute": {
-                    "x": 434,
-                    "y": 188.6
+                    "x": 0,
+                    "y": 0
                 },
                 "width": 663,
                 "height": 313
@@ -36,65 +32,31 @@
                 "name": "thing",
                 "description": "blah",
                 "routingMode": "REGIONAL",
-                "status": "syncing"
+                "status": "unsynced"
             },
             "position": {
-                "x": 550,
-                "y": 158.59999999999997
+                "x": 488.137891440501,
+                "y": 0.796242171189931
             },
             "parentNode": "70c1e8c40d731",
-            "origin": [
-                0.5,
-                0.5
-            ],
             "class": "bg-gray-200",
             "computed": {
                 "positionAbsolute": {
-                    "x": 652.5,
-                    "y": 190.69999999999996
+                    "x": 488.137891440501,
+                    "y": 0.796242171189931
                 },
                 "width": 174,
-                "height": 294
+                "height": 313
             },
-            "selected": false,
+            "selected": true,
             "dragging": false,
-            "style": "width: 174px; height: 294px;"
-        },
-        {
-            "id": "be3d9e41753fc",
-            "type": "Bucket",
-            "data": {
-                "location": "US",
-                "name": "test",
-                "publicState": false,
-                "status": "syncing"
-            },
-            "position": {
-                "x": 308,
-                "y": 124.6
-            },
-            "parentNode": "70c1e8c40d731",
-            "origin": [
-                0.5,
-                0.5
-            ],
-            "class": "bg-gray-200",
-            "computed": {
-                "positionAbsolute": {
-                    "x": 410.5,
-                    "y": 156.7
-                },
-                "width": 149,
-                "height": 204
-            },
-            "selected": false,
-            "dragging": false
+            "style": "width: 174px; height: 310px;"
         }
     ],
     "edges": [],
     "viewport": {
-        "x": 0,
-        "y": 0,
-        "zoom": 1
+        "x": 43.54545454545462,
+        "y": 48.808896710765964,
+        "zoom": 1.162762471173686
     }
 }

@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import { nodes, edges, sortNodes } from "$lib/nodes-edges";
 
-  const { toObject } = useSvelteFlow();
+  const { toObject, fitView, setViewport } = useSvelteFlow();
 
   async function onSave() {
     const flow = toObject();
@@ -45,10 +45,13 @@
 
         if (flow) {
           const { x, y, zoom, nodes, edges } = flow;
+          
           $nodes = nodes;
           sortNodes();
 
           $edges = edges;
+
+          fitView();
         } else {
           console.log(message);
         }
@@ -169,6 +172,7 @@
     </div>
   </div>
   <div class="flex flex-col">
+    <button class="px-5 py-2 text-left" on:click={() => setViewport({ x: 0, y: 0, zoom: 1})}>Recenter</button>
     <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button>
     <button class="px-5 py-2 text-left" on:click={onSave}>Save</button>
     <button class="px-5 py-2 text-left" on:click={onRestore}>Restore</button>

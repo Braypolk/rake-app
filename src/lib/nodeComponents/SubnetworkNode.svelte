@@ -4,7 +4,7 @@
   export let data = {
     name: String,
     ipCidrRange: String,
-    network: Number,
+    network: String,
     region: "us-central1",
     status: "unsynced",
   };
@@ -27,23 +27,6 @@
     }}
   />
 
-  <label for="network">Network</label>
-  <input
-    id="network"
-    class="nodrag"
-    type="number"
-    on:input={(evt) => {
-      console.log(evt.target?.value);
-      data.network = evt.target?.value;
-    }}
-    value={data.network}
-    on:keydown={(evt) => {
-      if (evt.key === "Delete" || evt.key === "Backspace") {
-        evt.stopPropagation();
-      }
-    }}
-  />
-
   <label for="ipCidrRange">IP Cidr Range</label>
   <input
     id="ipCidrRange"
@@ -57,9 +40,7 @@
         evt.stopPropagation();
       }
     }}
-  />
-
-  
+  />  
 
   <label for="region">Region</label>
   <select

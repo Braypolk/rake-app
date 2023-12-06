@@ -12,15 +12,13 @@
     edges,
     incrementNodeId,
     addNodes,
-    findNode,
+    findNode
   } from "$lib/nodes-edges";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
   import type { Node, Edge } from "@xyflow/svelte";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
-
-  // $: console.log($nodes);
 
   function onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -30,6 +28,7 @@
     }
   }
 
+  // TODO: not sure how to move this to another file because it can't be a svelte file because idk how to export a function, it can't be a ts file because it uses useSvelteFlow which requires a svelte file or more specifically to be a child of a svelteflow instance
   function onDrop(event: DragEvent): void {
     event.preventDefault();
 
@@ -41,7 +40,7 @@
     }
 
     const type = event.dataTransfer.getData("application/svelteflow");
-    
+
     let newNode: Node;
     if (type == "Bucket") {
       newNode = {
@@ -57,7 +56,7 @@
         position: pos,
         parentNode: "",
         // set the origin of the new node so it is centered
-        origin: [0.5, 0.5],
+        // origin: [0.5, 0.5],
       };
     } else if (type == "Network") {
       newNode = {
@@ -73,7 +72,7 @@
         position: pos,
         parentNode: "",
         // set the origin of the new node so it is centered
-        origin: [0.5, 0.5],
+        // origin: [0.5, 0.5],
         // class: "target"
       };
     } else if (type == "Subnetwork") {
@@ -91,7 +90,7 @@
         position: pos,
         parentNode: "",
         // set the origin of the new node so it is centered
-        origin: [0.5, 0.5],
+        // origin: [0.5, 0.5],
       };
     } else if (type == "Instance") {
       newNode = {
@@ -109,7 +108,7 @@
         position: pos,
         parentNode: "",
         // set the origin of the new node so it is centered
-        origin: [0.5, 0.5],
+        // origin: [0.5, 0.5],
       };
     } else if (type == "Project") {
       newNode = {
@@ -119,7 +118,7 @@
         // project the screen coordinates to pane coordinates
         position: pos,
         // set the origin of the new node so it is centered
-        origin: [0.5, 0.5],
+        // origin: [0.5, 0.5],
       };
     } else {
       newNode = {
@@ -129,7 +128,7 @@
         // project the screen coordinates to pane coordinates
         position: pos,
         // set the origin of the new node so it is centered
-        origin: [0.5, 0.5],
+        // origin: [0.5, 0.5],
       };
     }
     newNode.class = "bg-gray-200";
@@ -151,17 +150,41 @@
     $nodes = $nodes;
   }
 
-  function onNodeDragStop({ detail: { node } }) {
+  function onNodeDragStop({ detail: { node, event } }) {
+    console.log(event);
+    console.log(node);
+
+    if (node.type == "Subnetwork") {
+      const intersections = getIntersectingNodes(node)
+        .filter((n) => n.type == "Network")
+        .map((n) => n.id);
+
+      intersections.forEach((intersection) => {
+        $nodes[findNode(node.id)].parentNode = intersection;
+      });
+      $nodes = $nodes;
+
+      return;
+    }
+
     const intersections = getIntersectingNodes(node)
       .filter((n) => n.id != node.parentNode)
       .map((n) => n.id);
 
     intersections.forEach((intersection) => {
-      if ("Project" == $nodes[findNode(intersection)].type) {
-        $nodes[findNode(node.id)].parentNode = intersection;
-        // todo: currently jumps on parent change.
+      // find the type of the intersected node (not the dropped node)
+      const type = $nodes[findNode(intersection)].type;
+      switch (type) {
+        case "Project":
+          // set the parent of the dropped node to the intersected node if that node is a project
+          $nodes[findNode(node.id)].parentNode = intersection;
+          break;
+        default:
+          break;
       }
     });
+
+    console.log($nodes);
 
     $nodes = $nodes;
   }
