@@ -1,1 +1,100 @@
-{"nodes":[{"id":"70c1e8c40d731","type":"Project","data":{"name":"xr-mcp-bray-test","folderIdRef":"","status":"syncing"},"position":{"x":434,"y":188.6},"origin":[0.5,0.5],"class":"bg-gray-200","computed":{"positionAbsolute":{"x":434,"y":188.6},"width":663,"height":313},"selected":false,"dragging":false,"style":"width: 663px; height: 313px;"},{"id":"6a05b149f3413","type":"Network","data":{"name":"thing","description":"blah","routingMode":"REGIONAL","status":"syncing"},"position":{"x":550,"y":158.59999999999997},"parentNode":"70c1e8c40d731","origin":[0.5,0.5],"class":"bg-gray-200","computed":{"positionAbsolute":{"x":652.5,"y":190.69999999999996},"width":174,"height":294},"selected":false,"dragging":false,"style":"width: 174px; height: 294px;"},{"id":"be3d9e41753fc","type":"Bucket","data":{"location":"US","name":"test","publicState":false,"status":"syncing"},"position":{"x":308,"y":124.6},"parentNode":"70c1e8c40d731","origin":[0.5,0.5],"class":"bg-gray-200","computed":{"positionAbsolute":{"x":410.5,"y":156.7},"width":149,"height":204},"selected":false,"dragging":false}],"edges":[],"viewport":{"x":0,"y":0,"zoom":1}}
+{
+    "nodes": [
+        {
+            "id": "70c1e8c40d731",
+            "type": "Project",
+            "data": {
+                "name": "xr-mcp-bray-test",
+                "folderIdRef": "",
+                "status": "syncing"
+            },
+            "position": {
+                "x": 434,
+                "y": 188.6
+            },
+            "origin": [
+                0.5,
+                0.5
+            ],
+            "class": "bg-gray-200",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 434,
+                    "y": 188.6
+                },
+                "width": 663,
+                "height": 313
+            },
+            "selected": false,
+            "dragging": false,
+            "style": "width: 663px; height: 313px;"
+        },
+        {
+            "id": "6a05b149f3413",
+            "type": "Network",
+            "data": {
+                "name": "thing",
+                "description": "blah",
+                "routingMode": "REGIONAL",
+                "status": "syncing"
+            },
+            "position": {
+                "x": 550,
+                "y": 158.59999999999997
+            },
+            "parentNode": "70c1e8c40d731",
+            "origin": [
+                0.5,
+                0.5
+            ],
+            "class": "bg-gray-200",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 652.5,
+                    "y": 190.69999999999996
+                },
+                "width": 174,
+                "height": 294
+            },
+            "selected": false,
+            "dragging": false,
+            "style": "width: 174px; height: 294px;"
+        },
+        {
+            "id": "be3d9e41753fc",
+            "type": "Bucket",
+            "data": {
+                "location": "US",
+                "name": "test",
+                "publicState": false,
+                "status": "syncing"
+            },
+            "position": {
+                "x": 308,
+                "y": 124.6
+            },
+            "parentNode": "70c1e8c40d731",
+            "origin": [
+                0.5,
+                0.5
+            ],
+            "class": "bg-gray-200",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 410.5,
+                    "y": 156.7
+                },
+                "width": 149,
+                "height": 204
+            },
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [],
+    "viewport": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1
+    }
+}

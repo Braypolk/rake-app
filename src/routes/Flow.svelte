@@ -20,7 +20,7 @@
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
 
-  $: console.log($nodes);
+  // $: console.log($nodes);
 
   function onDragOver(event: DragEvent) {
     event.preventDefault();

@@ -1,10 +1,8 @@
-import { writable, derived, type Writable, get } from "svelte/store";
+import { writable, type Writable, get } from "svelte/store";
 import type { Node, Edge } from "@xyflow/svelte";
 
 const nodeId = writable('');
 
-const projectNodes: Writable<Node[]> = writable<Node[]>([]);
-const networkNodes: Writable<Node[]> = writable<Node[]>([]);
 const nodes: Writable<Node[]> = writable<Node[]>([]);
 const edges = writable<Edge[]>([]);
 
@@ -47,4 +45,4 @@ function findNode(id: string) {
   return get(nodes).findIndex(n => n.id === id)
 }
 
-export { nodes, projectNodes, networkNodes, edges, nodeId, incrementNodeId, addNodes, findNode, sortNodes };
+export { nodes, edges, nodeId, incrementNodeId, addNodes, findNode, sortNodes };

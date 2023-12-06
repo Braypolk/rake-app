@@ -1,13 +1,9 @@
 <script lang="ts">
   import { useSvelteFlow } from "@xyflow/svelte";
-  import { useNodes, useEdges } from "@xyflow/svelte";
   import { onMount } from "svelte";
   import { nodes, edges, sortNodes } from "$lib/nodes-edges";
 
   const { toObject } = useSvelteFlow();
-
-  const nodesState = useNodes();
-  const edgesState = useEdges();
 
   async function onSave() {
     const flow = toObject();

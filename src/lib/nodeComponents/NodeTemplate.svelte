@@ -9,9 +9,7 @@
   //moveable var
   let targetRef = null;
 
-  type $$Props = NodeProps;
-
-  //   this type should be singular
+  //  when setting type it should be singular
   export let type = "";
   $: typelower = type.toLowerCase();
   export let provider = "";
