@@ -1,15 +1,10 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-
-  export let data = {
-    name: String,
-    description: String,
-    routingMode: "REGIONAL",
-    status: "unsynced",
-  };
+  import { networkData } from "./nodeData";
+  export let data = networkData;
 </script>
 
-<NodeTemplate type="Network" provider="compute" data={data}>
+<NodeTemplate type="Network" provider="compute" {data}>
   <label for="network-name">Name</label>
   <input
     id="network-name"

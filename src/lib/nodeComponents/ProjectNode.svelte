@@ -1,11 +1,7 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-
-  export let data = {
-    name: "xr-mcp-bray-test",
-    folderIdRef: String,
-    status: "unsynced",
-  };
+  import { projectData } from "./nodeData";
+  export let data = projectData;
 </script>
 
 <!-- TODO: when handle connects to subnetwork, update network var in nodeState -->

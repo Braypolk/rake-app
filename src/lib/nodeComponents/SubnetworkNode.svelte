@@ -1,17 +1,11 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-
-  export let data = {
-    name: String,
-    ipCidrRange: String,
-    network: String,
-    region: "us-central1",
-    status: "unsynced",
-  };
+  import { subnetworkData } from "./nodeData";
+  export let data = subnetworkData;
 </script>
 
 <!-- TODO: subnetwork should live in network group and thus automatically know the network it should be attatched to -->
-<NodeTemplate type="Subnetwork" provider="compute" data={data}>
+<NodeTemplate type="Subnetwork" provider="compute" {data}>
   <label for="subnetwork-name">Name</label>
   <input
     id="subnetwork-name"
@@ -40,7 +34,7 @@
         evt.stopPropagation();
       }
     }}
-  />  
+  />
 
   <label for="region">Region</label>
   <select

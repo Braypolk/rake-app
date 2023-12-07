@@ -84,14 +84,13 @@
       const { parentNode, ...rest } = node;
       return {
         ...rest,
-        id: parseInt(node.id),
-        project: parseInt(parentNode),
+        project: parentNode,
       };
     });
     const relationships = $edges.map((edge) => {});
 
     // TODO: uncomment when I actually want to test running things
-    // const result = await runPythonFile(resources);
+    const result = await runPythonFile(resources);
     onSave();
   };
 
@@ -172,7 +171,7 @@
     </div>
   </div>
   <div class="flex flex-col">
-    <button class="px-5 py-2 text-left" on:click={() => setViewport({ x: 0, y: 0, zoom: 1})}>Recenter</button>
+    <button class="px-5 py-2 text-left" on:click={() => fitView()}>Recenter</button>
     <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button>
     <button class="px-5 py-2 text-left" on:click={onSave}>Save</button>
     <button class="px-5 py-2 text-left" on:click={onRestore}>Restore</button>

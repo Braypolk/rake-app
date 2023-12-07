@@ -1,12 +1,7 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-
-  export let data = {
-    location: "US",
-    name: String,
-    publicState: false,
-    status: "unsynced",
-  };
+  import { bucketData } from "./nodeData";
+  export let data = bucketData;
 </script>
 
 <NodeTemplate type="Bucket" provider="storage" {data}>

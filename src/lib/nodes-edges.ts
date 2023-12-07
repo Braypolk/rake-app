@@ -1,5 +1,5 @@
 import { writable, type Writable, get } from "svelte/store";
-import type { Node, Edge } from "@xyflow/svelte";
+import type { Node, Edge, XYPosition } from "@xyflow/svelte";
 
 const nodeId = writable('');
 
@@ -45,4 +45,17 @@ function findNode(id: string) {
   return get(nodes).findIndex(n => n.id === id)
 }
 
-export { nodes, edges, nodeId, incrementNodeId, addNodes, findNode, sortNodes };
+function newNode(data: Object, pos: XYPosition, type: string) {
+  addNodes([{
+    id: incrementNodeId(),
+    type: type,
+    data: data,
+    position: pos,
+    parentNode: "",
+    class: "bg-gray-200",
+    // set the origin of the new node so it is centered
+    // origin: [0.5, 0.5],
+  }]);
+}
+
+export { nodes, edges, nodeId, incrementNodeId, addNodes, findNode, sortNodes, newNode };

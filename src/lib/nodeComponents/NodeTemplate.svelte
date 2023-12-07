@@ -35,7 +35,6 @@
             status.status.conditions[0].status
           );
           if (status.status.conditions[0].status) {
-            console.log("it done did sync");
             data.status = "synced";
           }
         } else {

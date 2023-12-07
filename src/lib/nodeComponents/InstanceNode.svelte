@@ -1,18 +1,11 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-
-  export let data = {
-    name: String,
-    machineType: String,
-    bootDisk: String,
-    zone: String, // TODO: zone should be auto populated from subnetwork
-    subnetwork: Number,
-    status: String,
-  };
+  import { instanceData } from "./nodeData";
+  export let data = instanceData;
 </script>
 
 <!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
-<NodeTemplate type="Instance" provider="compute" data={data}>
+<NodeTemplate type="Instance" provider="compute" {data}>
   <label for="instance-name">Name</label>
   <input
     id="instance-name"
@@ -28,11 +21,11 @@
     }}
   />
 
+  <!-- TODO: replace this with the value of a subnetwork connected with an edge -->
   <label for="subnetwork">Subnetwork</label>
   <input
     id="subnetwork"
     class="nodrag"
-    type="number"
     on:input={(evt) => {
       data.subnetwork = evt.target?.value;
     }}
