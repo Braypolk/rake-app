@@ -1,10 +1,12 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
+  import CustomHandle from "./CustomHandle.svelte";
   import { instanceData } from "./nodeData";
+
   export let data = instanceData;
 </script>
 
-<!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
+<CustomHandle type="target" />
 <NodeTemplate type="Instance" provider="compute" {data}>
   <label for="instance-name">Name</label>
   <input
@@ -14,22 +16,6 @@
       data.name = evt.target?.value;
     }}
     value={data.name}
-    on:keydown={(evt) => {
-      if (evt.key === "Delete" || evt.key === "Backspace") {
-        evt.stopPropagation();
-      }
-    }}
-  />
-
-  <!-- TODO: replace this with the value of a subnetwork connected with an edge -->
-  <label for="subnetwork">Subnetwork</label>
-  <input
-    id="subnetwork"
-    class="nodrag"
-    on:input={(evt) => {
-      data.subnetwork = evt.target?.value;
-    }}
-    value={data.subnetwork}
     on:keydown={(evt) => {
       if (evt.key === "Delete" || evt.key === "Backspace") {
         evt.stopPropagation();
@@ -85,3 +71,4 @@
     }}
   />
 </NodeTemplate>
+<CustomHandle type="source" />

@@ -1,10 +1,12 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
+  import CustomHandle from "./CustomHandle.svelte";
   import { subnetworkData } from "./nodeData";
+
   export let data = subnetworkData;
 </script>
 
-<!-- TODO: subnetwork should live in network group and thus automatically know the network it should be attatched to -->
+<CustomHandle type="target"/>
 <NodeTemplate type="Subnetwork" provider="compute" {data}>
   <label for="subnetwork-name">Name</label>
   <input
@@ -86,3 +88,4 @@
     <option>us-west4</option>
   </select>
 </NodeTemplate>
+<CustomHandle type="source"/>

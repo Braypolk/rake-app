@@ -1,7 +1,7 @@
 import { writable, type Writable, get } from "svelte/store";
 import type { Node, Edge, XYPosition } from "@xyflow/svelte";
 
-const nodeId = writable('');
+const id = writable('');
 
 const nodes: Writable<Node[]> = writable<Node[]>([]);
 const edges = writable<Edge[]>([]);
@@ -36,9 +36,9 @@ function sortNodes() {
   });
 }
 
-function incrementNodeId() {
-  nodeId.update(() => Math.random().toString(16).slice(2).toString());
-  return get(nodeId);
+function incrementid() {
+  id.update(() => Math.random().toString(16).slice(2).toString());
+  return get(id);
 }
 
 function findNode(id: string) {
@@ -47,7 +47,7 @@ function findNode(id: string) {
 
 function newNode(data: Object, pos: XYPosition, type: string) {
   addNodes([{
-    id: incrementNodeId(),
+    id: incrementid(),
     type: type,
     data: data,
     position: pos,
@@ -58,4 +58,4 @@ function newNode(data: Object, pos: XYPosition, type: string) {
   }]);
 }
 
-export { nodes, edges, nodeId, incrementNodeId, addNodes, findNode, sortNodes, newNode };
+export { nodes, edges, id, incrementid, addNodes, findNode, sortNodes, newNode };

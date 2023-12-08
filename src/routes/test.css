@@ -8,3 +8,8 @@
     background-color: #ff0072 !important;
     color: white;
 }
+
+.svelte-flow__edges	{
+    z-index: 99 !important;
+}
+
