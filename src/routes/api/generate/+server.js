@@ -133,77 +133,56 @@ function jsonToCrossplane(resources) {
     }
 
     if (resource != {}) {
-      console.log(item['type'] + '-' + item['data']['name']);
       resourceList.push({ file: item['type'] + '-' + item['data']['name'] + '.yaml', content: resource });
     }
   });
   return resourceList;
 }
 
-// async function moveFilesInDirectory(bucketName, srcPrefix, destPrefix, files) {
-//   const moveOptions = {
-//     preconditionOpts: {
-//       ifGenerationMatch: 0, //destinationGenerationMatchPrecondition
-//     },
-//   };
-
-//   // List files in the source directory
-//   // const [files] = await srcBucket.getFiles({ prefix: srcPrefix });
-
-//   // Move each file to the destination directory
-//   for (const file of files) {
-//     await storage
-//       .bucket(bucketName)
-//       .file(srcPrefix + file)
-//       .move(destPrefix + file, moveOptions);
-//     console.log(`gs://${bucketName}/${srcPrefix}/${file} moved to gs://${bucketName}/${destPrefix}/${file}`);
-//   }
-// }
-
-
-// async function deleteFile(bucketName, filename) {
-//   const deleteOptions = {
-//     ifGenerationMatch: 0, //generationMatchPrecondition
-//   };
-//   // Deletes the file from the bucket
-//   await storage
-//     .bucket(bucketName)
-//     .file(filename)
-//     .delete(deleteOptions);
-//   console.log(`gs://${bucketName}/${filename} deleted.`);
-// }
-
-
 
 export async function POST({ request }) {
   let resources = await request.json();
-  
+
   resources.forEach(resource => {
-    console.log(resource. type + '-' + resource.data.name);
+    console.log('resources', resource.type + '-' + resource.data.name);
   });
 
   const OWNER = 'bray-rake';
-  const REPO = 'rake-resources'; 
+  const REPO = 'rake-resources';
   const BRANCH = 'main';
   const MESSAGE = 'commit test';
   const PATH = 'bray/resources/';
 
-  const files = await listAppliedResources(OWNER, REPO, PATH);
-  console.log(files);
+  // look: this approach will only be looking at files in github and not the actual state of the cluster. This will probably want to be changed in the future
 
-  // await moveFilesInDirectory(repo, resourceLocation, deletionLocation, files);
-  // const files = await jsonToCrossplane(resources);
+  const oldFiles = await listAppliedResources(OWNER, REPO, PATH);
+  console.log('oldfiles', oldFiles);
 
+  const generatedResources = await jsonToCrossplane(resources);
+  const generatedFiles = generatedResources.map(resource => resource.file);
+  console.log('generatedFiles', generatedFiles);
 
+  const delDiff = oldFiles.filter(item => !generatedFiles.includes(item));
+  const newDiff = generatedFiles.filter(item => !oldFiles.includes(item));
+  console.log('diff in old files vs new files (which files have been deleted)');
+  console.log(delDiff);
+  console.log(newDiff);
 
-  // Usage
-  // await commitFiles(OWNER, REPO, BRANCH, files, MESSAGE, PATH);
+  // TODO: I should probably rework this to only be one commit
+  if (delDiff.length > 0) {
+    console.log('deleting, adding and committing...');
 
-  // const newFiles = await listFiles(repo, resourceLocation)
-  // console.log(newFiles);
-
-  // const diff = files.filter(item => !newFiles.includes(item));
-  // console.log(diff);
+    const delResources = delDiff.map(file => {
+      return {
+        file: file,
+        content: null
+      };
+    });
+    // commit files with null content so that the file is deleted
+    await commitFiles(OWNER, REPO, BRANCH, delResources, MESSAGE, PATH);
+  }
+  console.log('committing...');
+  await commitFiles(OWNER, REPO, BRANCH, generatedResources, MESSAGE, PATH);
 
   return new Response(JSON.stringify({
     status: 200,

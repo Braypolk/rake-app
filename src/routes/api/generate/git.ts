@@ -21,7 +21,7 @@ export async function commitFiles(owner: string, repo: string, branch: string, f
       ref: `heads/${branch}`,
     });
     const shaBaseTree = branchRef.data.object.sha;
-
+    console.log('shaBaseTree', shaBaseTree);
     // Create a tree with the blobs
     const tree = await octokit.git.createTree({
       owner,
@@ -30,10 +30,10 @@ export async function commitFiles(owner: string, repo: string, branch: string, f
       tree: files.map(({ content, file }) => (
         content
           ? { path: path + file, content: YAML.stringify(content), mode: '100644', type: 'blob' } // Works for text files, utf-8 assumed
-          : { path: path + file, sha: null, mode: '100644', type: 'blob' } // If sha is null => the file gets deleted
+          : { path: path + file, sha: null, mode: '100644', type: 'blob' } // If content is null => the file gets deleted
       )),
     });
-
+    console.log('tree', tree);
 
     // Create a new commit with the tree
     const newCommit = await octokit.git.createCommit({
@@ -43,6 +43,7 @@ export async function commitFiles(owner: string, repo: string, branch: string, f
       tree: tree.data.sha,
       parents: [shaBaseTree],
     });
+    console.log('newCommit');
 
     // Update the reference of the branch to point to the new commit
     const res = await octokit.git.updateRef({
@@ -51,7 +52,6 @@ export async function commitFiles(owner: string, repo: string, branch: string, f
       ref: `heads/${branch}`,
       sha: newCommit.data.sha,
     });
-
     console.log(res);
   } catch (error) {
     console.error(`Error creating commit: ${error}`);
@@ -78,7 +78,7 @@ export async function listAppliedResources(owner: string, repo: string, path: st
     });
 
     // filter items by path
-    const fileNames = treeData.tree.filter(item => item.path.startsWith(path)).map(obj => obj.path);
+    const fileNames = treeData.tree.filter(item => item.path.startsWith(path)).map(obj => obj.path?.substring(obj.path.indexOf(path) + path.length));
     return fileNames;
   } catch (error) {
     console.error('Error fetching files:', error);
