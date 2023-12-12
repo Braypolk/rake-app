@@ -1,8 +1,4 @@
 // @ts-nocheck
-import { promises as fs } from 'fs';
-import { exec } from 'child_process';
-import { json, text } from '@sveltejs/kit';
-import yaml from 'js-yaml';
 import { listAppliedResources, commitFiles } from './git';
 
 function jsonToCrossplane(resources) {
@@ -181,27 +177,27 @@ function jsonToCrossplane(resources) {
 
 export async function POST({ request }) {
   let resources = await request.json();
+  
+  resources.forEach(resource => {
+    console.log(resource. type + '-' + resource.data.name);
+  });
 
-  // console.log(resources);
+  const OWNER = 'bray-rake';
+  const REPO = 'rake-resources'; 
+  const BRANCH = 'main';
+  const MESSAGE = 'commit test';
+  const PATH = 'bray/resources/';
 
-  const OWNER = 'bray-rake'; // Replace with the repository owner
-  const REPO = 'rake-resources';  // Replace with the repository name
-  const BRANCH = 'main'; // Replace with the branch you want to commit to
-  const MESSAGE = 'commit test'; // Replace with your commit message
-  const PATH = 'bray/resources/'
-  // const resourceLocation = 'bray/pending-deletion/'
-  // const deletionLocation = 'bray/resources/'
-
-  // const files = await listAppliedResources(OWNER, REPO, RESOURCELOCATION)
-  // console.log(files);
+  const files = await listAppliedResources(OWNER, REPO, PATH);
+  console.log(files);
 
   // await moveFilesInDirectory(repo, resourceLocation, deletionLocation, files);
-  const files = await jsonToCrossplane(resources);
+  // const files = await jsonToCrossplane(resources);
 
 
 
   // Usage
-  await commitFiles(OWNER, REPO, BRANCH, files, MESSAGE, PATH);
+  // await commitFiles(OWNER, REPO, BRANCH, files, MESSAGE, PATH);
 
   // const newFiles = await listFiles(repo, resourceLocation)
   // console.log(newFiles);

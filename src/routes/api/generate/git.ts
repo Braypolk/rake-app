@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import dotenv from 'dotenv';
-import yaml from 'js-yaml';
+import YAML from 'yaml';
 
 interface File {
   file: string;
@@ -29,7 +29,7 @@ export async function commitFiles(owner: string, repo: string, branch: string, f
       base_tree: shaBaseTree,
       tree: files.map(({ content, file }) => (
         content
-          ? { path: path + file, content: yaml.dump(content), mode: '100644', type: 'blob' } // Works for text files, utf-8 assumed
+          ? { path: path + file, content: YAML.stringify(content), mode: '100644', type: 'blob' } // Works for text files, utf-8 assumed
           : { path: path + file, sha: null, mode: '100644', type: 'blob' } // If sha is null => the file gets deleted
       )),
     });
@@ -51,30 +51,37 @@ export async function commitFiles(owner: string, repo: string, branch: string, f
       ref: `heads/${branch}`,
       sha: newCommit.data.sha,
     });
+
+    console.log(res);
   } catch (error) {
     console.error(`Error creating commit: ${error}`);
   }
 }
 
-export async function listAppliedResources(owner, repo, path) {
+// list current files in github
+export async function listAppliedResources(owner: string, repo: string, path: string) {
   try {
-    const response = await octokit.repos.getContent({
+    // Get the SHA of the latest commit on the default branch (e.g., 'main')
+    const { data: refData } = await octokit.git.getRef({
       owner,
       repo,
-      path
+      ref: 'heads/main'
+    });
+    const commitSha = refData.object.sha;
+
+    // Get the tree associated with the commit SHA recursively
+    const { data: treeData } = await octokit.git.getTree({
+      owner,
+      repo,
+      tree_sha: commitSha,
+      recursive: 'false'
     });
 
-    octokit.git.tree
-
-    if (Array.isArray(response.data)) {
-      response.data.forEach(file => {
-        console.log(file.name);
-      });
-    } else {
-      // If the path is a file, this will be hit
-      console.log('The specified path is a file, not a folder.');
-    }
+    // filter items by path
+    const fileNames = treeData.tree.filter(item => item.path.startsWith(path)).map(obj => obj.path);
+    return fileNames;
   } catch (error) {
-    console.error(`Error fetching contents: ${error}`);
+    console.error('Error fetching files:', error);
+    throw error;
   }
 }
