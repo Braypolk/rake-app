@@ -41,17 +41,21 @@
             data.status = "synced";
           }
         } else {
+          data.status = "syncing";
           console.log("waiting...");
         }
       } catch (error) {
         console.error("Failed to fetch network status:", error);
+        if (data.status != "deployed") {
+          data.status = "unsynced";
+        }
       }
     }, 50 * 1000);
   });
 
-  // onDestroy(() => {
-  //   clearInterval(intervalId);
-  // });
+  onDestroy(() => {
+    clearInterval(intervalId);
+  });
 </script>
 
 <!-- bind and height in style are for moveable and should be deleted once resize is released -->
@@ -64,6 +68,8 @@
   {#if data.status == "unsynced"}
     <div class="unsynced">Unsynced</div>
   {:else if data.status == "syncing"}
+    <div class="syncing">Syncing...</div>
+  {:else if data.status == "deployed"}
     <div class="syncing">Syncing...</div>
   {:else if data.status == "synced"}
     <div class="synced">Synced</div>

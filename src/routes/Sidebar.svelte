@@ -77,7 +77,7 @@
     // change all status to syncing
     $nodes = $nodes.map((node) => ({
       ...node,
-      data: { ...node.data, status: "syncing" },
+      data: { ...node.data, status: "deployed" },
     }));
 
     const resources = $nodes.map((node) => {
@@ -172,7 +172,7 @@
   </div>
   <div class="flex flex-col">
     <button class="px-5 py-2 text-left" on:click={() => fitView()}>Recenter</button>
-    <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button>
+    <!-- <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button> -->
     <button class="px-5 py-2 text-left" on:click={onSave}>Save</button>
     <button class="px-5 py-2 text-left" on:click={onRestore}>Restore</button>
   </div>

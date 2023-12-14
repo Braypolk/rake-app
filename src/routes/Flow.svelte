@@ -55,6 +55,8 @@
   }
 
   function onNodeDragStop({ detail: { node, event } }) {
+    const nodeId = findNode(node.id)
+
     if (node.type == "Subnetwork") {
       const intersections = getIntersectingNodes(node)
         .filter((n) => n.type == "Network")
@@ -75,8 +77,11 @@
       // find the type of the intersected node (not the dropped node)
       const type = $nodes[findNode(intersection)].type;
       if (type == "Project") {
-          // set the parent of the dropped node to the intersected node if that node is a project
-          $nodes[findNode(node.id)].parentNode = intersection;
+        const parentNodeId = findNode(intersection);
+        // set the parent of the dropped node to the intersected node if that node is a project
+        $nodes[nodeId].parentNode = intersection;
+        // minus position of parent so that the position goes to where it is dropped
+        $nodes[nodeId].position = { x: $nodes[nodeId].position.x - $nodes[parentNodeId].position.x, y: $nodes[nodeId].position.y - $nodes[parentNodeId].position.y};
       }
     });
     $nodes = $nodes;
