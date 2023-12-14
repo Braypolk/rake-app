@@ -17,7 +17,6 @@
   export let type = "";
   $: typelower = type.toLowerCase();
   export let provider = "";
-  export let style = "";
 
   let intervalId: any;
   onMount(() => {
@@ -62,14 +61,14 @@
 <div
   class={`${typelower} node`}
   bind:this={targetRef}
-  style={`${style} height: inherit;`}
+  style={`height: inherit;`}
 >
   <h1 class="text-lg">{type}</h1>
   {#if data.status == "unsynced"}
     <div class="unsynced">Unsynced</div>
-  {:else if data.status == "syncing"}
-    <div class="syncing">Syncing...</div>
   {:else if data.status == "deployed"}
+    <div class="syncing">Deployed...</div>
+  {:else if data.status == "syncing"}
     <div class="syncing">Syncing...</div>
   {:else if data.status == "synced"}
     <div class="synced">Synced</div>

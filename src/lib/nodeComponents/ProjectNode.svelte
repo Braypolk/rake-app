@@ -35,3 +35,11 @@
     }}
   />
 </NodeTemplate>
+
+<style>
+  :global(.svelte-flow__node-Project) {
+    background-color: rgb(255, 255, 255);
+    border: 5px solid rgb(71, 112, 224);
+    border-radius: 1rem;
+  }
+</style>

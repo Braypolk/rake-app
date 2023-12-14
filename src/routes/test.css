@@ -13,3 +13,7 @@
     z-index: 99 !important;
 }
 
+.moveable-line {
+    height: 0 !important;
+}
+

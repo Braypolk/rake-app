@@ -47,3 +47,11 @@
     <option>GLOBAL</option>
   </select>
 </NodeTemplate>
+
+<style>
+  :global(.svelte-flow__node-Network) {
+    background-color: rgba(131, 131, 131, 0.539);
+    border: 3px solid rgb(200, 200, 200);
+    border-radius: 1rem;
+  }
+</style>

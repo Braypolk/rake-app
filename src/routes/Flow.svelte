@@ -48,7 +48,7 @@
     });
 
     $nodes.forEach((n) => {
-      n.class = intersections.includes(n.id) ? "highlight" : "bg-gray-200";
+      n.class = intersections.includes(n.id) ? "highlight" : "";
     });
 
     $nodes = $nodes;

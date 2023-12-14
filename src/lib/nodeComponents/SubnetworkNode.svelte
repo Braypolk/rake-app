@@ -89,3 +89,12 @@
   </select>
 </NodeTemplate>
 <CustomHandle type="source"/>
+
+
+<style>
+  :global(.svelte-flow__node-Subnetwork) {
+    background-color: rgba(131, 131, 131, 0.539);
+    border: 3px solid rgb(255, 255, 255);
+    border-radius: 1rem;
+  }
+</style>

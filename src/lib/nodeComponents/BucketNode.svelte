@@ -42,3 +42,11 @@
     />Public
   </div>
 </NodeTemplate>
+
+<style>
+  :global(.svelte-flow__node-Bucket) {
+    background-color: rgba(184, 234, 234, 0.88);
+    border: 3px solid rgb(160, 160, 160);
+    border-radius: 1rem;
+  }
+</style>

@@ -52,7 +52,7 @@ function newNode(data: Object, pos: XYPosition, type: string) {
     data: data,
     position: pos,
     parentNode: "",
-    class: "bg-gray-200",
+    // class: "bg-gray-200",
     // set the origin of the new node so it is centered
     // origin: [0.5, 0.5],
   }]);
