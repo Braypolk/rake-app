@@ -76,7 +76,7 @@
     intersections.forEach((intersection) => {
       // find the type of the intersected node (not the dropped node)
       const type = $nodes[findNode(intersection)].type;
-      if (type == "Project") {
+      if (type == "Project" && node.type != "Project") {
         const parentNodeId = findNode(intersection);
         // set the parent of the dropped node to the intersected node if that node is a project
         $nodes[nodeId].parentNode = intersection;

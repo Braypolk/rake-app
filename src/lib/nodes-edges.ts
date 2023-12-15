@@ -12,8 +12,11 @@ const sortOrder = {
   'Network': 2,
   'Subnetwork': 3,
   'Instance': 4,
-  'Bucket': 5
-  //...
+  'Bucket': 5,
+  'Firewall': 99,
+  'InstanceGroup': 99,
+  'Router': 99,
+// END OF SORT ORDER
 };
 
 function addNodes(newNodes: Node[]) {
