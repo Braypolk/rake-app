@@ -4,7 +4,9 @@ import type { Node, Edge, XYPosition } from "@xyflow/svelte";
 const id = writable('');
 
 const nodes: Writable<Node[]> = writable<Node[]>([]);
-const edges = writable<Edge[]>([]);
+const edges: Writable<Edge[]> = writable<Edge[]>([]);
+
+const showContent: Writable<boolean> = writable<boolean>(true);
 
 // Define sorting rules based on the node type
 const sortOrder = {
@@ -16,6 +18,7 @@ const sortOrder = {
   'Firewall': 99,
   'InstanceGroup': 99,
   'Router': 99,
+  'BackendService': 99,
 // END OF SORT ORDER
 };
 
@@ -61,4 +64,4 @@ function newNode(data: Object, pos: XYPosition, type: string) {
   }]);
 }
 
-export { nodes, edges, id, incrementid, addNodes, findNode, sortNodes, newNode };
+export { nodes, edges, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };

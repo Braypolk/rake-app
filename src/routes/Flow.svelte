@@ -104,7 +104,7 @@
     on:drop={onDrop}
   >
     <Background bgColor="#0f161d" variant={BackgroundVariant.Cross} />
-    <Controls />
+    <Controls/>
     <!-- <MiniMap /> -->
   </SvelteFlow>
 </main>

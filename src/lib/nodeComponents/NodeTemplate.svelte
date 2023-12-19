@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { NodeProps } from "@xyflow/svelte";
   import { onMount, onDestroy } from "svelte";
-  import { findNode, nodes } from "$lib/nodes-edges";
+  import { findNode, nodes, showContent } from "$lib/nodes-edges";
 
   // TODO: temp until resize is released for svelteflow
   import Moveable from "svelte-moveable";
@@ -49,7 +49,7 @@
           data.status = "unsynced";
         }
       }
-    }, 50 * 1000);
+    }, 5 * 1000);
   });
 
   onDestroy(() => {
@@ -73,7 +73,15 @@
   {:else if data.status == "synced"}
     <div class="synced">Synced</div>
   {/if}
-  <slot />
+  {#if $showContent}
+    <slot />
+    {:else}
+    <div class="placeholder">
+      <div />
+      <div />
+      <div />
+    </div>
+  {/if}
 </div>
 
 <!-- remove once resize is released -->
@@ -93,3 +101,20 @@
     e.target.style.transform = e.drag.transform;
   }}
 />
+
+<style>
+  .placeholder {
+    background: unset;
+  }
+
+  .placeholder div {
+    background: #eee;
+    width: 100px;
+    height: 10px;
+    margin-bottom: 4px;
+  }
+
+  .placeholder div:last-child {
+    margin-bottom: 0;
+  }
+</style>

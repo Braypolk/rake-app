@@ -1,7 +1,7 @@
 <script lang="ts">
   import { useSvelteFlow } from "@xyflow/svelte";
   import { onMount } from "svelte";
-  import { nodes, edges, sortNodes } from "$lib/nodes-edges";
+  import { nodes, edges, showContent, sortNodes } from "$lib/nodes-edges";
 
   const { toObject, fitView, setViewport } = useSvelteFlow();
 
@@ -190,15 +190,23 @@
         >
             Router
         </div>
+    <div
+        class="backendservice blob"
+        on:dragstart={(event) => onDragStart(event, "BackendService")}
+        draggable={true}
+        >
+            BackendService
+        </div>
 <!-- END OF NODES -->
   </div>
   <div class="flex flex-col">
     <button class="px-5 py-2 text-left" on:click={() => fitView()}
       >Recenter</button
     >
-    <!-- <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button> -->
+    <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button>
     <button class="px-5 py-2 text-left" on:click={onSave}>Save</button>
     <button class="px-5 py-2 text-left" on:click={onRestore}>Restore</button>
+    <button class="px-5 py-2 text-left" on:click={() => {$showContent = !$showContent}}>Content View</button>
   </div>
 </aside>
 

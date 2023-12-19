@@ -2,7 +2,7 @@ import fs from 'fs';
 import YAML from 'yaml';
 
 // Replace 'input.yaml' with the path to your YAML file
-const yamlFilePath = '/Users/braypolkinghorne/Documents/code/Rake/provider-gcp/package/crds/compute.gcp.upbound.io_routers.yaml';
+const yamlFilePath = '/Users/braypolkinghorne/Documents/code/Rake/provider-gcp/package/crds/compute.gcp.upbound.io_backendservices.yaml';
 const yamlContent = fs.readFileSync(yamlFilePath, 'utf8');
 
 const doc = YAML.parse(yamlContent);

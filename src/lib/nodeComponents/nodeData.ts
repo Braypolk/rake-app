@@ -79,6 +79,38 @@ export let routerData = {
   region: "",
 };
 
+export let backendserviceData = {
+  name: "",
+  affinityCookieTtlSec: "",
+  backend: "",
+  cdnPolicy: "",
+  circuitBreakers: "",
+  compressionMode: "",
+  connectionDrainingTimeoutSec: "",
+  consistentHash: "",
+  customRequestHeaders: "",
+  customResponseHeaders: "",
+  description: "",
+  edgeSecurityPolicy: "",
+  enableCdn: false,
+  healthChecks: "",
+  healthChecksRefs: "",
+  healthChecksSelector: "",
+  iap: "",
+  loadBalancingScheme: "",
+  localityLbPolicies: "",
+  localityLbPolicy: "",
+  logConfig: "",
+  outlierDetection: "",
+  portName: "",
+  project: "",
+  protocol: "",
+  securityPolicy: "",
+  securitySettings: "",
+  sessionAffinity: "",
+  timeoutSec: "",
+};
+
 export const nodeTypeToDataMap = {
     Project: projectData,
     Network: networkData,
@@ -88,4 +120,5 @@ export const nodeTypeToDataMap = {
     Firewall: firewallData,
     InstanceGroup: instancegroupData,
     Router: routerData,
+    BackendService: backendserviceData,
 };
