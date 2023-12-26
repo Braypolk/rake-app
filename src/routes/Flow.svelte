@@ -13,6 +13,7 @@
   import "@xyflow/svelte/dist/style.css";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
+  let intersectedRef: Node;
 
   function onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -41,49 +42,80 @@
   }
 
   function onNodeDrag({ detail: { node } }) {
-    const intersections = getIntersectingNodes(node).map((n) => {
-      if (n.id != node.parentNode) {
-        return n.id;
+    // when I drag I only want to check if the dragged node is intersecting with potential parents (ex: when dragging a network, don't have subnets be "available" intersections)
+
+    // calculate the center point of the node from position and dimensions
+    const centerX = node.computed?.positionAbsolute.x + node.computed.width / 2;
+    const centerY =
+      node.computed?.positionAbsolute.y + node.computed.height / 2;
+
+    // find a node where the center point is inside
+    const intersections = $nodes.map((n) => {
+      if (
+        centerX > n.computed?.positionAbsolute.x &&
+        centerX < n.computed?.positionAbsolute.x + n.computed.width &&
+        centerY > n.computed?.positionAbsolute.y &&
+        centerY < n.computed?.positionAbsolute.y + n.computed.height &&
+        n.id !== node.id // this is needed, otherwise we would always find the dragged node
+      ) {
+        return n;
       }
     });
 
-    $nodes.forEach((n) => {
-      n.class = intersections.includes(n.id) ? "highlight" : "";
-    });
+    if (node.type === "Project") {
+      intersectedRef = intersections.findLast((n) => {
+        if (n !== undefined) {
+          return n.type == "Folder" ? n : null;
+        }
+      });
+    } else if (node.type === "Network") {
+      intersectedRef = intersections.findLast((n) => {
+        if (n !== undefined) {
+          return n.type === "Project" ? n : null;
+        }
+      });
+    } else if (node.type === "Subnetwork") {
+      intersectedRef = intersections.findLast((n) => {
+        if (n !== undefined) {
+          return n.type === "Network" ? n : null;
+        }
+      });
+    }
+
+    $nodes.forEach((n) => (n.class = ""));
+    if (intersectedRef && intersectedRef.id !== node.parentNode) {
+      intersectedRef.class = "highlight";
+    }
 
     $nodes = $nodes;
   }
 
   function onNodeDragStop({ detail: { node, event } }) {
-    const nodeId = findNode(node.id)
+    const nodePosition = findNode(node.id);
 
-    if (node.type == "Subnetwork") {
-      const intersections = getIntersectingNodes(node)
-        .filter((n) => n.type == "Network")
-        .map((n) => n.id);
+    if (intersectedRef) {
+      // assign parent to node
+      const parentNodeId = findNode(intersectedRef.id);
+      if (
+        intersectedRef.type == "Project" ||
+        (intersectedRef.type == "Network" && node.type == "Subnetwork")
+      ) {
+        // if a node has a parent already, remove the node (data.child) from the parent
+        if ($nodes[nodePosition].parentNode !== "") {
+          delete $nodes[findNode($nodes[nodePosition].parentNode)].data
+            .children[node.id];
+        }
+        $nodes[nodePosition].parentNode = intersectedRef.id;
+        $nodes[parentNodeId].data.children[node.id] = nodePosition;
 
-      intersections.forEach((intersection) => {
-        $nodes[findNode(node.id)].parentNode = intersection;
-      });
-      $nodes = $nodes;
-      return;
-    }
-
-    const intersections = getIntersectingNodes(node)
-      .filter((n) => n.id != node.parentNode)
-      .map((n) => n.id);
-
-    intersections.forEach((intersection) => {
-      // find the type of the intersected node (not the dropped node)
-      const type = $nodes[findNode(intersection)].type;
-      if (type == "Project" && node.type != "Project") {
-        const parentNodeId = findNode(intersection);
-        // set the parent of the dropped node to the intersected node if that node is a project
-        $nodes[nodeId].parentNode = intersection;
-        // minus position of parent so that the position goes to where it is dropped
-        $nodes[nodeId].position = { x: $nodes[nodeId].position.x - $nodes[parentNodeId].position.x, y: $nodes[nodeId].position.y - $nodes[parentNodeId].position.y};
       }
-    });
+      // minus position of parent so that the position goes to where it is dropped
+      // $nodes[nodePosition].position = {
+      //   x: $nodes[nodePosition].position.x - $nodes[parentNodeId].position.x,
+      //   y: $nodes[nodePosition].position.y - $nodes[parentNodeId].position.y,
+      // };
+    }
+    $nodes.forEach((n) => (n.class = ""));
     $nodes = $nodes;
   }
 </script>
@@ -104,7 +136,7 @@
     on:drop={onDrop}
   >
     <Background bgColor="#0f161d" variant={BackgroundVariant.Cross} />
-    <Controls/>
+    <Controls />
     <!-- <MiniMap /> -->
   </SvelteFlow>
 </main>

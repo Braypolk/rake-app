@@ -32,12 +32,20 @@
     }
   }
 
-  async function onRestore() {
+  async function onRestore(resourceLocation: string) {
     try {
       //todo: will have to be changed when not using local storage
-      const response = await fetch(
-        "/api/flow?location=/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/test.json",
-      );
+      let response;
+      if (resourceLocation == "demo") {
+        response = await fetch(
+          "/api/flow?location=/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/demo.json",
+        );
+      }
+      else {
+        response = await fetch(
+          "/api/flow?location=/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/test.json",
+        );
+      }
 
       if (response.ok) {
         const res = await response.json();
@@ -169,35 +177,35 @@
     >
       Instance
     </div>
+    <!-- <div
+      class="firewall blob"
+      on:dragstart={(event) => onDragStart(event, "Firewall")}
+      draggable={true}
+    >
+      Firewall
+    </div>
     <div
-        class="firewall blob"
-        on:dragstart={(event) => onDragStart(event, "Firewall")}
-        draggable={true}
-        >
-            Firewall
-        </div>
+      class="instancegroup blob"
+      on:dragstart={(event) => onDragStart(event, "InstanceGroup")}
+      draggable={true}
+    >
+      InstanceGroup
+    </div>
     <div
-        class="instancegroup blob"
-        on:dragstart={(event) => onDragStart(event, "InstanceGroup")}
-        draggable={true}
-        >
-            InstanceGroup
-        </div>
+      class="router blob"
+      on:dragstart={(event) => onDragStart(event, "Router")}
+      draggable={true}
+    >
+      Router
+    </div>
     <div
-        class="router blob"
-        on:dragstart={(event) => onDragStart(event, "Router")}
-        draggable={true}
-        >
-            Router
-        </div>
-    <div
-        class="backendservice blob"
-        on:dragstart={(event) => onDragStart(event, "BackendService")}
-        draggable={true}
-        >
-            BackendService
-        </div>
-<!-- END OF NODES -->
+      class="backendservice blob"
+      on:dragstart={(event) => onDragStart(event, "BackendService")}
+      draggable={true}
+    >
+      BackendService
+    </div> -->
+    <!-- END OF NODES -->
   </div>
   <div class="flex flex-col">
     <button class="px-5 py-2 text-left" on:click={() => fitView()}
@@ -205,8 +213,14 @@
     >
     <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button>
     <button class="px-5 py-2 text-left" on:click={onSave}>Save</button>
-    <button class="px-5 py-2 text-left" on:click={onRestore}>Restore</button>
-    <button class="px-5 py-2 text-left" on:click={() => {$showContent = !$showContent}}>Content View</button>
+    <button class="px-5 py-2 text-left" on:click={() => onRestore("res")}>Restore</button>
+    <button class="px-5 py-2 text-left" on:click={() => onRestore("demo")}>Demo</button>
+    <button
+      class="px-5 py-2 text-left"
+      on:click={() => {
+        $showContent = !$showContent;
+      }}>Content View</button
+    >
   </div>
 </aside>
 

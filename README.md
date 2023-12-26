@@ -1,6 +1,6 @@
 # Everything to start
 - start rancher desktop
-- minikube start --extra-config "apiserver.cors-allowed-origins=["http://\*"]"
+- minikube start --extra-config "apiserver.cors-allowed-origins=["http://\*"]" --profile management --kubernetes-version=v1.28.4
 - kubectl proxy
 - (might have to gcloud auth application-default login)
 - yarn dev

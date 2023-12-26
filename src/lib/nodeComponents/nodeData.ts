@@ -1,11 +1,13 @@
 export let projectData = {
     name: "",
+    children: {},
     folderIdRef: "",
     status: "unsynced",
 }
 
 export let networkData = {
     name: "",
+    children: {},
     description: "",
     routingMode: "REGIONAL",
     status: "unsynced",
