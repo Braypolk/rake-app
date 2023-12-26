@@ -1,16 +1,17 @@
 export let projectData = {
     name: "",
+    children: {},
     folderIdRef: "",
     status: "unsynced",
 }
 
 export let networkData = {
     name: "",
+    children: {},
     description: "",
     routingMode: "REGIONAL",
     status: "unsynced",
 }
-
 
 export let subnetworkData = {
     name: "",
@@ -36,10 +37,90 @@ export let bucketData = {
     status: "unsynced",
 }
 
+export let firewallData = {
+    name: "",
+    allowed: "",
+    denied: "",
+    description: "",
+    destinationRanges: "",
+    direction: "",
+    disabled: false,
+    logConfig: "",
+    network: "",
+    networkRef: "",
+    networkSelector: "",
+    priority: "",
+    sourceRanges: "",
+    sourceServiceAccounts: "",
+    sourceTags: "",
+    targetServiceAccounts: "",
+    targetTags: "",
+};
+
+export let instancegroupData = {
+    name: "",
+    description: "",
+    instances: "",
+    namedPort: "",
+    network: "",
+    networkRef: "",
+    networkSelector: "",
+    project: "",
+    zone: "",
+};
+
+export let routerData = {
+  name: "",
+  bgp: "",
+  description: "",
+  encryptedInterconnectRouter: false,
+  network: "",
+  networkRef: "",
+  networkSelector: "",
+  project: "",
+  region: "",
+};
+
+export let backendserviceData = {
+  name: "",
+  affinityCookieTtlSec: "",
+  backend: "",
+  cdnPolicy: "",
+  circuitBreakers: "",
+  compressionMode: "",
+  connectionDrainingTimeoutSec: "",
+  consistentHash: "",
+  customRequestHeaders: "",
+  customResponseHeaders: "",
+  description: "",
+  edgeSecurityPolicy: "",
+  enableCdn: false,
+  healthChecks: "",
+  healthChecksRefs: "",
+  healthChecksSelector: "",
+  iap: "",
+  loadBalancingScheme: "",
+  localityLbPolicies: "",
+  localityLbPolicy: "",
+  logConfig: "",
+  outlierDetection: "",
+  portName: "",
+  project: "",
+  protocol: "",
+  securityPolicy: "",
+  securitySettings: "",
+  sessionAffinity: "",
+  timeoutSec: "",
+};
+
 export const nodeTypeToDataMap = {
     Project: projectData,
     Network: networkData,
     Subnetwork: subnetworkData,
     Instance: instanceData,
     Bucket: bucketData,
-  };
+    Firewall: firewallData,
+    InstanceGroup: instancegroupData,
+    Router: routerData,
+    BackendService: backendserviceData,
+};
