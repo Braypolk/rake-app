@@ -1,1 +1,125 @@
-{"nodes":[{"id":"70c1e8c40d731","type":"Project","data":{"name":"xr-mcp-bray-test","folderIdRef":"              ","status":"syncing"},"position":{"x":827.3763420211928,"y":457.6074375217561},"class":"bg-gray-200","computed":{"positionAbsolute":{"x":827.3763420211928,"y":457.6074375217561},"width":1515,"height":779},"selected":true,"dragging":false,"style":"width: 1515px; height: 779px;"},{"id":"6a05b149f3413","type":"Network","data":{"name":"test-network-thing2","description":"blah","routingMode":"REGIONAL","status":"synced"},"position":{"x":718.7621507188128,"y":16.249021691509597},"parentNode":"70c1e8c40d731","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1546.1384927400056,"y":473.8564592132657},"width":763,"height":338},"selected":false,"dragging":false,"style":"width: 763px; height: 338px;"},{"id":"3301c93253a93","type":"Network","data":{"name":"test-network-thing1","description":"some description","routingMode":"REGIONAL","status":"synced"},"position":{"x":192.239023172966,"y":15.56331227563635},"parentNode":"70c1e8c40d731","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1019.6153651941588,"y":473.17074979739243},"width":503,"height":337},"selected":false,"dragging":false,"style":"width: 503px; height: 337px;"},{"id":"90f313b91dae3","type":"Subnetwork","data":{"name":"test-subnet-thing2","ipCidrRange":"10.1.0.0/24","region":"us-central1","status":"synced"},"position":{"x":190.5601174520291,"y":38.19710517578608},"parentNode":"6a05b149f3413","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1736.6986101920347,"y":512.0535643890518},"width":196,"height":228},"selected":false,"dragging":false},{"id":"a4036dcb96e07","type":"Subnetwork","data":{"name":"test-subnet-thing3","ipCidrRange":"10.2.0.0/24","region":"us-central1","status":"synced"},"position":{"x":453.2061561040577,"y":35.36047750567343},"parentNode":"6a05b149f3413","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1999.3446488440634,"y":509.2169367189391},"width":196,"height":228},"selected":false,"dragging":false},{"id":"1ccaa6507584e","type":"Subnetwork","data":{"name":"test-subnet-thing1","ipCidrRange":"10.0.0.0/24","region":"us-central1","status":"synced"},"position":{"x":189.4803019114205,"y":21.53356852589718},"parentNode":"3301c93253a93","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1209.0956671055792,"y":494.7043183232896},"width":196,"height":228},"selected":false,"dragging":false},{"id":"b8cce67ccb44c","type":"Instance","data":{"name":"test-insance","subnetwork":"a4036dcb96e07","machineType":"e2-medium","bootDisk":"debian-cloud/debian-11","zone":"us-central1-a","status":"syncing"},"position":{"x":444.66856592013596,"y":378.084813288614},"parentNode":"70c1e8c40d731","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1272.0449079413288,"y":835.6922508103701},"width":149,"height":324},"selected":false,"dragging":false},{"id":"752a6a53be71a","type":"Bucket","data":{"name":"bray-bucket-of-tests","location":"US","publicState":false,"status":"synced"},"position":{"x":43.13251579702006,"y":420.271561567582},"parentNode":"70c1e8c40d731","class":"bg-gray-200","computed":{"positionAbsolute":{"x":870.5088578182128,"y":877.8789990893381},"width":149,"height":204},"selected":false,"dragging":false}],"edges":[],"viewport":{"x":-1177.327385723448,"y":-760.8328454685102,"zoom":1.1292847294782358}}
+{
+    "nodes": [
+        {
+            "id": "32aa3e8ea6e0d",
+            "type": "Project",
+            "data": {
+                "name": "",
+                "children": {
+                    "b3176595f4552": 2,
+                    "7ff093df37c7c": 4
+                },
+                "folderIdRef": "",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "parentNode": "",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 0,
+                    "y": 0
+                },
+                "width": 1095,
+                "height": 429
+            },
+            "style": "width: 1095px; height: 429px;",
+            "selected": false,
+            "class": "",
+            "dragging": false
+        },
+        {
+            "id": "e3038fdcaeb9f",
+            "type": "Project",
+            "data": {
+                "name": "",
+                "children": {
+                    "bdb5bac2bacd6": 2
+                },
+                "folderIdRef": "",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 50,
+                "y": 450
+            },
+            "parentNode": "",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 50,
+                    "y": 450
+                },
+                "width": 1096,
+                "height": 466
+            },
+            "selected": false,
+            "dragging": false,
+            "class": "",
+            "style": "width: 1096px; height: 466px;"
+        },
+        {
+            "id": "bdb5bac2bacd6",
+            "type": "Network",
+            "data": {
+                "name": "",
+                "children": {
+                    "5ebd3bb983955": 3
+                },
+                "description": "",
+                "routingMode": "REGIONAL",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 34.8791494058363,
+                "y": 37.50510461920896
+            },
+            "parentNode": "e3038fdcaeb9f",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 84.8791494058363,
+                    "y": 487.50510461920896
+                },
+                "width": 695,
+                "height": 308
+            },
+            "selected": true,
+            "dragging": false,
+            "class": "",
+            "style": "width: 695px; height: 308px;"
+        },
+        {
+            "id": "5ebd3bb983955",
+            "type": "Subnetwork",
+            "data": {
+                "name": "",
+                "ipCidrRange": "",
+                "region": "us-central1",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 200.7780456741765,
+                "y": 23.9002154035702
+            },
+            "parentNode": "bdb5bac2bacd6",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 285.6571950800128,
+                    "y": 511.40532002277916
+                },
+                "width": 202,
+                "height": 234
+            },
+            "selected": false,
+            "dragging": false,
+            "class": ""
+        }
+    ],
+    "edges": [],
+    "viewport": {
+        "x": 49.608971814212055,
+        "y": 25.409090909090963,
+        "zoom": 0.5547836443032949
+    }
+}

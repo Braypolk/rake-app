@@ -85,7 +85,7 @@
     // change all status to syncing
     $nodes = $nodes.map((node) => ({
       ...node,
-      data: { ...node.data, status: "deployed" },
+      data: { ...node.data, status: "deploying" },
     }));
 
     const resources = $nodes.map((node) => {

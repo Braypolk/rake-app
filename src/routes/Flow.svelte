@@ -91,9 +91,9 @@
   }
 
   function onNodeDragStop({ detail: { node, event } }) {
-    const nodePosition = findNode(node.id);
-
+    const nodeArrayPosition = findNode(node.id);
     if (intersectedRef) {
+      let originalParentPositionAbs = {x: 0, y: 0};
       // assign parent to node
       const parentNodeId = findNode(intersectedRef.id);
       if (
@@ -101,19 +101,21 @@
         (intersectedRef.type == "Network" && node.type == "Subnetwork")
       ) {
         // if a node has a parent already, remove the node (data.child) from the parent
-        if ($nodes[nodePosition].parentNode !== "") {
-          delete $nodes[findNode($nodes[nodePosition].parentNode)].data
-            .children[node.id];
+        if ($nodes[nodeArrayPosition].parentNode !== "") {
+          const originalParent =
+            $nodes[findNode($nodes[nodeArrayPosition].parentNode)];
+          originalParentPositionAbs =
+            originalParent.computed?.positionAbsolute;
+          delete originalParent.data.children[node.id];
         }
-        $nodes[nodePosition].parentNode = intersectedRef.id;
-        $nodes[parentNodeId].data.children[node.id] = nodePosition;
-
+        $nodes[nodeArrayPosition].parentNode = intersectedRef.id;
+        $nodes[parentNodeId].data.children[node.id] = nodeArrayPosition;
       }
-      // minus position of parent so that the position goes to where it is dropped
-      // $nodes[nodePosition].position = {
-      //   x: $nodes[nodePosition].position.x - $nodes[parentNodeId].position.x,
-      //   y: $nodes[nodePosition].position.y - $nodes[parentNodeId].position.y,
-      // };
+
+      $nodes[nodeArrayPosition].position = {
+        x: $nodes[nodeArrayPosition].position.x + (originalParentPositionAbs.x - $nodes[parentNodeId].computed.positionAbsolute.x),
+        y: $nodes[nodeArrayPosition].position.y + (originalParentPositionAbs.y - $nodes[parentNodeId].computed.positionAbsolute.y),
+      }
     }
     $nodes.forEach((n) => (n.class = ""));
     $nodes = $nodes;
