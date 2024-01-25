@@ -40,8 +40,7 @@
         response = await fetch(
           "/api/flow?location=/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/demo.json",
         );
-      }
-      else {
+      } else {
         response = await fetch(
           "/api/flow?location=/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/test.json",
         );
@@ -83,9 +82,13 @@
 
   const deploy = async () => {
     // change all status to syncing
+    // TODO: should probably change to be only changing status to items that have been added or changed
     $nodes = $nodes.map((node) => ({
       ...node,
-      data: { ...node.data, status: "deploying" },
+      data: {
+        ...node.data,
+        status: node.data.status == "pendingDelete" ? "deleting" : "deploying",
+      },
     }));
 
     const resources = $nodes.map((node) => {
@@ -104,14 +107,18 @@
 
   async function runPythonFile(resources) {
     try {
-      console.log(resources);
+      console.log("before prune", resources);
+      let filteredResources = resources.filter(
+        (resource) => resource.data.status !== "deleting",
+      );
+      console.log("after prune", filteredResources);
 
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify(resources),
+        body: JSON.stringify(filteredResources),
       });
 
       if (response.ok) {
@@ -143,35 +150,35 @@
   <div class="components flex items-center justify-center">
     <!-- TODO: eventually this group will be a project node -->
     <div
-      class="project blob"
+      class="projectDrag blob"
       on:dragstart={(event) => onDragStart(event, "Project")}
       draggable={true}
     >
       Project
     </div>
     <div
-      class="bucket blob"
+      class="bucketDrag blob"
       on:dragstart={(event) => onDragStart(event, "Bucket")}
       draggable={true}
     >
       Bucket
     </div>
     <div
-      class="network blob"
+      class="networkDrag blob"
       on:dragstart={(event) => onDragStart(event, "Network")}
       draggable={true}
     >
       Network
     </div>
     <div
-      class="subnetwork blob"
+      class="subnetworkDrag blob"
       on:dragstart={(event) => onDragStart(event, "Subnetwork")}
       draggable={true}
     >
       Subnetwork
     </div>
     <div
-      class="instance blob"
+      class="instanceDrag blob"
       on:dragstart={(event) => onDragStart(event, "Instance")}
       draggable={true}
     >
@@ -213,8 +220,12 @@
     >
     <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button>
     <button class="px-5 py-2 text-left" on:click={onSave}>Save</button>
-    <button class="px-5 py-2 text-left" on:click={() => onRestore("res")}>Restore</button>
-    <button class="px-5 py-2 text-left" on:click={() => onRestore("demo")}>Demo</button>
+    <button class="px-5 py-2 text-left" on:click={() => onRestore("res")}
+      >Restore</button
+    >
+    <button class="px-5 py-2 text-left" on:click={() => onRestore("demo")}
+      >Demo</button
+    >
     <button
       class="px-5 py-2 text-left"
       on:click={() => {

@@ -7,7 +7,7 @@
 </script>
 
 <CustomHandle type="target" />
-<NodeTemplate type="Instance" provider="compute" {data}>
+<NodeTemplate type="Instance" provider="compute" id={data.id}>
   <label for="instance-name">Name</label>
   <input
     id="instance-name"
@@ -73,10 +73,4 @@
 </NodeTemplate>
 <CustomHandle type="source" />
 
-<style>
-  :global(.svelte-flow__node-Instance) {
-    background-color: rgba(255, 152, 50, 0.712);
-    border: 3px solid rgb(160, 160, 160);
-    border-radius: 1rem;
-  }
-</style>
+

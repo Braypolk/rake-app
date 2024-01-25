@@ -51,14 +51,16 @@ function findNode(id: string) {
   return get(nodes).findIndex(n => n.id === id)
 }
 
-function newNode(data: Object, pos: XYPosition, type: string) {
+function newNode(data: Object, pos: XYPosition, type: string, nodeClass: string) {
+  const newId = incrementid();
+  data["id"] = newId;
   addNodes([{
-    id: incrementid(),
+    id: newId,
     type: type,
     data: data,
     position: pos,
     parentNode: "",
-    // class: "bg-gray-200",
+    class: nodeClass,
     // set the origin of the new node so it is centered
     // origin: [0.5, 0.5],
   }]);

@@ -4,7 +4,7 @@
     export let data = backendserviceData;
 </script>
 
-<NodeTemplate type="BackendService" provider="compute" data={data}>
+<NodeTemplate type="BackendService" provider="compute" id={data.id}>
 
     <div class="property">
       <span class="property-affinityCookieTtlSec">affinityCookieTtlSec</span>

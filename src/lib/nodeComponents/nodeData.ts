@@ -1,11 +1,13 @@
 export let projectData = {
+    id: "",
     name: "",
     children: {},
-    folderIdRef: "",
+    folderId: "",
     status: "unsynced",
 }
 
 export let networkData = {
+    id: "",
     name: "",
     children: {},
     description: "",
@@ -14,6 +16,7 @@ export let networkData = {
 }
 
 export let subnetworkData = {
+    id: "",
     name: "",
     ipCidrRange: "",
     region: "us-central1",
@@ -21,6 +24,7 @@ export let subnetworkData = {
 }
 
 export let instanceData = {
+    id: "",
     name: "",
     subnetwork: "", // TOOD: get subnetwork id from existing networks
     machineType: "e2-medium",
@@ -30,6 +34,7 @@ export let instanceData = {
 }
 
 export let bucketData = {
+    id: "",
     name: "",
     location: "US",
     publicState: false,
@@ -38,6 +43,7 @@ export let bucketData = {
 }
 
 export let firewallData = {
+    id: "",
     name: "",
     allowed: "",
     denied: "",
@@ -58,6 +64,7 @@ export let firewallData = {
 };
 
 export let instancegroupData = {
+    id: "",
     name: "",
     description: "",
     instances: "",
@@ -70,47 +77,49 @@ export let instancegroupData = {
 };
 
 export let routerData = {
-  name: "",
-  bgp: "",
-  description: "",
-  encryptedInterconnectRouter: false,
-  network: "",
-  networkRef: "",
-  networkSelector: "",
-  project: "",
-  region: "",
+    id: "",
+    name: "",
+    bgp: "",
+    description: "",
+    encryptedInterconnectRouter: false,
+    network: "",
+    networkRef: "",
+    networkSelector: "",
+    project: "",
+    region: "",
 };
 
 export let backendserviceData = {
-  name: "",
-  affinityCookieTtlSec: "",
-  backend: "",
-  cdnPolicy: "",
-  circuitBreakers: "",
-  compressionMode: "",
-  connectionDrainingTimeoutSec: "",
-  consistentHash: "",
-  customRequestHeaders: "",
-  customResponseHeaders: "",
-  description: "",
-  edgeSecurityPolicy: "",
-  enableCdn: false,
-  healthChecks: "",
-  healthChecksRefs: "",
-  healthChecksSelector: "",
-  iap: "",
-  loadBalancingScheme: "",
-  localityLbPolicies: "",
-  localityLbPolicy: "",
-  logConfig: "",
-  outlierDetection: "",
-  portName: "",
-  project: "",
-  protocol: "",
-  securityPolicy: "",
-  securitySettings: "",
-  sessionAffinity: "",
-  timeoutSec: "",
+    id: "",
+    name: "",
+    affinityCookieTtlSec: "",
+    backend: "",
+    cdnPolicy: "",
+    circuitBreakers: "",
+    compressionMode: "",
+    connectionDrainingTimeoutSec: "",
+    consistentHash: "",
+    customRequestHeaders: "",
+    customResponseHeaders: "",
+    description: "",
+    edgeSecurityPolicy: "",
+    enableCdn: false,
+    healthChecks: "",
+    healthChecksRefs: "",
+    healthChecksSelector: "",
+    iap: "",
+    loadBalancingScheme: "",
+    localityLbPolicies: "",
+    localityLbPolicy: "",
+    logConfig: "",
+    outlierDetection: "",
+    portName: "",
+    project: "",
+    protocol: "",
+    securityPolicy: "",
+    securitySettings: "",
+    sessionAffinity: "",
+    timeoutSec: "",
 };
 
 export const nodeTypeToDataMap = {
@@ -124,3 +133,15 @@ export const nodeTypeToDataMap = {
     Router: routerData,
     BackendService: backendserviceData,
 };
+
+export const nodeClassToDataMap = {
+    project: "project",
+    network: "network",
+    subnetwork: "subnetwork",
+    instance: "instance",
+    bucket: "bucket",
+    firewall: "firewall",
+    instancegroup: "instancegroup",
+    router: "router",
+    backendservice: "backendservice",
+}

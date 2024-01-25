@@ -57,7 +57,7 @@
 
 <div style="height: 100vh;">
 	<SvelteFlow {nodes} {edges} {nodeTypes} fitView>
-		<Background />
+		<Background bgColor="#0f161d"/>
 		<SelectedNodesToolbar />
 	</SvelteFlow>
 </div>

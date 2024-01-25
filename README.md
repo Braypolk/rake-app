@@ -3,7 +3,7 @@
 - minikube start --extra-config "apiserver.cors-allowed-origins=["http://\*"]" --profile management --kubernetes-version=v1.28.4
 - kubectl proxy
 - (might have to gcloud auth application-default login)
-- yarn dev
+- pn dev
 
 easy view cluster resources with k9s
 

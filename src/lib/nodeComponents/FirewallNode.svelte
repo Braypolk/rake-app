@@ -4,7 +4,7 @@
     export let data = firewallData;
 </script>
 
-<NodeTemplate type="Firewall" provider="compute" data={data}>
+<NodeTemplate type="Firewall" provider="compute" id={data.id}>
 
     <div class="property">
       <span class="property-allowed">allowed</span>

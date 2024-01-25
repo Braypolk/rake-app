@@ -4,7 +4,7 @@
     export let data = routerData;
 </script>
 
-<NodeTemplate type="Router" provider="compute" data={data}>
+<NodeTemplate type="Router" provider="compute" id={data.id}>
 
     <div class="property">
       <span class="property-bgp">bgp</span>

@@ -4,7 +4,7 @@
   export let data = bucketData;
 </script>
 
-<NodeTemplate type="Bucket" provider="storage" {data}>
+<NodeTemplate type="Bucket" provider="storage" id={data.id}>
   <label for="bucket-name">Name</label>
   <input
     id="bucket-name"

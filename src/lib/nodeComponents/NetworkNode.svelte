@@ -4,7 +4,7 @@
   export let data = networkData;
 </script>
 
-<NodeTemplate type="Network" provider="compute" {data}>
+<NodeTemplate type="Network" provider="compute" id={data.id}>
   <label for="network-name">Name</label>
   <input
     id="network-name"

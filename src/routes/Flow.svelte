@@ -5,10 +5,12 @@
     Background,
     BackgroundVariant,
     useSvelteFlow,
+    type Node,
+    type Edge,
   } from "@xyflow/svelte";
   import Sidebar from "./Sidebar.svelte";
   import { nodes, edges, findNode, newNode } from "$lib/nodes-edges";
-  import { nodeTypeToDataMap } from "$lib/nodeComponents/nodeData";
+  import { nodeTypeToDataMap, nodeClassToDataMap } from "$lib/nodeComponents/nodeData";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
 
@@ -33,9 +35,10 @@
     const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
     const type = event.dataTransfer.getData("application/svelteflow");
     const data = nodeTypeToDataMap[type];
+    const nodeClass = nodeClassToDataMap[type];
 
     if (data) {
-      newNode(data, pos, type);
+      newNode(data, pos, type, nodeClass);
     } else {
       console.log("unknown type");
     }
@@ -62,13 +65,16 @@
       }
     });
 
+    // console.log(intersections);
+    
+
     if (node.type === "Project") {
       intersectedRef = intersections.findLast((n) => {
         if (n !== undefined) {
           return n.type == "Folder" ? n : null;
         }
       });
-    } else if (node.type === "Network") {
+    } else if (node.type === "Network" || node.type === "Instance") {
       intersectedRef = intersections.findLast((n) => {
         if (n !== undefined) {
           return n.type === "Project" ? n : null;
@@ -82,9 +88,11 @@
       });
     }
 
-    $nodes.forEach((n) => (n.class = ""));
-    if (intersectedRef && intersectedRef.id !== node.parentNode) {
+    $nodes.forEach((n) => (n.class = n.class?.replace(/\bhighlight\b/, '').trim()));
+    if (intersectedRef && intersectedRef.id !== node.parentNode) {  
+      console.log("classes", intersectedRef.class)    
       intersectedRef.class = "highlight";
+      console.log("classes", intersectedRef.class)    
     }
 
     $nodes = $nodes;
@@ -93,7 +101,7 @@
   function onNodeDragStop({ detail: { node, event } }) {
     const nodeArrayPosition = findNode(node.id);
     if (intersectedRef) {
-      let originalParentPositionAbs = {x: 0, y: 0};
+      let originalParentPositionAbs = { x: 0, y: 0 };
       // assign parent to node
       const parentNodeId = findNode(intersectedRef.id);
       if (
@@ -104,8 +112,7 @@
         if ($nodes[nodeArrayPosition].parentNode !== "") {
           const originalParent =
             $nodes[findNode($nodes[nodeArrayPosition].parentNode)];
-          originalParentPositionAbs =
-            originalParent.computed?.positionAbsolute;
+          originalParentPositionAbs = originalParent.computed?.positionAbsolute;
           delete originalParent.data.children[node.id];
         }
         $nodes[nodeArrayPosition].parentNode = intersectedRef.id;
@@ -113,14 +120,54 @@
       }
 
       $nodes[nodeArrayPosition].position = {
-        x: $nodes[nodeArrayPosition].position.x + (originalParentPositionAbs.x - $nodes[parentNodeId].computed.positionAbsolute.x),
-        y: $nodes[nodeArrayPosition].position.y + (originalParentPositionAbs.y - $nodes[parentNodeId].computed.positionAbsolute.y),
-      }
+        x:
+          $nodes[nodeArrayPosition].position.x +
+          (originalParentPositionAbs.x -
+            $nodes[parentNodeId].computed.positionAbsolute.x),
+        y:
+          $nodes[nodeArrayPosition].position.y +
+          (originalParentPositionAbs.y -
+            $nodes[parentNodeId].computed.positionAbsolute.y),
+      };
     }
-    $nodes.forEach((n) => (n.class = ""));
+    $nodes.forEach((n) => (n.class = n.class?.replace(/\bhighlight\b/, '').trim()));
     $nodes = $nodes;
   }
+
+  // TODO: still need to process edges, currently only looking at nodes
+  async function onBeforeDelete(e: { nodes: Node[]; edges: Edge[] }) {
+    console.log(e);
+
+    let del = {
+      nodes: [] as Node[],
+      edges: [] as Edge[],
+    };
+    e.nodes.forEach((n) => {
+      if (n.data.status === "unsynced") {
+        del.nodes.push(n);
+      } else if (n.data.status === "synced") {
+        console.log("change to pendingDelete");
+        n.data.status = "pendingDelete";
+        n.class = "pendingDelete";
+      } else {
+        // todo: have some error that tells user that the resources is currently being processed
+        console.log("Resource is currently being processed");
+      }
+    });
+    $nodes = $nodes;
+    console.log($nodes);
+
+    return del;
+  }
 </script>
+
+<!-- <svelte:window
+  on:keydown|preventDefault={(e) => {
+    if (e.key == "Backspace" || e.key == "Delete") {
+      console.log(e.key);
+    }
+  }}
+/> -->
 
 <main>
   <Sidebar />
@@ -132,6 +179,7 @@
     minZoom={0.2}
     maxZoom={4}
     proOptions={{ hideAttribution: true }}
+    onbeforedelete={(e) => onBeforeDelete(e)}
     on:dragover={onDragOver}
     on:nodedrag={onNodeDrag}
     on:nodedragstop={onNodeDragStop}

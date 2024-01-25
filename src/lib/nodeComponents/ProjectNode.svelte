@@ -5,7 +5,7 @@
 </script>
 
 <!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
-<NodeTemplate type="Project" provider="cloudplatform" {data}>
+<NodeTemplate type="Project" provider="cloudplatform" id={data.id}>
   <label for="project-name">Name</label>
   <input
     id="project-name"
@@ -25,9 +25,9 @@
     id="folder-name"
     class="nodrag"
     on:input={(evt) => {
-      data.folderIdRef = evt.target?.value;
+      data.folderId = evt.target?.value;
     }}
-    value={data.folderIdRef}
+    value={data.folderId}
     on:keydown={(evt) => {
       if (evt.key === "Delete" || evt.key === "Backspace") {
         evt.stopPropagation();

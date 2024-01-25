@@ -7,7 +7,7 @@
 </script>
 
 <CustomHandle type="target"/>
-<NodeTemplate type="Subnetwork" provider="compute" {data}>
+<NodeTemplate type="Subnetwork" provider="compute" id={data.id}>
   <label for="subnetwork-name">Name</label>
   <input
     id="subnetwork-name"

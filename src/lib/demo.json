@@ -1,1 +1,152 @@
-{"nodes":[{"id":"70c1e8c40d731","type":"Project","data":{"zoomLevel":0.5,"name":"xr-mcp-bray-test","folderIdRef":"              ","status":"deploying"},"position":{"x":753.0206681522254,"y":886.6809631743199},"computed":{"positionAbsolute":{"x":753.0206681522254,"y":886.6809631743199},"width":1515,"height":779},"selected":true,"dragging":false,"style":"width: 1515px; height: 779px;","class":""},{"id":"fc268520f83d7","type":"Network","data":{"name":"test-network-thing2","description":"thing","routingMode":"REGIONAL","status":"unsynced"},"position":{"x":260.7111044429778,"y":16.07210003471323},"parentNode":"70c1e8c40d731","computed":{"positionAbsolute":{"x":1013.7317725952032,"y":902.7530632090331},"width":627,"height":463},"selected":false,"dragging":false,"class":"","style":"width: 627px; height: 463px;"},{"id":"2e84509d45af7","type":"Subnetwork","data":{"name":"test-subnet-thing2","ipCidrRange":"10.1.0.0/24","region":"us-central1","status":"unsynced"},"position":{"x":245.16862199315005,"y":119.59566407539455},"parentNode":"fc268520f83d7","computed":{"positionAbsolute":{"x":1258.9003945883533,"y":1022.3487272844277},"width":202,"height":234},"selected":false,"dragging":false,"class":""},{"id":"f0600828efc4a","type":"Instance","data":{"name":"my-instance1","subnetwork":"2e84509d45af7","machineType":"e2-medium","bootDisk":"debian-cloud/debian-11","zone":"us-central1-a","status":"unsynced"},"position":{"x":1036.9300263933283,"y":96.38513736493155},"parentNode":"70c1e8c40d731","computed":{"positionAbsolute":{"x":1789.9506945455537,"y":983.0661005392515},"width":155,"height":282},"selected":false,"dragging":false,"class":""},{"id":"3904274be23ed","type":"Bucket","data":{"name":"some-bray-bucket-test","location":"US","publicState":false,"status":"unsynced"},"position":{"x":247.29226493938336,"y":518.9602899434149},"parentNode":"70c1e8c40d731","computed":{"positionAbsolute":{"x":1000.3129330916088,"y":1405.6412531177348},"width":155,"height":210},"selected":false,"dragging":false,"class":""}],"edges":[{"source":"2e84509d45af7","sourceHandle":"dd13bf360dcf8","target":"f0600828efc4a","targetHandle":"86f98c9f3b8ee","id":"xyflow__edge-2e84509d45af7dd13bf360dcf8-f0600828efc4a86f98c9f3b8ee","selected":false}],"viewport":{"x":-311.06153605366967,"y":-376.73960100361035,"zoom":0.5464161027017578}}
+{
+    "nodes": [
+        {
+            "id": "70c1e8c40d731",
+            "type": "Project",
+            "data": {
+                "zoomLevel": 0.5,
+                "name": "xr-mcp-bray-test",
+                "folderId": "              ",
+                "status": "deploying"
+            },
+            "position": {
+                "x": 753.0206681522254,
+                "y": 886.6809631743199
+            },
+            "computed": {
+                "positionAbsolute": {
+                    "x": 753.0206681522254,
+                    "y": 886.6809631743199
+                },
+                "width": 1515,
+                "height": 779
+            },
+            "selected": true,
+            "dragging": false,
+            "style": "width: 1515px; height: 779px;",
+            "class": ""
+        },
+        {
+            "id": "fc268520f83d7",
+            "type": "Network",
+            "data": {
+                "name": "test-network-thing2",
+                "description": "thing",
+                "routingMode": "REGIONAL",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 260.7111044429778,
+                "y": 16.07210003471323
+            },
+            "parentNode": "70c1e8c40d731",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 1013.7317725952032,
+                    "y": 902.7530632090331
+                },
+                "width": 627,
+                "height": 463
+            },
+            "selected": false,
+            "dragging": false,
+            "class": "",
+            "style": "width: 627px; height: 463px;"
+        },
+        {
+            "id": "2e84509d45af7",
+            "type": "Subnetwork",
+            "data": {
+                "name": "test-subnet-thing2",
+                "ipCidrRange": "10.1.0.0/24",
+                "region": "us-central1",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 245.16862199315005,
+                "y": 119.59566407539455
+            },
+            "parentNode": "fc268520f83d7",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 1258.9003945883533,
+                    "y": 1022.3487272844277
+                },
+                "width": 202,
+                "height": 234
+            },
+            "selected": false,
+            "dragging": false,
+            "class": ""
+        },
+        {
+            "id": "f0600828efc4a",
+            "type": "Instance",
+            "data": {
+                "name": "my-instance1",
+                "subnetwork": "2e84509d45af7",
+                "machineType": "e2-medium",
+                "bootDisk": "debian-cloud/debian-11",
+                "zone": "us-central1-a",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 1036.9300263933283,
+                "y": 96.38513736493155
+            },
+            "parentNode": "70c1e8c40d731",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 1789.9506945455537,
+                    "y": 983.0661005392515
+                },
+                "width": 155,
+                "height": 282
+            },
+            "selected": false,
+            "dragging": false,
+            "class": ""
+        },
+        {
+            "id": "3904274be23ed",
+            "type": "Bucket",
+            "data": {
+                "name": "some-bray-bucket-test",
+                "location": "US",
+                "publicState": false,
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 247.29226493938336,
+                "y": 518.9602899434149
+            },
+            "parentNode": "70c1e8c40d731",
+            "computed": {
+                "positionAbsolute": {
+                    "x": 1000.3129330916088,
+                    "y": 1405.6412531177348
+                },
+                "width": 155,
+                "height": 210
+            },
+            "selected": false,
+            "dragging": false,
+            "class": ""
+        }
+    ],
+    "edges": [
+        {
+            "source": "2e84509d45af7",
+            "sourceHandle": "dd13bf360dcf8",
+            "target": "f0600828efc4a",
+            "targetHandle": "86f98c9f3b8ee",
+            "id": "xyflow__edge-2e84509d45af7dd13bf360dcf8-f0600828efc4a86f98c9f3b8ee",
+            "selected": false
+        }
+    ],
+    "viewport": {
+        "x": -311.06153605366967,
+        "y": -376.73960100361035,
+        "zoom": 0.5464161027017578
+    }
+}

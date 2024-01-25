@@ -4,7 +4,7 @@
     export let data = instancegroupData;
 </script>
 
-<NodeTemplate type="InstanceGroup" provider="compute" data={data}>
+<NodeTemplate type="InstanceGroup" provider="compute" id={data.id}>
 
     <div class="property">
       <span class="property-description">description</span>

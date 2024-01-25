@@ -9,8 +9,8 @@ dependencies:
     specifier: ^20.0.2
     version: 20.0.2
   '@xyflow/svelte':
-    specifier: ^0.0.28
-    version: 0.0.28(svelte@4.2.1)
+    specifier: ^0.0.34
+    version: 0.0.34(svelte@4.2.1)
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
@@ -502,8 +502,8 @@ packages:
       tailwindcss: 3.3.3
     dev: true
 
-  /@svelte-put/shortcut@3.0.0:
-    resolution: {integrity: sha512-nZg3pwpTi9wUsvQPlqOzEsxZcF2jmY5j+VBq/20IUjjd2OpM92XqZAga0PCCjE6OuEobOt58UMnC2QZgOvk0tQ==}
+  /@svelte-put/shortcut@3.1.0:
+    resolution: {integrity: sha512-EWMEDkZ0+O3yMhb9yrqe5UYisV9CNRKX6Pl/JW3x62t74CiN+3COu1L9NzZUG0omagc2Z3J14PZNYxs77IC9NA==}
     dev: false
 
   /@sveltejs/adapter-auto@2.1.0(@sveltejs/kit@1.25.2):
@@ -783,19 +783,19 @@ packages:
     resolution: {integrity: sha512-I469DU0UXNC1aHepwirWhu9YKg5fkxohZD95Ey/5A7lovC+Siu+MCLffva87lnfThaOrw9Vb1DUN5t55oULAAw==}
     dev: true
 
-  /@xyflow/svelte@0.0.28(svelte@4.2.1):
-    resolution: {integrity: sha512-8mCyjorsHFPnfFvTNhoCs/Cvyyk2v8IZnFqw2zJMBMdL87OD/hMxDY/zbImL6M43paojQzJFb//Rl0aWoJaBxA==}
+  /@xyflow/svelte@0.0.34(svelte@4.2.1):
+    resolution: {integrity: sha512-3uo9V06BOVoSp0Yrpe48j6m12llRGqjE3KXhkU8m4Kn6dVlWBVnEbmLUKU9CLjfhjZei1C9sy5PbL5YzbZ4ymQ==}
     peerDependencies:
       svelte: ^3.0.0 || ^4.0.0
     dependencies:
-      '@svelte-put/shortcut': 3.0.0
-      '@xyflow/system': 0.0.11
+      '@svelte-put/shortcut': 3.1.0
+      '@xyflow/system': 0.0.15
       classcat: 5.0.4
       svelte: 4.2.1
     dev: false
 
-  /@xyflow/system@0.0.11:
-    resolution: {integrity: sha512-QllVEdguVfRHonf1kuiHTt4nwDuISF7AXY47h2mjSG+99GrRxoUBHfhEiKq9vdJMuZJOCUCtrgLuxDezgw/R3w==}
+  /@xyflow/system@0.0.15:
+    resolution: {integrity: sha512-TD3+lm4H1CtDgzooDv9K8izG49RzfpMklIyiQ84ftF3HgwhjPY8oR8pf0L7f6i+sTeCyIL1V+P4kM1GJc0ZN3w==}
     dependencies:
       '@types/d3': 7.4.3
       '@types/d3-drag': 3.0.7

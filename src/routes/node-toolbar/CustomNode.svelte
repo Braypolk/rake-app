@@ -26,6 +26,6 @@
 		width: 180px;
 		height: 50px;
 		border: solid 1px black;
-		background: white;
+		background: gray;
 	}
 </style>
