@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { NodeProps } from "@xyflow/svelte";
-  import { useSvelteFlow } from "@xyflow/svelte";
+  import { useSvelteFlow, NodeResizer } from "@xyflow/svelte";
   import { onMount, onDestroy } from "svelte";
   import { findNode, nodes, showContent } from "$lib/nodes-edges";
 
@@ -15,7 +15,6 @@
   export let type = "";
   $: typelower = type.toLowerCase();
 
-  // export let data: $$Props["data"];
   export let provider = "";
   export let id: string;
 
@@ -24,8 +23,6 @@
   $: data = node.data;
   $: status = data.status;
 
-  // var for moveable
-  let targetRef = null;
   let intervalId: any;
 
   // todo: this is duplicated from the sidebar. maybe try to not have it be the exact same code
@@ -109,9 +106,8 @@
     clearInterval(intervalId);
   });
 </script>
-
-<!-- bind and height in style are for moveable and should be deleted once resize is released -->
-<div class={` node`} bind:this={targetRef} style={`height: inherit;`}>
+<NodeResizer minWidth={100} minHeight={30}/>
+<div class={` node`}>
   <div class="flex flex-wrap justify-between">
     <h1 class="text-lg">{type}</h1>
     {#if status == "unsynced"}
@@ -278,24 +274,6 @@
     </div>
   {/if}
 </div>
-
-<!-- remove once resize is released -->
-<Moveable
-  target={targetRef}
-  resizable={true}
-  keepRatio={false}
-  origin={false}
-  throttleResize={1}
-  renderDirections={["se"]}
-  on:resize={({ detail: e }) => {
-    $nodes[findNode(e.target.parentNode.getAttribute("data-id"))].style =
-      `width: ${e.target.style.width}; height: ${e.target.style.height};`;
-
-    e.target.style.width = `${e.width}px`;
-    e.target.style.height = `${e.height}px`;
-    e.target.style.transform = e.drag.transform;
-  }}
-/>
 
 <style>
   .placeholder {
