@@ -7,12 +7,18 @@
     useSvelteFlow,
     type Node,
     type Edge,
+    MiniMap,
   } from "@xyflow/svelte";
-  import Sidebar from "./Sidebar.svelte";
+  import LeftSidebar from "$lib/LeftSidebar.svelte";
+  import Header from "$lib/Header.svelte";
   import { nodes, edges, findNode, newNode } from "$lib/nodes-edges";
-  import { nodeTypeToDataMap, nodeClassToDataMap } from "$lib/nodeComponents/nodeData";
+  import {
+    nodeTypeToDataMap,
+    nodeClassToDataMap,
+  } from "$lib/nodeComponents/nodeData";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
+  import { AppShell } from "@skeletonlabs/skeleton";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
   let intersectedRef: Node;
@@ -66,7 +72,6 @@
     });
 
     // console.log(intersections);
-    
 
     if (node.type === "Project") {
       intersectedRef = intersections.findLast((n) => {
@@ -88,11 +93,13 @@
       });
     }
 
-    $nodes.forEach((n) => (n.class = n.class?.replace(/\bhighlight\b/, '').trim()));
-    if (intersectedRef && intersectedRef.id !== node.parentNode) {  
-      console.log("classes", intersectedRef.class)    
+    $nodes.forEach(
+      (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
+    );
+    if (intersectedRef && intersectedRef.id !== node.parentNode) {
+      console.log("classes", intersectedRef.class);
       intersectedRef.class = "highlight";
-      console.log("classes", intersectedRef.class)    
+      console.log("classes", intersectedRef.class);
     }
 
     $nodes = $nodes;
@@ -130,7 +137,9 @@
             $nodes[parentNodeId].computed.positionAbsolute.y),
       };
     }
-    $nodes.forEach((n) => (n.class = n.class?.replace(/\bhighlight\b/, '').trim()));
+    $nodes.forEach(
+      (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
+    );
     $nodes = $nodes;
   }
 
@@ -161,43 +170,30 @@
   }
 </script>
 
-<!-- <svelte:window
-  on:keydown|preventDefault={(e) => {
-    if (e.key == "Backspace" || e.key == "Delete") {
-      console.log(e.key);
-    }
-  }}
-/> -->
+<LeftSidebar />
+<AppShell class="z-40 min-h-screen">
+  <svelte:fragment slot="header">
+    <Header />
+  </svelte:fragment>
 
-<main>
-  <Sidebar />
-  <SvelteFlow
-    class="text-on-primary-token"
-    {nodeTypes}
-    {nodes}
-    {edges}
-    minZoom={0.2}
-    maxZoom={4}
-    proOptions={{ hideAttribution: true }}
-    onbeforedelete={(e) => onBeforeDelete(e)}
-    on:dragover={onDragOver}
-    on:nodedrag={onNodeDrag}
-    on:nodedragstop={onNodeDragStop}
-    on:drop={onDrop}
-  >
-    <Background bgColor="#0f161d" variant={BackgroundVariant.Cross} />
-    <Controls />
-    <!-- <MiniMap /> -->
-  </SvelteFlow>
-</main>
-
-<style>
-  main {
-    padding: 0;
-    margin: 0;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-</style>
+  <main class="h-90 p-0 m-0 w-full h-full flex flex-col">
+    <SvelteFlow
+      class="text-on-primary-token"
+      {nodeTypes}
+      {nodes}
+      {edges}
+      minZoom={0.2}
+      maxZoom={4}
+      proOptions={{ hideAttribution: true }}
+      onbeforedelete={(e) => onBeforeDelete(e)}
+      on:dragover={onDragOver}
+      on:nodedrag={onNodeDrag}
+      on:nodedragstop={onNodeDragStop}
+      on:drop={onDrop}
+    >
+      <Background bgColor="#0f161d" variant={BackgroundVariant.Cross} />
+      <Controls />
+      <!-- <MiniMap /> -->
+    </SvelteFlow>
+  </main>
+</AppShell>

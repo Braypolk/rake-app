@@ -1,6 +1,5 @@
 <script>
   import { SvelteFlowProvider } from "@xyflow/svelte";
-
   import Flow from "./Flow.svelte";
 </script>
 

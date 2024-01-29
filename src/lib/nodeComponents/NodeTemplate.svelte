@@ -22,6 +22,7 @@
   $: node = $nodes[findNode(id)];
   $: data = node.data;
   $: status = data.status;
+  $: selected = node.selected
 
   let intervalId: any;
 
@@ -106,7 +107,7 @@
     clearInterval(intervalId);
   });
 </script>
-<NodeResizer minWidth={100} minHeight={30}/>
+<NodeResizer minWidth={100} minHeight={30} isVisible={selected} color="#ff0000"/>
 <div class={` node`}>
   <div class="flex flex-wrap justify-between">
     <h1 class="text-lg">{type}</h1>

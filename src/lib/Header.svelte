@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { useSvelteFlow } from "@xyflow/svelte";
   import { onMount } from "svelte";
   import { nodes, edges, showContent, sortNodes } from "$lib/nodes-edges";
-
+  import { useSvelteFlow } from "@xyflow/svelte";
+  import { drawerOpen } from "$lib/nodes-edges";
   const { toObject, fitView, setViewport } = useSvelteFlow();
 
   async function onSave() {
@@ -70,16 +70,6 @@
     }
   }
 
-  const onDragStart = (event: DragEvent, nodeType: string) => {
-    if (!event.dataTransfer) {
-      return null;
-    }
-
-    event.dataTransfer.setData("application/svelteflow", nodeType);
-
-    event.dataTransfer.effectAllowed = "move";
-  };
-
   const deploy = async () => {
     // change all status to syncing
     // TODO: should probably change to be only changing status to items that have been added or changed
@@ -138,7 +128,7 @@
   onMount(async () => {
     try {
       // load user state
-      await onRestore();
+      await onRestore("res");
     } catch (error) {
       console.error(error);
       // Additional error handling can be done here if necessary.
@@ -146,111 +136,43 @@
   });
 </script>
 
-<aside class="w-full bg-surface-800 py-2 px-4 flex justify-between">
-  <div class="components flex items-center justify-center">
-    <!-- TODO: eventually this group will be a project node -->
-    <div
-      class="projectDrag blob"
-      on:dragstart={(event) => onDragStart(event, "Project")}
-      draggable={true}
-    >
-      Project
-    </div>
-    <div
-      class="bucketDrag blob"
-      on:dragstart={(event) => onDragStart(event, "Bucket")}
-      draggable={true}
-    >
-      Bucket
-    </div>
-    <div
-      class="networkDrag blob"
-      on:dragstart={(event) => onDragStart(event, "Network")}
-      draggable={true}
-    >
-      Network
-    </div>
-    <div
-      class="subnetworkDrag blob"
-      on:dragstart={(event) => onDragStart(event, "Subnetwork")}
-      draggable={true}
-    >
-      Subnetwork
-    </div>
-    <div
-      class="instanceDrag blob"
-      on:dragstart={(event) => onDragStart(event, "Instance")}
-      draggable={true}
-    >
-      Instance
-    </div>
-    <!-- <div
-      class="firewall blob"
-      on:dragstart={(event) => onDragStart(event, "Firewall")}
-      draggable={true}
-    >
-      Firewall
-    </div>
-    <div
-      class="instancegroup blob"
-      on:dragstart={(event) => onDragStart(event, "InstanceGroup")}
-      draggable={true}
-    >
-      InstanceGroup
-    </div>
-    <div
-      class="router blob"
-      on:dragstart={(event) => onDragStart(event, "Router")}
-      draggable={true}
-    >
-      Router
-    </div>
-    <div
-      class="backendservice blob"
-      on:dragstart={(event) => onDragStart(event, "BackendService")}
-      draggable={true}
-    >
-      BackendService
-    </div> -->
-    <!-- END OF NODES -->
-  </div>
-  <div class="flex flex-col">
-    <button class="px-5 py-2 text-left" on:click={() => fitView()}
-      >Recenter</button
-    >
-    <button class="px-5 py-2 text-left" on:click={deploy}>Deploy</button>
-    <button class="px-5 py-2 text-left" on:click={onSave}>Save</button>
-    <button class="px-5 py-2 text-left" on:click={() => onRestore("res")}
-      >Restore</button
-    >
-    <button class="px-5 py-2 text-left" on:click={() => onRestore("demo")}
-      >Demo</button
-    >
+<div class="w-full h-12 bg-surface-800">
+  <div class="flex h-full">
     <button
-      class="px-5 py-2 text-left"
+      class="btn btn-sm mr-4 absolute top-0 left-0 p-0 w-11 h-12 m-0"
       on:click={() => {
-        $showContent = !$showContent;
-      }}>Content View</button
+        $drawerOpen = !$drawerOpen;
+      }}
+    >
+      <span>
+        <svg viewBox="0 0 100 80" class="fill-white w-6 h-6">
+          <rect width="100" height="15" />
+          <rect y="30" width="100" height="15" />
+          <rect y="60" width="100" height="15" />
+        </svg>
+      </span>
+    </button>
+
+    <div class="flex w-full justify-center align-center">
+      <button class="px-5 text-left" on:click={() => fitView()}>Recenter</button
+      >
+      <button class="px-5 text-left" on:click={() => onRestore("res")}
+        >Restore</button
+      >
+      <button class="px-5 text-left" on:click={() => onRestore("demo")}
+        >Demo</button
+      >
+      <button
+        class="px-5 text-left"
+        on:click={() => {
+          $showContent = !$showContent;
+        }}>Content View</button
+      >
+      <button class="px-5 text-left" on:click={onSave}>Save</button>
+    </div>
+    <button
+      class="px-5 my-2 text-left bg-primary-500 text-black rounded-md"
+      on:click={deploy}>Deploy</button
     >
   </div>
-</aside>
-
-<style>
-  .label {
-    margin: 0.5rem 0 0.25rem 0;
-  }
-
-  .components {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .blob {
-    margin-bottom: 0.5rem;
-    border: 1px solid #111;
-    padding: 0.5rem 1rem;
-    font-weight: 700;
-    border-radius: 3px;
-    cursor: grab;
-  }
-</style>
+</div>

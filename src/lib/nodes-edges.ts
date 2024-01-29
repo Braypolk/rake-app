@@ -6,6 +6,7 @@ const id = writable('');
 const nodes: Writable<Node[]> = writable<Node[]>([]);
 const edges: Writable<Edge[]> = writable<Edge[]>([]);
 
+const drawerOpen: Writable<boolean> = writable<boolean>(false);
 const showContent: Writable<boolean> = writable<boolean>(true);
 
 // Define sorting rules based on the node type
@@ -61,9 +62,10 @@ function newNode(data: Object, pos: XYPosition, type: string, nodeClass: string)
     position: pos,
     parentNode: "",
     class: nodeClass,
+    extent: "parent",
     // set the origin of the new node so it is centered
     // origin: [0.5, 0.5],
   }]);
 }
 
-export { nodes, edges, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };
+export { nodes, edges, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };
