@@ -11,7 +11,7 @@
   } from "@xyflow/svelte";
   import LeftSidebar from "$lib/LeftSidebar.svelte";
   import Header from "$lib/Header.svelte";
-  import { nodes, edges, findNode, newNode } from "$lib/nodes-edges";
+  import { nodes, edges, findNode, newNode, draggingNodeType } from "$lib/nodes-edges";
   import {
     nodeTypeToDataMap,
     nodeClassToDataMap,
@@ -21,30 +21,40 @@
   import { AppShell } from "@skeletonlabs/skeleton";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
-  let intersectedRef: Node;
+  let intersectedRef: Node | undefined;
 
   function onDragOver(event: DragEvent) {
     event.preventDefault();
+    console.log($draggingNodeType);
+    
 
-    if (event.dataTransfer) {
+    if (event.dataTransfer && $draggingNodeType !== "") {
       event.dataTransfer.dropEffect = "move";
+      const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+      dragIntersection(pos.x, pos.y, undefined, $draggingNodeType, undefined)
     }
   }
 
   // TODO: not sure how to move this to another file because it can't be a svelte file because idk how to export a function, it can't be a ts file because it uses useSvelteFlow which requires a svelte file or more specifically to be a child of a svelteflow instance
   function onDrop(event: DragEvent): void {
     event.preventDefault();
+    $draggingNodeType = "";
+    
     if (!event.dataTransfer) {
       return;
     }
 
     const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
     const type = event.dataTransfer.getData("application/svelteflow");
+
+    console.log(type);
+    
     const data = nodeTypeToDataMap[type];
     const nodeClass = nodeClassToDataMap[type];
 
     if (data) {
-      newNode(data, pos, type, nodeClass);
+      const node = newNode(data, pos, type, nodeClass);
+      dropIntersection(node.id, type)
     } else {
       console.log("unknown type");
     }
@@ -54,18 +64,28 @@
     // when I drag I only want to check if the dragged node is intersecting with potential parents (ex: when dragging a network, don't have subnets be "available" intersections)
 
     // calculate the center point of the node from position and dimensions
-    const centerX = node.computed?.positionAbsolute.x + node.computed.width / 2;
-    const centerY =
+
+    const centerX: number =
+      node.computed?.positionAbsolute.x + node.computed.width / 2;
+    const centerY: number =
       node.computed?.positionAbsolute.y + node.computed.height / 2;
 
+    dragIntersection(centerX, centerY, node.id, node.type, node.parentNode);
+  }
+
+  function onNodeDragStop({ detail: { node } }) {
+    dropIntersection(node.id, node.type);
+  }
+
+  function dragIntersection(pointX: number, pointY: number, id:string | undefined, type: string, parentNode: string | undefined) {
     // find a node where the center point is inside
     const intersections = $nodes.map((n) => {
       if (
-        centerX > n.computed?.positionAbsolute.x &&
-        centerX < n.computed?.positionAbsolute.x + n.computed.width &&
-        centerY > n.computed?.positionAbsolute.y &&
-        centerY < n.computed?.positionAbsolute.y + n.computed.height &&
-        n.id !== node.id // this is needed, otherwise we would always find the dragged node
+        pointX > n.computed.positionAbsolute.x &&
+        pointX < n.computed.positionAbsolute.x + n.computed.width &&
+        pointY > n.computed.positionAbsolute.y &&
+        pointY < n.computed.positionAbsolute.y + n.computed.height &&
+        n.id !== id // this is needed, otherwise we would always find the dragged node
       ) {
         return n;
       }
@@ -73,22 +93,22 @@
 
     // console.log(intersections);
 
-    if (node.type === "Project") {
+    if (type === "Project") {
       intersectedRef = intersections.findLast((n) => {
         if (n !== undefined) {
-          return n.type == "Folder" ? n : null;
+          return n.type == "Folder" ? n : undefined;
         }
       });
-    } else if (node.type === "Network" || node.type === "Instance") {
+    } else if (type === "Network" || type === "Instance") {
       intersectedRef = intersections.findLast((n) => {
         if (n !== undefined) {
-          return n.type === "Project" ? n : null;
+          return n.type === "Project" ? n : undefined;
         }
       });
-    } else if (node.type === "Subnetwork") {
+    } else if (type === "Subnetwork") {
       intersectedRef = intersections.findLast((n) => {
         if (n !== undefined) {
-          return n.type === "Network" ? n : null;
+          return n.type === "Network" ? n : undefined;
         }
       });
     }
@@ -96,7 +116,7 @@
     $nodes.forEach(
       (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
     );
-    if (intersectedRef && intersectedRef.id !== node.parentNode) {
+    if (intersectedRef && intersectedRef.id !== parentNode) {
       console.log("classes", intersectedRef.class);
       intersectedRef.class = "highlight";
       console.log("classes", intersectedRef.class);
@@ -105,25 +125,25 @@
     $nodes = $nodes;
   }
 
-  function onNodeDragStop({ detail: { node, event } }) {
-    const nodeArrayPosition = findNode(node.id);
+  function dropIntersection(id: string, type: string) {
+    const nodeArrayPosition = findNode(id);
     if (intersectedRef) {
       let originalParentPositionAbs = { x: 0, y: 0 };
       // assign parent to node
       const parentNodeId = findNode(intersectedRef.id);
       if (
         intersectedRef.type == "Project" ||
-        (intersectedRef.type == "Network" && node.type == "Subnetwork")
+        (intersectedRef.type == "Network" && type == "Subnetwork")
       ) {
         // if a node has a parent already, remove the node (data.child) from the parent
         if ($nodes[nodeArrayPosition].parentNode !== "") {
           const originalParent =
             $nodes[findNode($nodes[nodeArrayPosition].parentNode)];
-          originalParentPositionAbs = originalParent.computed?.positionAbsolute;
-          delete originalParent.data.children[node.id];
+          originalParentPositionAbs = originalParent.computed.positionAbsolute;
+          delete originalParent.data.children[id];
         }
         $nodes[nodeArrayPosition].parentNode = intersectedRef.id;
-        $nodes[parentNodeId].data.children[node.id] = nodeArrayPosition;
+        $nodes[parentNodeId].data.children[id] = nodeArrayPosition;
       }
 
       $nodes[nodeArrayPosition].position = {
@@ -184,6 +204,7 @@
       {edges}
       minZoom={0.2}
       maxZoom={4}
+      snapGrid={[10, 10]}
       proOptions={{ hideAttribution: true }}
       onbeforedelete={(e) => onBeforeDelete(e)}
       on:dragover={onDragOver}
@@ -191,7 +212,11 @@
       on:nodedragstop={onNodeDragStop}
       on:drop={onDrop}
     >
-      <Background bgColor="#0f161d" variant={BackgroundVariant.Cross} />
+      <Background
+        bgColor="#0f161d"
+        patternClass="opacity-10"
+        variant={BackgroundVariant.Lines}
+      />
       <Controls />
       <!-- <MiniMap /> -->
     </SvelteFlow>

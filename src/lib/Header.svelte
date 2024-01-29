@@ -154,8 +154,6 @@
     </button>
 
     <div class="flex w-full justify-center align-center">
-      <button class="px-5 text-left" on:click={() => fitView()}>Recenter</button
-      >
       <button class="px-5 text-left" on:click={() => onRestore("res")}
         >Restore</button
       >

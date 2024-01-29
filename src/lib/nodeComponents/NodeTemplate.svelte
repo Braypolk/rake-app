@@ -4,16 +4,13 @@
   import { onMount, onDestroy } from "svelte";
   import { findNode, nodes, showContent } from "$lib/nodes-edges";
 
-  // TODO: temp until resize is released for svelteflow
-  import Moveable from "svelte-moveable";
-
   const { toObject } = useSvelteFlow();
 
   type $$Props = NodeProps;
 
   //  when setting type it should be singular
-  export let type = "";
-  $: typelower = type.toLowerCase();
+  export let type: $$Props["type"];
+  $: typelower = type?.toLowerCase();
 
   export let provider = "";
   export let id: string;
@@ -22,7 +19,7 @@
   $: node = $nodes[findNode(id)];
   $: data = node.data;
   $: status = data.status;
-  $: selected = node.selected
+  $: selected = node.selected;
 
   let intervalId: any;
 
@@ -107,7 +104,13 @@
     clearInterval(intervalId);
   });
 </script>
-<NodeResizer minWidth={100} minHeight={30} isVisible={selected} color="#ff0000"/>
+
+<NodeResizer
+  minWidth={100}
+  minHeight={30}
+  isVisible={selected}
+  color="#ff0000"
+/>
 <div class={` node`}>
   <div class="flex flex-wrap justify-between">
     <h1 class="text-lg">{type}</h1>
@@ -235,7 +238,7 @@
           stroke-linecap="square"
         />
       </svg>
-      {:else if status == "deleting"}
+    {:else if status == "deleting"}
       <svg
         style="height: 20px; width: 20px;"
         width="311"

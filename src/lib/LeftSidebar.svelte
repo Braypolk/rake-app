@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { drawerOpen } from "$lib/nodes-edges";
+  import { drawerOpen, draggingNodeType } from "$lib/nodes-edges";
 
   const onDragStart = (event: DragEvent, nodeType: string) => {
     if (!event.dataTransfer) {
       return null;
     }
+    
+    // might be kinda jank beause of the DnD api but it works
+    $draggingNodeType = nodeType;
     event.dataTransfer.setData("application/svelteflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
   };

@@ -9,6 +9,9 @@ const edges: Writable<Edge[]> = writable<Edge[]>([]);
 const drawerOpen: Writable<boolean> = writable<boolean>(false);
 const showContent: Writable<boolean> = writable<boolean>(true);
 
+// used because the DnD api is annoying and doesn't show data when dragging, only when dropped.
+const draggingNodeType: Writable<string> = writable<string>('');
+
 // Define sorting rules based on the node type
 const sortOrder = {
   'Project': 1,
@@ -52,20 +55,22 @@ function findNode(id: string) {
   return get(nodes).findIndex(n => n.id === id)
 }
 
-function newNode(data: Object, pos: XYPosition, type: string, nodeClass: string) {
+function newNode(data: Object, pos: XYPosition, type: string, nodeClass: string): Node {
   const newId = incrementid();
   data["id"] = newId;
-  addNodes([{
+  const node = {
     id: newId,
     type: type,
     data: data,
     position: pos,
     parentNode: "",
     class: nodeClass,
-    extent: "parent",
     // set the origin of the new node so it is centered
     // origin: [0.5, 0.5],
-  }]);
+  };
+  addNodes([node]);
+
+  return node;
 }
 
-export { nodes, edges, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };
+export { nodes, edges, draggingNodeType, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };
