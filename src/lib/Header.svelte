@@ -136,29 +136,54 @@
   });
 </script>
 
-<div class="w-full h-12 bg-surface-800">
+<div class="w-full h-12 bg-surface-800 z-40">
   <div class="flex h-full">
-    <button
-      class="btn btn-sm mr-4 absolute top-0 left-0 p-0 w-11 h-12 m-0"
-      on:click={() => {
-        $drawerOpen = !$drawerOpen;
-      }}
-    >
-      <span>
-        <svg viewBox="0 0 100 80" class="fill-white w-6 h-6">
-          <rect width="100" height="15" />
-          <rect y="30" width="100" height="15" />
-          <rect y="60" width="100" height="15" />
+    <div class="flex items-center">
+      <button
+        class="btn btn-sm mx-2 px-2 w-11 h-12 m-0"
+        on:click={() => {
+          $drawerOpen = !$drawerOpen;
+        }}
+      >
+        <span>
+          <svg viewBox="0 0 100 80" class="fill-white w-6 h-6">
+            <rect width="100" height="15" />
+            <rect y="30" width="100" height="15" />
+            <rect y="60" width="100" height="15" />
+          </svg>
+        </span>
+      </button>
+      <button class="btn btn-sm px-2 mx-2">
+        <svg
+          class="w-6 h-6"
+          width="258"
+          height="257"
+          viewBox="0 0 258 257"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="103.5"
+            cy="103.5"
+            r="88.5"
+            stroke="white"
+            stroke-width="30"
+          />
+          <line
+            x1="156.607"
+            y1="156.393"
+            x2="246.607"
+            y2="246.393"
+            stroke="white"
+            stroke-width="30"
+          />
         </svg>
-      </span>
-    </button>
+      </button>
+    </div>
 
     <div class="flex w-full justify-center align-center">
       <button class="px-5 text-left" on:click={() => onRestore("res")}
         >Restore</button
-      >
-      <button class="px-5 text-left" on:click={() => onRestore("demo")}
-        >Demo</button
       >
       <button
         class="px-5 text-left"

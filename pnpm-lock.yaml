@@ -9,11 +9,14 @@ dependencies:
     specifier: ^20.0.2
     version: 20.0.2
   '@xyflow/svelte':
-    specifier: ^0.0.34
-    version: 0.0.34(svelte@4.2.1)
+    specifier: ^0.0.35
+    version: 0.0.35(svelte@4.2.1)
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
+  svelte-splitpanes:
+    specifier: ^0.8.0
+    version: 0.8.0(svelte@4.2.1)
   yaml:
     specifier: ^2.3.4
     version: 2.3.4
@@ -561,7 +564,7 @@ packages:
     resolution: {integrity: sha512-BjzLgXGnCWjUSYGfH1cpdo41/hgdWETu4YxpezoztawmqsvCeep+8QGfiY6YbDvfgHz/DkjeIkkZVJavB4a3rg==}
     dependencies:
       '@types/d3-array': 3.2.1
-      '@types/geojson': 7946.0.13
+      '@types/geojson': 7946.0.14
     dev: false
 
   /@types/d3-delaunay@6.0.4:
@@ -603,7 +606,7 @@ packages:
   /@types/d3-geo@3.1.0:
     resolution: {integrity: sha512-856sckF0oP/diXtS4jNsiQw/UuK5fQG8l/a9VVLeSouf1/PPbBE1i1W852zVwKwYCBkFJJB7nCFTbk6UMEXBOQ==}
     dependencies:
-      '@types/geojson': 7946.0.13
+      '@types/geojson': 7946.0.14
     dev: false
 
   /@types/d3-hierarchy@3.1.6:
@@ -715,8 +718,8 @@ packages:
   /@types/estree@1.0.3:
     resolution: {integrity: sha512-CS2rOaoQ/eAgAfcTfq6amKG7bsN+EMcgGY4FAFQdvSj2y1ixvOZTUA9mOtCai7E1SYu283XNw7urKK30nP3wkQ==}
 
-  /@types/geojson@7946.0.13:
-    resolution: {integrity: sha512-bmrNrgKMOhM3WsafmbGmC+6dsF2Z308vLFsQ3a/bT8X8Sv5clVYpPars/UPq+sAaJP+5OoLAYgwbkS5QEJdLUQ==}
+  /@types/geojson@7946.0.14:
+    resolution: {integrity: sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==}
     dev: false
 
   /@types/js-yaml@4.0.9:
@@ -733,19 +736,19 @@ packages:
     resolution: {integrity: sha512-I469DU0UXNC1aHepwirWhu9YKg5fkxohZD95Ey/5A7lovC+Siu+MCLffva87lnfThaOrw9Vb1DUN5t55oULAAw==}
     dev: true
 
-  /@xyflow/svelte@0.0.34(svelte@4.2.1):
-    resolution: {integrity: sha512-3uo9V06BOVoSp0Yrpe48j6m12llRGqjE3KXhkU8m4Kn6dVlWBVnEbmLUKU9CLjfhjZei1C9sy5PbL5YzbZ4ymQ==}
+  /@xyflow/svelte@0.0.35(svelte@4.2.1):
+    resolution: {integrity: sha512-dYYGDr7KJRViXpP7/Qj8cvGZVGleZvDaweaVMZY7EaFiyfPLmnk5BX46uzISvcU1TXoa3tjxLRrB82d6W6oixQ==}
     peerDependencies:
       svelte: ^3.0.0 || ^4.0.0
     dependencies:
       '@svelte-put/shortcut': 3.1.0
-      '@xyflow/system': 0.0.15
+      '@xyflow/system': 0.0.16
       classcat: 5.0.4
       svelte: 4.2.1
     dev: false
 
-  /@xyflow/system@0.0.15:
-    resolution: {integrity: sha512-TD3+lm4H1CtDgzooDv9K8izG49RzfpMklIyiQ84ftF3HgwhjPY8oR8pf0L7f6i+sTeCyIL1V+P4kM1GJc0ZN3w==}
+  /@xyflow/system@0.0.16:
+    resolution: {integrity: sha512-pVWaBHAE1Ew9acmNGEdsVLNh8Z+TEBbsdaIojV+SDbmolYlCQ1UJ6Sse4k+K3rr7kgX/1GRsiEcWxOFIx0wt+w==}
     dependencies:
       '@types/d3': 7.4.3
       '@types/d3-drag': 3.0.7
@@ -1080,9 +1083,14 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /esm-env-robust@0.0.3:
+    resolution: {integrity: sha512-90Gnuw2DALOqlL1581VxP3GHPUNHX9U+fQ+8FNcTTFClhY5gEggAAnJ3q1b2Oq23knRsjv8YpNeMRPaMLUymOA==}
+    dependencies:
+      esm-env: 1.0.0
+    dev: false
+
   /esm-env@1.0.0:
     resolution: {integrity: sha512-Cf6VksWPsTuW01vU9Mk/3vRue91Zevka5SjyNf3nEpokFRuqt/KjUQoGAwq9qMmhpLTHmXzSIrFRw8zxWzmFBA==}
-    dev: true
 
   /estree-walker@3.0.3:
     resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
@@ -1725,6 +1733,15 @@ packages:
       svelte: 4.2.1
       typescript: 5.2.2
     dev: true
+
+  /svelte-splitpanes@0.8.0(svelte@4.2.1):
+    resolution: {integrity: sha512-cdtSUG8GE8eCAY+TiIGJmnEqV0GC1k/7lwWqovN0qTbw7OIAKEA2BWvqnZ/jk7UzSLlzdI2Uxxm4shXgCdN1kQ==}
+    peerDependencies:
+      svelte: ^4.0.2
+    dependencies:
+      esm-env-robust: 0.0.3
+      svelte: 4.2.1
+    dev: false
 
   /svelte@4.2.1:
     resolution: {integrity: sha512-LpLqY2Jr7cRxkrTc796/AaaoMLF/1ax7cto8Ot76wrvKQhrPmZ0JgajiWPmg9mTSDqO16SSLiD17r9MsvAPTmw==}

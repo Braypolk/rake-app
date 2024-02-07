@@ -6,34 +6,30 @@
 
 <!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
 <NodeTemplate type="Project" provider="cloudplatform" id={data.id}>
-  <label for="project-name">Name</label>
-  <input
-    id="project-name"
-    class="nodrag"
-    on:input={(evt) => {
-      data.name = evt.target?.value;
-    }}
-    value={data.name}
-    on:keydown={(evt) => {
-      if (evt.key === "Delete" || evt.key === "Backspace") {
-        evt.stopPropagation();
-      }
-    }}
-  />
-  <label for="folder-name">Folder</label>
-  <input
-    id="folder-name"
-    class="nodrag"
-    on:input={(evt) => {
-      data.folderId = evt.target?.value;
-    }}
-    value={data.folderId}
-    on:keydown={(evt) => {
-      if (evt.key === "Delete" || evt.key === "Backspace") {
-        evt.stopPropagation();
-      }
-    }}
-  />
+  <div class="flex flex-wrap" >
+    <div>
+      <label for="project-name">Name</label>
+      <input
+        id="project-name"
+        class="nodrag"
+        on:input={(evt) => {          
+          data.name = evt.target?.value;
+        }}
+        value={data.name}
+      />
+    </div>
+    <div>
+      <label for="folder-name">Folder</label>
+      <input
+        id="folder-name"
+        class="nodrag"
+        on:input={(evt) => {
+          data.folderId = evt.target?.value;
+        }}
+        value={data.folderId}
+      />
+    </div>
+  </div>
 </NodeTemplate>
 
 <style>

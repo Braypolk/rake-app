@@ -10,8 +10,15 @@
     MiniMap,
   } from "@xyflow/svelte";
   import LeftSidebar from "$lib/LeftSidebar.svelte";
+  import NodeSidebar from "$lib/NodeSidebar.svelte";
   import Header from "$lib/Header.svelte";
-  import { nodes, edges, findNode, newNode, draggingNodeType } from "$lib/nodes-edges";
+  import {
+    nodes,
+    edges,
+    findNode,
+    newNode,
+    draggingNodeType,
+  } from "$lib/nodes-edges";
   import {
     nodeTypeToDataMap,
     nodeClassToDataMap,
@@ -19,19 +26,20 @@
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
   import { AppShell } from "@skeletonlabs/skeleton";
+  import { Pane, Splitpanes } from "svelte-splitpanes";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
   let intersectedRef: Node | undefined;
 
+  let paneSize = 20;
+  let id: string = "";
   function onDragOver(event: DragEvent) {
     event.preventDefault();
-    console.log($draggingNodeType);
-    
 
     if (event.dataTransfer && $draggingNodeType !== "") {
       event.dataTransfer.dropEffect = "move";
       const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
-      dragIntersection(pos.x, pos.y, undefined, $draggingNodeType, undefined)
+      dragIntersection(pos.x, pos.y, undefined, $draggingNodeType, undefined);
     }
   }
 
@@ -48,13 +56,13 @@
     const type = event.dataTransfer.getData("application/svelteflow");
 
     console.log(type);
-    
+
     const data = nodeTypeToDataMap[type];
     const nodeClass = nodeClassToDataMap[type];
 
     if (data) {
       const node = newNode(data, pos, type, nodeClass);
-      dropIntersection(node.id, type)
+      dropIntersection(node.id, type);
     } else {
       console.log("unknown type");
     }
@@ -77,7 +85,13 @@
     dropIntersection(node.id, node.type);
   }
 
-  function dragIntersection(pointX: number, pointY: number, id:string | undefined, type: string, parentNode: string | undefined) {
+  function dragIntersection(
+    pointX: number,
+    pointY: number,
+    id: string | undefined,
+    type: string,
+    parentNode: string | undefined,
+  ) {
     // find a node where the center point is inside
     const intersections = $nodes.map((n) => {
       if (
@@ -165,6 +179,7 @@
 
   // TODO: still need to process edges, currently only looking at nodes
   async function onBeforeDelete(e: { nodes: Node[]; edges: Edge[] }) {
+    // TODO: also remove children once element is deleted
     console.log(e);
 
     let del = {
@@ -188,37 +203,116 @@
 
     return del;
   }
+
+  function handleSplitterClick(e) {
+    console.log("handle");
+
+    if (paneSize == 20) {
+      paneSize = 0;
+    } else {
+      paneSize = 20;
+    }
+  }
+
+  function onNodeClick(e) {
+    id = e.detail.node.id;
+  }
 </script>
 
+<Header />
 <LeftSidebar />
-<AppShell class="z-40 min-h-screen">
-  <svelte:fragment slot="header">
-    <Header />
-  </svelte:fragment>
+<Splitpanes
+  style="height: calc(100% - 3rem);"
+  dblClickSplitter={false}
+  on:splitter-click={handleSplitterClick}
+>
+  <Pane>
+    <main class="h-90 p-0 m-0 w-full h-full flex flex-col">
+      <SvelteFlow
+        class="text-on-primary-token"
+        {nodeTypes}
+        {nodes}
+        {edges}
+        defaultEdgeOptions={{ type: "smoothstep" }}
+        minZoom={0.2}
+        maxZoom={4}
+        snapGrid={[10, 10]}
+        proOptions={{ hideAttribution: true }}
+        onbeforedelete={(e) => onBeforeDelete(e)}
+        on:dragover={onDragOver}
+        on:nodedrag={onNodeDrag}
+        on:nodedragstop={onNodeDragStop}
+        on:drop={onDrop}
+        on:nodeclick={onNodeClick}
+      >
+        <Background
+          bgColor="#0f161d"
+          patternClass="opacity-10"
+          variant={BackgroundVariant.Lines}
+        />
+        <Controls />
+        <MiniMap />
+      </SvelteFlow>
+    </main>
+  </Pane>
+  <Pane bind:size={paneSize} maxSize={50} snapSize={8}>
+    <NodeSidebar />
+  </Pane>
+</Splitpanes>
 
-  <main class="h-90 p-0 m-0 w-full h-full flex flex-col">
-    <SvelteFlow
-      class="text-on-primary-token"
-      {nodeTypes}
-      {nodes}
-      {edges}
-      minZoom={0.2}
-      maxZoom={4}
-      snapGrid={[10, 10]}
-      proOptions={{ hideAttribution: true }}
-      onbeforedelete={(e) => onBeforeDelete(e)}
-      on:dragover={onDragOver}
-      on:nodedrag={onNodeDrag}
-      on:nodedragstop={onNodeDragStop}
-      on:drop={onDrop}
-    >
-      <Background
-        bgColor="#0f161d"
-        patternClass="opacity-10"
-        variant={BackgroundVariant.Lines}
-      />
-      <Controls />
-      <!-- <MiniMap /> -->
-    </SvelteFlow>
-  </main>
-</AppShell>
+<!-- <style global>
+  .splitpanes.modern-theme .splitpanes__pane {
+	 background-color: #f8f8f8;
+}
+ .splitpanes.modern-theme .splitpanes__splitter {
+	 background-color: #ccc;
+	 position: relative;
+}
+ .splitpanes.modern-theme .splitpanes__splitter:before {
+	 content: '';
+	 position: absolute;
+	 left: 0;
+	 top: 0;
+	 transition: opacity 0.4s;
+	 background-color: #2db9d2;
+	 opacity: 0;
+	 z-index: 1;
+}
+ .splitpanes.modern-theme .splitpanes__splitter:hover:before {
+	 opacity: 1;
+}
+ .splitpanes.modern-theme .splitpanes__splitter.splitpanes__splitter__active {
+	 z-index: 2;
+	/* Fix an issue of overlap fighting with a near hovered splitter */
+}
+ .modern-theme.splitpanes--vertical > .splitpanes__splitter:before {
+	 left: -3px;
+	 right: -3px;
+	 height: 100%;
+	 cursor: col-resize;
+}
+ .modern-theme.splitpanes--horizontal > .splitpanes__splitter:before {
+	 top: -3px;
+	 bottom: -3px;
+	 width: 100%;
+	 cursor: row-resize;
+}
+ .splitpanes.no-splitter .splitpanes__pane {
+	 background-color: #f8f8f8;
+}
+ .splitpanes.no-splitter .splitpanes__splitter {
+	 background-color: #ccc;
+	 position: relative;
+}
+ .no-splitter.splitpanes--horizontal > .splitpanes__splitter:before {
+	 width: 0.125rem;
+	 pointer-events: none;
+	 cursor: none;
+}
+ .no-splitter.splitpanes--vertical > .splitpanes__splitter:before {
+	 height: 0.125rem;
+	 pointer-events: none;
+	 cursor: none;
+}
+ 
+</style> -->

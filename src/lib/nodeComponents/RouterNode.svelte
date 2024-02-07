@@ -1,142 +1,135 @@
 <script>
-    import NodeTemplate from "$lib/nodeComponents/NodeTemplate.svelte";
-    import { routerData } from "$lib/nodeComponents/nodeData";
-    export let data = routerData;
+  import NodeTemplate from "$lib/nodeComponents/NodeTemplate.svelte";
+  import { routerData } from "$lib/nodeComponents/nodeData";
+  export let data = routerData;
 </script>
 
 <NodeTemplate type="Router" provider="compute" id={data.id}>
-
-    <div class="property">
-      <span class="property-bgp">bgp</span>
-      <span class="info-icon" title="BGP information specific to this router. Structure is documented below.">ℹ</span>
-      <input 
-        class="nodrag" 
-        type="text" 
-        on:input={(evt) => { data.bgp = evt.target?.value;}}
-        value={data.bgp}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
+  <div class="property">
+    <span class="property-bgp">bgp</span>
+    <span
+      class="info-icon"
+      title="BGP information specific to this router. Structure is documented below."
+      >ℹ</span
+    >
+    <input
+      class="nodrag"
+      type="text"
+      on:input={(evt) => {
+        data.bgp = evt.target?.value;
+      }}
+      value={data.bgp}
     />
-    </div>
-  
+  </div>
 
-    <div class="property">
-      <span class="property-description">description</span>
-      <span class="info-icon" title="An optional description of this resource.">ℹ</span>
-      <input 
-        class="nodrag" 
-        type="text" 
-        on:input={(evt) => { data.description = evt.target?.value;}}
-        value={data.description}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
+  <div class="property">
+    <span class="property-description">description</span>
+    <span class="info-icon" title="An optional description of this resource."
+      >ℹ</span
+    >
+    <input
+      class="nodrag"
+      type="text"
+      on:input={(evt) => {
+        data.description = evt.target?.value;
+      }}
+      value={data.description}
     />
-    </div>
-  
+  </div>
 
-    <div class="property">
-      <span class="property-encryptedInterconnectRouter">encryptedInterconnectRouter</span>
-      <span class="info-icon" title="Indicates if a router is dedicated for use with encrypted VLAN attachments (interconnectAttachments).">ℹ</span>
-      <input
-            type="checkbox"
-            name="encryptedInterconnectRouterState"
-            on:change={(evt) => {
-                data.encryptedInterconnectRouter = evt.target?.checked;
-            }}
-        />
-    </div>
-  
-
-    <div class="property">
-      <span class="property-network">network</span>
-      <span class="info-icon" title="A reference to the network to which this router belongs.">ℹ</span>
-      <input 
-        class="nodrag" 
-        type="text" 
-        on:input={(evt) => { data.network = evt.target?.value;}}
-        value={data.network}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
+  <div class="property">
+    <span class="property-encryptedInterconnectRouter"
+      >encryptedInterconnectRouter</span
+    >
+    <span
+      class="info-icon"
+      title="Indicates if a router is dedicated for use with encrypted VLAN attachments (interconnectAttachments)."
+      >ℹ</span
+    >
+    <input
+      type="checkbox"
+      name="encryptedInterconnectRouterState"
+      on:change={(evt) => {
+        data.encryptedInterconnectRouter = evt.target?.checked;
+      }}
     />
-    </div>
-  
+  </div>
 
-    <div class="property">
-      <span class="property-networkRef">networkRef</span>
-      <span class="info-icon" title="Reference to a Network to populate network.">ℹ</span>
-      <input 
-        class="nodrag" 
-        type="text" 
-        on:input={(evt) => { data.networkRef = evt.target?.value;}}
-        value={data.networkRef}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
+  <div class="property">
+    <span class="property-network">network</span>
+    <span
+      class="info-icon"
+      title="A reference to the network to which this router belongs.">ℹ</span
+    >
+    <input
+      class="nodrag"
+      type="text"
+      on:input={(evt) => {
+        data.network = evt.target?.value;
+      }}
+      value={data.network}
     />
-    </div>
-  
+  </div>
 
-    <div class="property">
-      <span class="property-networkSelector">networkSelector</span>
-      <span class="info-icon" title="Selector for a Network to populate network.">ℹ</span>
-      <input 
-        class="nodrag" 
-        type="text" 
-        on:input={(evt) => { data.networkSelector = evt.target?.value;}}
-        value={data.networkSelector}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
+  <div class="property">
+    <span class="property-networkRef">networkRef</span>
+    <span class="info-icon" title="Reference to a Network to populate network."
+      >ℹ</span
+    >
+    <input
+      class="nodrag"
+      type="text"
+      on:input={(evt) => {
+        data.networkRef = evt.target?.value;
+      }}
+      value={data.networkRef}
     />
-    </div>
-  
+  </div>
 
-    <div class="property">
-      <span class="property-project">project</span>
-      <span class="info-icon" title="The ID of the project in which the resource belongs. If it is not provided, the provider project is used.">ℹ</span>
-      <input 
-        class="nodrag" 
-        type="text" 
-        on:input={(evt) => { data.project = evt.target?.value;}}
-        value={data.project}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
+  <div class="property">
+    <span class="property-networkSelector">networkSelector</span>
+    <span class="info-icon" title="Selector for a Network to populate network."
+      >ℹ</span
+    >
+    <input
+      class="nodrag"
+      type="text"
+      on:input={(evt) => {
+        data.networkSelector = evt.target?.value;
+      }}
+      value={data.networkSelector}
     />
-    </div>
-  
+  </div>
 
-    <div class="property">
-      <span class="property-region">region</span>
-      <span class="info-icon" title="Region where the router resides.">ℹ</span>
-      <input 
-        class="nodrag" 
-        type="text" 
-        on:input={(evt) => { data.region = evt.target?.value;}}
-        value={data.region}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
+  <div class="property">
+    <span class="property-project">project</span>
+    <span
+      class="info-icon"
+      title="The ID of the project in which the resource belongs. If it is not provided, the provider project is used."
+      >ℹ</span
+    >
+    <input
+      class="nodrag"
+      type="text"
+      on:input={(evt) => {
+        data.project = evt.target?.value;
+      }}
+      value={data.project}
     />
-    </div>
-  
+  </div>
+
+  <div class="property">
+    <span class="property-region">region</span>
+    <span class="info-icon" title="Region where the router resides.">ℹ</span>
+    <input
+      class="nodrag"
+      type="text"
+      on:input={(evt) => {
+        data.region = evt.target?.value;
+      }}
+      value={data.region}
+    />
+  </div>
 </NodeTemplate>
 
 <style>

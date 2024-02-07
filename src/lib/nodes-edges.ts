@@ -51,13 +51,13 @@ function incrementid() {
   return get(id);
 }
 
-function findNode(id: string) {
+function findNode(id: string): number {
   return get(nodes).findIndex(n => n.id === id)
 }
 
 function newNode(data: Object, pos: XYPosition, type: string, nodeClass: string): Node {
   const newId = incrementid();
-  data["id"] = newId;
+  data.id = newId;
   const node = {
     id: newId,
     type: type,

@@ -26,11 +26,6 @@ function generateInputField(propertyName, propertyDetails) {
         type="text" 
         on:input={(evt) => { data.${propertyName} = evt.target?.value;}}
         value={data.${propertyName}}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
     />`;
     }
 }
