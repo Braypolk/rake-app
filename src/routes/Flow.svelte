@@ -19,10 +19,7 @@
     newNode,
     draggingNodeType,
   } from "$lib/nodes-edges";
-  import {
-    nodeTypeToDataMap,
-    nodeClassToDataMap,
-  } from "$lib/nodeComponents/nodeData";
+  import { nodeTypeToDataMap } from "$lib/nodeComponents/nodeData";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
   import { AppShell } from "@skeletonlabs/skeleton";
@@ -47,7 +44,7 @@
   function onDrop(event: DragEvent): void {
     event.preventDefault();
     $draggingNodeType = "";
-    
+
     if (!event.dataTransfer) {
       return;
     }
@@ -58,10 +55,9 @@
     console.log(type);
 
     const data = nodeTypeToDataMap[type];
-    const nodeClass = nodeClassToDataMap[type];
 
     if (data) {
-      const node = newNode(data, pos, type, nodeClass);
+      const node = newNode(data, pos, type);
       dropIntersection(node.id, type);
     } else {
       console.log("unknown type");
@@ -236,7 +232,6 @@
         defaultEdgeOptions={{ type: "smoothstep" }}
         minZoom={0.2}
         maxZoom={4}
-        snapGrid={[10, 10]}
         proOptions={{ hideAttribution: true }}
         onbeforedelete={(e) => onBeforeDelete(e)}
         on:dragover={onDragOver}

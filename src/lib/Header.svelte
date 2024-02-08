@@ -1,12 +1,24 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { nodes, edges, showContent, sortNodes } from "$lib/nodes-edges";
-  import { useSvelteFlow } from "@xyflow/svelte";
+  import {
+    nodes,
+    nodeData,
+    edges,
+    showContent,
+    sortNodes,
+  } from "$lib/nodes-edges";
+  import { useSvelteFlow, type Node } from "@xyflow/svelte";
   import { drawerOpen } from "$lib/nodes-edges";
   const { toObject, fitView, setViewport } = useSvelteFlow();
 
   async function onSave() {
     const flow = toObject();
+
+    // for each node in flow, I want to insert nodeData into the flow.node.data object
+    flow.nodes.forEach((node) => {
+      node.data = $nodeData[node.id];
+    });
+
     console.log("flow", flow);
 
     try {
@@ -55,8 +67,12 @@
 
           $nodes = nodes;
           sortNodes();
+          $nodes.forEach((node: Node) => {
+            $nodeData[node.id] = node.data;
+          });
 
           $edges = edges;
+          // todo: do the same for edges as was done with nodeData
 
           fitView();
         } else {

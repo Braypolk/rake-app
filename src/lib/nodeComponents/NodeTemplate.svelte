@@ -2,7 +2,7 @@
   import type { NodeProps } from "@xyflow/svelte";
   import { useSvelteFlow, NodeResizer } from "@xyflow/svelte";
   import { onMount, onDestroy } from "svelte";
-  import { findNode, nodes, showContent } from "$lib/nodes-edges";
+  import { findNode, nodes, showContent, nodeData } from "$lib/nodes-edges";
 
   const { toObject } = useSvelteFlow();
 
@@ -17,9 +17,9 @@
 
   // test to make sure this works when the order of the array changes
   $: node = $nodes[findNode(id)];
-  $: data = node.data;
-  $: status = data.status;
   $: selected = node.selected;
+
+  
 
   let intervalId: any;
 
@@ -56,13 +56,13 @@
     // TODO: should probably change this so it's not on every component
     intervalId = setInterval(async () => {
       try {
-        if (status !== "pendingDelete") {
+        if ($nodeData[id].status !== "pendingDelete") {
           const response = await fetch(
-            `http://localhost:8001/apis/${provider}.gcp.upbound.io/v1beta1/${typelower}s/${data.name}/status`,
+            `http://localhost:8001/apis/${provider}.gcp.upbound.io/v1beta1/${typelower}s/${$nodeData[id].name}/status`,
           );
           if (!response.ok) {
-            console.log(status);
-            if (status == "deleting") {
+            console.log($nodeData[id].status);
+            if ($nodeData[id].status == "deleting") {
               console.log("deleted");
               $nodes.splice(findNode(id), 1);
               // todo: also remove any edges connected to this node or try to use the svelte flow deleteNodes hook
@@ -71,7 +71,7 @@
             }
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          if (status !== "deleting") {
+          if ($nodeData[id].status !== "deleting") {
             // bug: something here is not being set correctly and it is preemtivly being set to synced
             const clusterStatus = await response.json();
             if (clusterStatus.status) {
@@ -80,10 +80,10 @@
               //   clusterStatus.status.conditions[0].status,
               // );
               if (clusterStatus.status.conditions[0].status) {
-                data.status = "synced";
+                $nodeData[id].status = "synced";
               }
             } else {
-              data.status = "syncing";
+              $nodeData[id].status = "syncing";
               console.log("waiting...");
             }
           }
@@ -93,8 +93,8 @@
       } catch (error) {
         // console.error("Failed to fetch network status:", error);
         // bug: this is currently not a complete test. if the deploying stage fails, it will remain in the deploying state
-        if (data.status != "deploying") {
-          data.status = "unsynced";
+        if ($nodeData[id].status != "deploying") {
+          $nodeData[id].status = "unsynced";
         }
       }
     }, 500 * 1000);
@@ -103,6 +103,9 @@
   onDestroy(() => {
     clearInterval(intervalId);
   });
+
+  console.log($nodeData[id].status);
+  
 </script>
 
 <NodeResizer
@@ -114,7 +117,7 @@
 <div class={` node`}>
   <div class="flex flex-wrap justify-start items-center">
     <span class="pr-2">
-      {#if status == "unsynced"}
+      {#if $nodeData[id].status == "unsynced"}
         <svg
           style="height: 20px; width: 20px;"
           width="253"
@@ -130,7 +133,7 @@
             fill="#444444"
           />
         </svg>
-      {:else if status == "deploying"}
+      {:else if $nodeData[id].status == "deploying"}
         <svg
           style="height: 20px; width: 20px;"
           width="253"
@@ -163,7 +166,7 @@
             fill="#31A6FA"
           />
         </svg>
-      {:else if status == "syncing"}
+      {:else if $nodeData[id].status == "syncing"}
         <svg
           style="height: 20px; width: 20px;"
           width="253"
@@ -196,7 +199,7 @@
             fill="#FAE531"
           />
         </svg>
-      {:else if status == "synced"}
+      {:else if $nodeData[id].status == "synced"}
         <svg
           style="height: 20px; width: 20px;"
           width="253"
@@ -211,7 +214,7 @@
             stroke-width="35"
           />
         </svg>
-      {:else if status == "pendingDelete"}
+      {:else if $nodeData[id].status == "pendingDelete"}
         <svg
           style="height: 20px; width: 20px;"
           width="311"
@@ -238,7 +241,7 @@
             stroke-linecap="square"
           />
         </svg>
-      {:else if status == "deleting"}
+      {:else if $nodeData[id].status == "deleting"}
         <svg
           style="height: 20px; width: 20px;"
           width="311"

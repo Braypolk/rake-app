@@ -1,14 +1,24 @@
 <script lang="ts">
-  import { findNode, nodes } from "$lib/nodes-edges";
+  import { nodes, nodeData } from "$lib/nodes-edges";
 
-  $: selectedNodes = $nodes.filter((node) => node.selected);  
+  $: selectedNodeIds = $nodes
+    .filter((node) => node.selected)
+    .map((node) => node.id);
 </script>
 
 <div>
-  {#if selectedNodes.length == 1}
-  <input type="text" bind:value={selectedNodes[0].data.folderId} style="color: black;"/>
-    <!-- <div style="color: black">
-      {selectedNodes[0].data.folderId}
-    </div> -->
+  {#if selectedNodeIds.length == 1 && selectedNodeIds[0] != undefined}
+    {#each Object.entries($nodeData[selectedNodeIds[0]]) as [key, value]}
+      {#if key != "children"}
+        <div style="color: black;">
+          <label for={key}>{key}</label>
+          <input
+            id={key}
+            type="text"
+            bind:value={$nodeData[selectedNodeIds[0]][key]}
+          />
+        </div>
+      {/if}
+    {/each}
   {/if}
 </div>

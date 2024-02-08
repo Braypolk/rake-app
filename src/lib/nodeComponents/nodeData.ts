@@ -1,5 +1,4 @@
 export let projectData = {
-    id: "",
     name: "",
     children: {},
     folderId: "",
@@ -7,7 +6,6 @@ export let projectData = {
 }
 
 export let networkData = {
-    id: "",
     name: "",
     children: {},
     description: "",
@@ -16,7 +14,6 @@ export let networkData = {
 }
 
 export let subnetworkData = {
-    id: "",
     name: "",
     ipCidrRange: "",
     region: "us-central1",
@@ -24,7 +21,6 @@ export let subnetworkData = {
 }
 
 export let instanceData = {
-    id: "",
     name: "",
     subnetwork: "", // TOOD: get subnetwork id from existing networks
     machineType: "e2-medium",
@@ -34,7 +30,6 @@ export let instanceData = {
 }
 
 export let bucketData = {
-    id: "",
     name: "",
     location: "US",
     publicState: false,
@@ -43,7 +38,6 @@ export let bucketData = {
 }
 
 export let firewallData = {
-    id: "",
     name: "",
     allowed: "",
     denied: "",
@@ -64,7 +58,6 @@ export let firewallData = {
 };
 
 export let instancegroupData = {
-    id: "",
     name: "",
     description: "",
     instances: "",
@@ -77,7 +70,6 @@ export let instancegroupData = {
 };
 
 export let routerData = {
-    id: "",
     name: "",
     bgp: "",
     description: "",
@@ -90,7 +82,6 @@ export let routerData = {
 };
 
 export let backendserviceData = {
-    id: "",
     name: "",
     affinityCookieTtlSec: "",
     backend: "",
@@ -133,15 +124,3 @@ export const nodeTypeToDataMap = {
     Router: routerData,
     BackendService: backendserviceData,
 };
-
-export const nodeClassToDataMap = {
-    project: "project",
-    network: "network",
-    subnetwork: "subnetwork",
-    instance: "instance",
-    bucket: "bucket",
-    firewall: "firewall",
-    instancegroup: "instancegroup",
-    router: "router",
-    backendservice: "backendservice",
-}

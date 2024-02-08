@@ -6,6 +6,13 @@ const id = writable('');
 const nodes: Writable<Node[]> = writable<Node[]>([]);
 const edges: Writable<Edge[]> = writable<Edge[]>([]);
 
+// contains the data for each node with a key of id
+const nodeData: Writable<{[id: string]: any}> = writable<{[id: string]: any}>({});
+// keeps track of the array position of each node with format { id(string): arrayPosition (number) }
+const nodeArrayPosition: Writable<Object> = writable<Object>({});
+
+// todo: also need to do edges
+
 const drawerOpen: Writable<boolean> = writable<boolean>(false);
 const showContent: Writable<boolean> = writable<boolean>(true);
 
@@ -23,7 +30,7 @@ const sortOrder = {
   'InstanceGroup': 99,
   'Router': 99,
   'BackendService': 99,
-// END OF SORT ORDER
+  // END OF SORT ORDER
 };
 
 function addNodes(newNodes: Node[]) {
@@ -55,22 +62,26 @@ function findNode(id: string): number {
   return get(nodes).findIndex(n => n.id === id)
 }
 
-function newNode(data: Object, pos: XYPosition, type: string, nodeClass: string): Node {
+function newNode(data: Object, pos: XYPosition, type: string): Node {
   const newId = incrementid();
-  data.id = newId;
   const node = {
     id: newId,
     type: type,
-    data: data,
+    data: {},
     position: pos,
     parentNode: "",
-    class: nodeClass,
+    class: type,
     // set the origin of the new node so it is centered
     // origin: [0.5, 0.5],
   };
   addNodes([node]);
 
+  nodeData.update((currentData: { [id: string]: {} }) => {
+    currentData[newId] = data;
+    return currentData;
+  });
+
   return node;
 }
 
-export { nodes, edges, draggingNodeType, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };
+export { nodes, nodeData, nodeArrayPosition, edges, draggingNodeType, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };

@@ -1,21 +1,26 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
   import { projectData } from "./nodeData";
-  export let data = projectData;
+  import { nodeData } from "$lib/nodes-edges";
+  export let id: string;
+
+  // $nodeData[id] = projectData;
+  
+  
 </script>
 
 <!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
-<NodeTemplate type="Project" provider="cloudplatform" id={data.id}>
+<NodeTemplate type="Project" provider="cloudplatform" id={id}>
   <div class="flex flex-wrap" >
-    <div>
+    <!-- <div>
       <label for="project-name">Name</label>
       <input
         id="project-name"
         class="nodrag"
         on:input={(evt) => {          
-          data.name = evt.target?.value;
+          $nodeData[id].name = evt.target?.value;
         }}
-        value={data.name}
+        value={$nodeData[id].name}
       />
     </div>
     <div>
@@ -24,11 +29,13 @@
         id="folder-name"
         class="nodrag"
         on:input={(evt) => {
-          data.folderId = evt.target?.value;
+          $nodeData[id].folderId = evt.target?.value;
         }}
-        value={data.folderId}
+        value={$nodeData[id].folderId}
       />
-    </div>
+    </div> -->
+    <p class="p-5">Name: {$nodeData[id].name}</p>
+    <p class="p-5">Folder Id: {$nodeData[id].folderId}</p>
   </div>
 </NodeTemplate>
 
