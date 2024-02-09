@@ -89,13 +89,10 @@
   const deploy = async () => {
     // change all status to syncing
     // TODO: should probably change to be only changing status to items that have been added or changed
-    $nodes = $nodes.map((node) => ({
-      ...node,
-      data: {
-        ...node.data,
-        status: node.data.status == "pendingDelete" ? "deleting" : "deploying",
-      },
-    }));
+    $nodes.forEach(({id}) => {
+      console.log(id);
+      $nodeData[id].status = "pendingDelete" ? "deleting" : "deploying"
+    });
 
     const resources = $nodes.map((node) => {
       const { parentNode, ...rest } = node;
@@ -111,7 +108,7 @@
     onSave();
   };
 
-  async function runPythonFile(resources) {
+  async function runPythonFile(resources: Node[]) {
     try {
       console.log("before prune", resources);
       let filteredResources = resources.filter(

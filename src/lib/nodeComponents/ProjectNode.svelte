@@ -1,16 +1,11 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-  import { projectData } from "./nodeData";
   import { nodeData } from "$lib/nodes-edges";
-  export let id: string;
-
-  // $nodeData[id] = projectData;
-  
-  
+  export let id: string;  
 </script>
 
 <!-- TODO: when handle connects to subnetwork, update network var in nodeState -->
-<NodeTemplate type="Project" provider="cloudplatform" id={id}>
+<NodeTemplate type="Project" provider="cloudplatform" {id}>
   <div class="flex flex-wrap" >
     <!-- <div>
       <label for="project-name">Name</label>

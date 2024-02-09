@@ -14,6 +14,7 @@
   import Header from "$lib/Header.svelte";
   import {
     nodes,
+    nodeData,
     edges,
     findNode,
     newNode,
@@ -54,9 +55,11 @@
 
     console.log(type);
 
-    const data = nodeTypeToDataMap[type];
+    const data = {...nodeTypeToDataMap[type]};
 
     if (data) {
+      console.log(data);
+      
       const node = newNode(data, pos, type);
       dropIntersection(node.id, type);
     } else {
@@ -127,9 +130,7 @@
       (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
     );
     if (intersectedRef && intersectedRef.id !== parentNode) {
-      console.log("classes", intersectedRef.class);
       intersectedRef.class = "highlight";
-      console.log("classes", intersectedRef.class);
     }
 
     $nodes = $nodes;
@@ -150,10 +151,10 @@
           const originalParent =
             $nodes[findNode($nodes[nodeArrayPosition].parentNode)];
           originalParentPositionAbs = originalParent.computed.positionAbsolute;
-          delete originalParent.data.children[id];
+          delete $nodeData[originalParent.id].children[id];
         }
         $nodes[nodeArrayPosition].parentNode = intersectedRef.id;
-        $nodes[parentNodeId].data.children[id] = nodeArrayPosition;
+        $nodeData[intersectedRef.id].children[id] = nodeArrayPosition;
       }
 
       $nodes[nodeArrayPosition].position = {
@@ -176,18 +177,20 @@
   // TODO: still need to process edges, currently only looking at nodes
   async function onBeforeDelete(e: { nodes: Node[]; edges: Edge[] }) {
     // TODO: also remove children once element is deleted
-    console.log(e);
+    // console.log(e);
 
     let del = {
       nodes: [] as Node[],
       edges: [] as Edge[],
     };
     e.nodes.forEach((n) => {
-      if (n.data.status === "unsynced") {
+      const status = $nodeData[n.id].status;
+
+      if ($nodeData[n.id].status === "unsynced") {
         del.nodes.push(n);
-      } else if (n.data.status === "synced") {
+      } else if ($nodeData[n.id].status === "synced") {
         console.log("change to pendingDelete");
-        n.data.status = "pendingDelete";
+        $nodeData[n.id].status = "pendingDelete";
         n.class = "pendingDelete";
       } else {
         // todo: have some error that tells user that the resources is currently being processed

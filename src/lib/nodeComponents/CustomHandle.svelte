@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { incrementid, nodes, findNode } from "$lib/nodes-edges";
+  import { incrementid, nodes, nodeData, findNode } from "$lib/nodes-edges";
   import { Handle, Position, type NodeProps } from "@xyflow/svelte";
 
   export let type: 'source' | 'target';
@@ -18,7 +18,7 @@
     if (source.type == "Subnetwork") {
       console.log("in");
 
-      $nodes[findNode(connection[0].target)].data.subnetwork = source.id;
+      $nodeData[connection[0].target].subnetwork = source.id;
       console.log($nodes[findNode(connection[0].target)]);
     }
   }

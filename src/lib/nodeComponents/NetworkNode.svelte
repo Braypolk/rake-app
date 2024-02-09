@@ -1,33 +1,31 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-  import { networkData } from "./nodeData";
-  export let data = networkData;
+  import { nodeData } from "$lib/nodes-edges";
+  export let id: string;  
 </script>
 
-<NodeTemplate type="Network" provider="compute" id={data.id}>
+<NodeTemplate type="Network" provider="compute" {id}>
   <label for="network-name">Name</label>
   <input
     id="network-name"
     class="nodrag"
-    on:input={(evt) => {
-      data.name = evt.target?.value;
-    }}
-    value={data.name}
+    bind:value={$nodeData[id].name}
     on:keydown={(evt) => {
       if (evt.key === "Delete" || evt.key === "Backspace") {
         evt.stopPropagation();
       }
     }}
   />
+  <p>{$nodeData[id].name}</p>
 
   <label for="description">Description</label>
   <input
     id="description"
     class="nodrag"
     on:input={(evt) => {
-      data.description = evt.target?.value;
+      $nodeData[id].description = evt.target?.value;
     }}
-    value={data.description}
+    value={$nodeData[id].description}
     on:keydown={(evt) => {
       if (evt.key === "Delete" || evt.key === "Backspace") {
         evt.stopPropagation();
@@ -38,9 +36,9 @@
   <label for="routingMode">Routing Mode:</label>
   <select
     id="routingMode"
-    value={data.routingMode}
+    value={$nodeData[id].routingMode}
     on:change={(evt) => {
-      data.routingMode = evt.target?.value;
+      $nodeData[id].routingMode = evt.target?.value;
     }}
   >
     <option>REGIONAL</option>

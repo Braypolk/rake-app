@@ -102,10 +102,7 @@
 
   onDestroy(() => {
     clearInterval(intervalId);
-  });
-
-  console.log($nodeData[id].status);
-  
+  });  
 </script>
 
 <NodeResizer
