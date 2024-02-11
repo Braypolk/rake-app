@@ -16,6 +16,11 @@
             id={key}
             type="text"
             bind:value={$nodeData[selectedNodeIds[0]][key]}
+            on:keydown={(evt) => {
+              if (evt.key === "Delete" || evt.key === "Backspace") {
+                evt.stopPropagation();
+              }
+            }}
           />
         </div>
       {/if}

@@ -4,3 +4,71 @@
 @tailwind variants;
 
 html, body { @apply h-full overflow-hidden; }
+
+/* For splitpanes, in here so I can use tailwind classes */
+.splitpanes.rake-theme .splitpanes__pane {
+    @apply bg-surface-800
+}
+
+.splitpanes.rake-theme .splitpanes__splitter {
+    @apply bg-surface-500
+}
+
+.splitpanes.rake-theme .splitpanes__splitter {
+    box-sizing: border-box;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.splitpanes.rake-theme .splitpanes__splitter:before,
+.splitpanes.rake-theme .splitpanes__splitter:after {
+    @apply bg-primary-800;
+}
+
+.splitpanes.rake-theme .splitpanes__splitter:before,
+.splitpanes.rake-theme .splitpanes__splitter:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: background-color 0.3s;
+}
+
+.splitpanes.rake-theme .splitpanes__splitter:hover:before,
+.splitpanes.rake-theme .splitpanes__splitter:hover:after {
+    @apply bg-primary-500;
+}
+
+
+.splitpanes.rake-theme .splitpanes__splitter:first-child {
+    cursor: auto;
+}
+
+.rake-theme.splitpanes .splitpanes .splitpanes__splitter {
+    z-index: 1;
+}
+
+.rake-theme.splitpanes--vertical>.splitpanes__splitter,
+.rake-theme .splitpanes--vertical>.splitpanes__splitter {
+    width: 7px;
+    cursor: col-resize;
+}
+
+.rake-theme.splitpanes--vertical>.splitpanes__splitter:before,
+.rake-theme.splitpanes--vertical>.splitpanes__splitter:after,
+.rake-theme .splitpanes--vertical>.splitpanes__splitter:before,
+.rake-theme .splitpanes--vertical>.splitpanes__splitter:after {
+    transform: translateY(-50%);
+    width: 1px;
+    height: 30px;
+}
+
+.rake-theme.splitpanes--vertical>.splitpanes__splitter:before,
+.rake-theme .splitpanes--vertical>.splitpanes__splitter:before {
+    margin-left: -2px;
+}
+
+.rake-theme.splitpanes--vertical>.splitpanes__splitter:after,
+.rake-theme .splitpanes--vertical>.splitpanes__splitter:after {
+    margin-left: 1px;
+}

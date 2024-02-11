@@ -1,7 +1,7 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
   import { nodeData } from "$lib/nodes-edges";
-  export let id: string;  
+  export let id: string;
 </script>
 
 <NodeTemplate type="Network" provider="compute" {id}>
@@ -16,7 +16,6 @@
       }
     }}
   />
-  <p>{$nodeData[id].name}</p>
 
   <label for="description">Description</label>
   <input

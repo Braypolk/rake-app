@@ -5,9 +5,11 @@ const id = writable('');
 
 const nodes: Writable<Node[]> = writable<Node[]>([]);
 const edges: Writable<Edge[]> = writable<Edge[]>([]);
+const leftSidebarSize: Writable<number> = writable<number>(10);
+const paneSize: Writable<number> = writable<number>(20);
 
 // contains the data for each node with a key of id
-const nodeData: Writable<{[id: string]: any}> = writable<{[id: string]: any}>({});
+const nodeData: Writable<{ [id: string]: any }> = writable<{ [id: string]: any }>({});
 // keeps track of the array position of each node with format { id(string): arrayPosition (number) }
 const nodeArrayPosition: Writable<Object> = writable<Object>({});
 
@@ -84,4 +86,4 @@ function newNode(data: Object, pos: XYPosition, type: string): Node {
   return node;
 }
 
-export { nodes, nodeData, nodeArrayPosition, edges, draggingNodeType, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };
+export { nodes, nodeData, nodeArrayPosition, edges, leftSidebarSize, paneSize, draggingNodeType, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };

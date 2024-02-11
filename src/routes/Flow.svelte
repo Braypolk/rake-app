@@ -19,6 +19,8 @@
     findNode,
     newNode,
     draggingNodeType,
+    leftSidebarSize,
+    paneSize,
   } from "$lib/nodes-edges";
   import { nodeTypeToDataMap } from "$lib/nodeComponents/nodeData";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
@@ -29,7 +31,6 @@
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
   let intersectedRef: Node | undefined;
 
-  let paneSize = 20;
   let id: string = "";
   function onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -55,11 +56,11 @@
 
     console.log(type);
 
-    const data = {...nodeTypeToDataMap[type]};
+    const data = { ...nodeTypeToDataMap[type] };
 
     if (data) {
       console.log(data);
-      
+
       const node = newNode(data, pos, type);
       dropIntersection(node.id, type);
     } else {
@@ -112,7 +113,7 @@
           return n.type == "Folder" ? n : undefined;
         }
       });
-    } else if (type === "Network" || type === "Instance") {
+    } else if (type === "Network" || type === "Instance" || type === "Bucket") {
       intersectedRef = intersections.findLast((n) => {
         if (n !== undefined) {
           return n.type === "Project" ? n : undefined;
@@ -204,12 +205,12 @@
   }
 
   function handleSplitterClick(e) {
-    console.log("handle");
+    const index = e.detail.index;
 
-    if (paneSize == 20) {
-      paneSize = 0;
-    } else {
-      paneSize = 20;
+    if (index == 1) {
+      $leftSidebarSize = $leftSidebarSize > 0 ? 0 : 10;
+    } else if (index == 2) {
+      $paneSize = $paneSize > 0 ? 0 : 20;
     }
   }
 
@@ -219,12 +220,15 @@
 </script>
 
 <Header />
-<LeftSidebar />
 <Splitpanes
+  theme="rake-theme"
   style="height: calc(100% - 3rem);"
   dblClickSplitter={false}
   on:splitter-click={handleSplitterClick}
 >
+  <Pane bind:size={$leftSidebarSize} maxSize={20} snapSize={3}>
+    <LeftSidebar />
+  </Pane>
   <Pane>
     <main class="h-90 p-0 m-0 w-full h-full flex flex-col">
       <SvelteFlow
@@ -253,64 +257,7 @@
       </SvelteFlow>
     </main>
   </Pane>
-  <Pane bind:size={paneSize} maxSize={50} snapSize={8}>
+  <Pane bind:size={$paneSize} maxSize={50} snapSize={8}>
     <NodeSidebar />
   </Pane>
 </Splitpanes>
-
-<!-- <style global>
-  .splitpanes.modern-theme .splitpanes__pane {
-	 background-color: #f8f8f8;
-}
- .splitpanes.modern-theme .splitpanes__splitter {
-	 background-color: #ccc;
-	 position: relative;
-}
- .splitpanes.modern-theme .splitpanes__splitter:before {
-	 content: '';
-	 position: absolute;
-	 left: 0;
-	 top: 0;
-	 transition: opacity 0.4s;
-	 background-color: #2db9d2;
-	 opacity: 0;
-	 z-index: 1;
-}
- .splitpanes.modern-theme .splitpanes__splitter:hover:before {
-	 opacity: 1;
-}
- .splitpanes.modern-theme .splitpanes__splitter.splitpanes__splitter__active {
-	 z-index: 2;
-	/* Fix an issue of overlap fighting with a near hovered splitter */
-}
- .modern-theme.splitpanes--vertical > .splitpanes__splitter:before {
-	 left: -3px;
-	 right: -3px;
-	 height: 100%;
-	 cursor: col-resize;
-}
- .modern-theme.splitpanes--horizontal > .splitpanes__splitter:before {
-	 top: -3px;
-	 bottom: -3px;
-	 width: 100%;
-	 cursor: row-resize;
-}
- .splitpanes.no-splitter .splitpanes__pane {
-	 background-color: #f8f8f8;
-}
- .splitpanes.no-splitter .splitpanes__splitter {
-	 background-color: #ccc;
-	 position: relative;
-}
- .no-splitter.splitpanes--horizontal > .splitpanes__splitter:before {
-	 width: 0.125rem;
-	 pointer-events: none;
-	 cursor: none;
-}
- .no-splitter.splitpanes--vertical > .splitpanes__splitter:before {
-	 height: 0.125rem;
-	 pointer-events: none;
-	 cursor: none;
-}
- 
-</style> -->

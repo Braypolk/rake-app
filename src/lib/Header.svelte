@@ -6,6 +6,7 @@
     edges,
     showContent,
     sortNodes,
+    leftSidebarSize,
   } from "$lib/nodes-edges";
   import { useSvelteFlow, type Node } from "@xyflow/svelte";
   import { drawerOpen } from "$lib/nodes-edges";
@@ -89,9 +90,9 @@
   const deploy = async () => {
     // change all status to syncing
     // TODO: should probably change to be only changing status to items that have been added or changed
-    $nodes.forEach(({id}) => {
+    $nodes.forEach(({ id }) => {
       console.log(id);
-      $nodeData[id].status = "pendingDelete" ? "deleting" : "deploying"
+      $nodeData[id].status = "pendingDelete" ? "deleting" : "deploying";
     });
 
     const resources = $nodes.map((node) => {
@@ -155,7 +156,7 @@
       <button
         class="btn btn-sm mx-2 px-2 w-11 h-12 m-0"
         on:click={() => {
-          $drawerOpen = !$drawerOpen;
+          $leftSidebarSize = $leftSidebarSize > 0 ? 0 : 10;
         }}
       >
         <span>

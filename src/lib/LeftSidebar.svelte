@@ -22,7 +22,7 @@
 
 />
 
-<div class="w-40 p-3 h-full top-12 overflow-y-hidden overflow-x-hidden fixed -left-40 bg-surface-800 duration-100 z-50" class:show={$drawerOpen}>
+<div>
   <div class="components flex items-center justify-center">
     <!-- TODO: eventually this group will be a project node -->
     <div
