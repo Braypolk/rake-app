@@ -64,22 +64,24 @@ function findNode(id: string): number {
   return get(nodes).findIndex(n => n.id === id)
 }
 
-function newNode(data: Object, pos: XYPosition, type: string): Node {
+function newNode(data: Object, pos: XYPosition, type: string, parentNodeId: string = "", style: string = "", selected: boolean = false): Node {
   const newId = incrementid();
   const node = {
     id: newId,
     type: type,
     data: {},
     position: pos,
-    parentNode: "",
+    parentNode: parentNodeId,
     class: type,
+    style: style,
+    selected: selected,
     // set the origin of the new node so it is centered
     // origin: [0.5, 0.5],
   };
   addNodes([node]);
 
   nodeData.update((currentData: { [id: string]: {} }) => {
-    currentData[newId] = data;
+    currentData[newId] = {... data, status: "unsynced"};
     return currentData;
   });
 

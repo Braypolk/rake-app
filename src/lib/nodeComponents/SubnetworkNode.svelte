@@ -3,9 +3,10 @@
   import CustomHandle from "./CustomHandle.svelte";
   import { nodeData } from "$lib/nodes-edges";
   export let id: string;
+  $$restProps;
 </script>
 
-<CustomHandle type="target"/>
+<CustomHandle type="target" />
 <NodeTemplate type="Subnetwork" provider="compute" {id}>
   <label for="subnetwork-name">Name</label>
   <input
@@ -87,8 +88,7 @@
     <option>us-west4</option>
   </select>
 </NodeTemplate>
-<CustomHandle type="source"/>
-
+<CustomHandle type="source" />
 
 <style>
   :global(.svelte-flow__node-Subnetwork) {

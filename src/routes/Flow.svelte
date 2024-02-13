@@ -31,6 +31,11 @@
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
   let intersectedRef: Node | undefined;
 
+  let copiedNodeIds: string[];
+  $: selectedNodeIds = $nodes
+    .filter((node) => node.selected)
+    .map((node) => node.id);
+
   let id: string = "";
   function onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -139,7 +144,12 @@
 
   function dropIntersection(id: string, type: string) {
     const nodeArrayPosition = findNode(id);
-    if (intersectedRef) {
+
+    // if there is an intersection and the node is not intersected with a parent
+    if (
+      intersectedRef &&
+      intersectedRef.id !== $nodes[findNode(id)].parentNode
+    ) {
       let originalParentPositionAbs = { x: 0, y: 0 };
       // assign parent to node
       const parentNodeId = findNode(intersectedRef.id);
@@ -152,10 +162,14 @@
           const originalParent =
             $nodes[findNode($nodes[nodeArrayPosition].parentNode)];
           originalParentPositionAbs = originalParent.computed.positionAbsolute;
-          delete $nodeData[originalParent.id].children[id];
+
+          const index = $nodeData[originalParent.id].children.indexOf(id);
+          if (index > -1) {
+            $nodeData[originalParent.id].children.splice(index, 1);
+          }
         }
         $nodes[nodeArrayPosition].parentNode = intersectedRef.id;
-        $nodeData[intersectedRef.id].children[id] = nodeArrayPosition;
+        $nodeData[intersectedRef.id].children.push(id);
       }
 
       $nodes[nodeArrayPosition].position = {
@@ -185,10 +199,14 @@
       edges: [] as Edge[],
     };
     e.nodes.forEach((n) => {
-      const status = $nodeData[n.id].status;
-
       if ($nodeData[n.id].status === "unsynced") {
         del.nodes.push(n);
+        if (n.parentNode !== "") {
+          const index = $nodeData[n.parentNode].children.indexOf(n.id);
+          if (index > -1) {
+            $nodeData[n.parentNode].children.splice(index, 1);
+          }
+        }
       } else if ($nodeData[n.id].status === "synced") {
         console.log("change to pendingDelete");
         $nodeData[n.id].status = "pendingDelete";
@@ -199,7 +217,6 @@
       }
     });
     $nodes = $nodes;
-    console.log($nodes);
 
     return del;
   }
@@ -217,7 +234,89 @@
   function onNodeClick(e) {
     id = e.detail.node.id;
   }
+
+  function on_key_down(event) {
+    const { key, ctrlKey, altKey, metaKey, repeat } = event;
+    // need to hanle this correctly, right now when holding down a key it does nothing, I want it to act like normal and send the key
+    if (repeat) {
+      console.log(repeat);
+      return;
+    }
+
+    if (metaKey) {
+      switch (key) {
+        case "c":
+          if (selectedNodeIds.length > 0) {
+            event.preventDefault();
+            handleNodeCopy();
+          }
+          break;
+        // case "x":
+        //     if (selectedNodeIds.length > 0) {
+        //       event.preventDefault();
+        //       handleNodeCut();
+        //     }
+        //     break;
+        case "v":
+          if (copiedNodeIds.length > 0) {
+            event.preventDefault();
+            handleNodePaste(copiedNodeIds);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  function handleNodeCopy() {
+    copiedNodeIds = selectedNodeIds;
+  }
+
+  // todo: still bugs when trying to copy node with many layers of children
+  function handleNodePaste(nodeIds: string[], newParent?: string) {
+    let childAssignments: string[] = [];
+    console.log(nodeIds);
+    nodeIds.forEach((nodeId) => {
+      const data = $nodeData[nodeId];
+      const node = $nodes[findNode(nodeId)];
+      $nodes[findNode(nodeId)].selected = false;
+      const type = node.type;
+      const parent = node.parentNode;
+      const pos = parent == "" ? node.computed.positionAbsolute : node.position;
+      const style = `width: ${node.computed?.width}px; height: ${node.computed?.height}px;`;
+
+      const returnedNode = newNode(
+        { ...data, children: [] },
+        newParent ? pos : { x: pos.x + 50, y: pos.y + 50 },
+        type,
+        newParent ? newParent : parent,
+        style
+      );
+
+      if (data.children && data.children.length) {
+        const newChildren = handleNodePaste(data.children, returnedNode.id);
+        $nodeData[returnedNode.id].children = newChildren;
+
+        // todo: i don't think this works
+        $nodeData[parent].children.push(returnedNode.id);
+        // todo: this is buggy, need it to only have the top level nodes selected
+        $nodes[findNode(returnedNode.id)].selected = true;
+      }
+      else {
+        console.log('in');
+        
+        childAssignments.push(returnedNode.id);
+      }
+    });
+    console.log(childAssignments);
+    
+    // return a list of children;
+    return childAssignments;
+  }
 </script>
+
+<svelte:window on:keydown={on_key_down} />
 
 <Header />
 <Splitpanes
@@ -258,6 +357,6 @@
     </main>
   </Pane>
   <Pane bind:size={$paneSize} maxSize={50} snapSize={8}>
-    <NodeSidebar />
+    <NodeSidebar {selectedNodeIds} />
   </Pane>
 </Splitpanes>

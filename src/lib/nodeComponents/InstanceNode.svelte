@@ -3,6 +3,7 @@
   import CustomHandle from "./CustomHandle.svelte";
   import { nodeData } from "$lib/nodes-edges";
   export let id: string;
+  $$restProps;
 </script>
 
 <CustomHandle type="target" />
@@ -71,5 +72,3 @@
   />
 </NodeTemplate>
 <CustomHandle type="source" />
-
-

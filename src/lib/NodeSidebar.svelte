@@ -1,9 +1,7 @@
 <script lang="ts">
   import { nodes, nodeData } from "$lib/nodes-edges";
 
-  $: selectedNodeIds = $nodes
-    .filter((node) => node.selected)
-    .map((node) => node.id);
+  export let selectedNodeIds;
 </script>
 
 <div>

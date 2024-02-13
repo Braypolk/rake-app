@@ -19,8 +19,6 @@
   $: node = $nodes[findNode(id)];
   $: selected = node.selected;
 
-  
-
   let intervalId: any;
 
   // todo: this is duplicated from the sidebar. maybe try to not have it be the exact same code
@@ -102,7 +100,7 @@
 
   onDestroy(() => {
     clearInterval(intervalId);
-  });  
+  });
 </script>
 
 <NodeResizer
@@ -110,8 +108,10 @@
   minHeight={30}
   isVisible={selected}
   color="#ff0000"
+  lineStyle="border-width: 3px; border-radius: 2px;"
 />
 <div class={` node`}>
+  <h1 class="text-lg pr-5">{id}</h1>
   <div class="flex flex-wrap justify-start items-center">
     <span class="pr-2">
       {#if $nodeData[id].status == "unsynced"}

@@ -2,6 +2,7 @@
   import NodeTemplate from "./NodeTemplate.svelte";
   import { nodeData } from "$lib/nodes-edges";
   export let id: string;
+  $$restProps;
 </script>
 
 <NodeTemplate type="Network" provider="compute" {id}>
