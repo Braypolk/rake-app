@@ -64,8 +64,6 @@
     const data = { ...nodeTypeToDataMap[type] };
 
     if (data) {
-      console.log(data);
-
       const node = newNode(data, pos, type);
       dropIntersection(node.id, type);
     } else {
@@ -162,14 +160,8 @@
           const originalParent =
             $nodes[findNode($nodes[nodeArrayPosition].parentNode)];
           originalParentPositionAbs = originalParent.computed.positionAbsolute;
-
-          const index = $nodeData[originalParent.id].children.indexOf(id);
-          if (index > -1) {
-            $nodeData[originalParent.id].children.splice(index, 1);
-          }
         }
         $nodes[nodeArrayPosition].parentNode = intersectedRef.id;
-        $nodeData[intersectedRef.id].children.push(id);
       }
 
       $nodes[nodeArrayPosition].position = {
@@ -182,6 +174,7 @@
           (originalParentPositionAbs.y -
             $nodes[parentNodeId].computed.positionAbsolute.y),
       };
+      assignChildren();
     }
     $nodes.forEach(
       (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
@@ -248,7 +241,7 @@
         case "c":
           if (selectedNodeIds.length > 0) {
             event.preventDefault();
-            handleNodeCopy();
+            copiedNodeIds = selectedNodeIds;
           }
           break;
         // case "x":
@@ -261,6 +254,7 @@
           if (copiedNodeIds.length > 0) {
             event.preventDefault();
             handleNodePaste(copiedNodeIds);
+            assignChildren();
           }
           break;
         default:
@@ -269,14 +263,26 @@
     }
   }
 
-  function handleNodeCopy() {
-    copiedNodeIds = selectedNodeIds;
+  // look: inefficient, could probably be done better. Reassign all children after any node relationship is modified
+  function assignChildren() {
+    console.log("test");
+
+    for (let i = 0; i < $nodes.length; i++) {
+      const nodeId = $nodes[i].id;
+      if ($nodeData[nodeId].children) {
+        $nodeData[nodeId].children = [];
+        for (let q = 0; q < $nodes.length; q++) {
+          if ($nodes[q].parentNode === nodeId) {
+            $nodeData[nodeId].children.push($nodes[q].id);
+          }
+        }
+      }
+    }
   }
 
   // todo: still bugs when trying to copy node with many layers of children
   function handleNodePaste(nodeIds: string[], newParent?: string) {
     let childAssignments: string[] = [];
-    console.log(nodeIds);
     nodeIds.forEach((nodeId) => {
       const data = $nodeData[nodeId];
       const node = $nodes[findNode(nodeId)];
@@ -291,28 +297,13 @@
         newParent ? pos : { x: pos.x + 50, y: pos.y + 50 },
         type,
         newParent ? newParent : parent,
-        style
+        style,
       );
 
       if (data.children && data.children.length) {
-        const newChildren = handleNodePaste(data.children, returnedNode.id);
-        $nodeData[returnedNode.id].children = newChildren;
-
-        // todo: i don't think this works
-        $nodeData[parent].children.push(returnedNode.id);
-        // todo: this is buggy, need it to only have the top level nodes selected
-        $nodes[findNode(returnedNode.id)].selected = true;
-      }
-      else {
-        console.log('in');
-        
-        childAssignments.push(returnedNode.id);
+        handleNodePaste(data.children, returnedNode.id);
       }
     });
-    console.log(childAssignments);
-    
-    // return a list of children;
-    return childAssignments;
   }
 </script>
 

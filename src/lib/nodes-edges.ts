@@ -6,7 +6,7 @@ const id = writable('');
 const nodes: Writable<Node[]> = writable<Node[]>([]);
 const edges: Writable<Edge[]> = writable<Edge[]>([]);
 const leftSidebarSize: Writable<number> = writable<number>(10);
-const paneSize: Writable<number> = writable<number>(20);
+const paneSize: Writable<number> = writable<number>(0);
 
 // contains the data for each node with a key of id
 const nodeData: Writable<{ [id: string]: any }> = writable<{ [id: string]: any }>({});
@@ -81,7 +81,7 @@ function newNode(data: Object, pos: XYPosition, type: string, parentNodeId: stri
   addNodes([node]);
 
   nodeData.update((currentData: { [id: string]: {} }) => {
-    currentData[newId] = {... data, status: "unsynced"};
+    currentData[newId] = { ...data, status: "unsynced" };
     return currentData;
   });
 

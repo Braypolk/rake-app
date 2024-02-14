@@ -20,7 +20,10 @@
       node.data = $nodeData[node.id];
     });
 
-    console.log("flow", flow);
+    flow.nodes.forEach((node) => {
+      console.log(node.id, node.data.children);
+      // console.log(node.data.children);
+    });
 
     try {
       const response = await fetch("/api/flow", {
