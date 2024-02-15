@@ -12,6 +12,8 @@
   import LeftSidebar from "$lib/LeftSidebar.svelte";
   import NodeSidebar from "$lib/NodeSidebar.svelte";
   import Header from "$lib/Header.svelte";
+  import ContextMenu from "$lib/ContextMenu.svelte";
+  import { on_key_down } from "$lib/keybinds";
   import {
     nodes,
     nodeData,
@@ -21,22 +23,26 @@
     draggingNodeType,
     leftSidebarSize,
     paneSize,
+    assignChildren
   } from "$lib/nodes-edges";
   import { nodeTypeToDataMap } from "$lib/nodeComponents/nodeData";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
-  import { AppShell } from "@skeletonlabs/skeleton";
   import { Pane, Splitpanes } from "svelte-splitpanes";
 
   const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
   let intersectedRef: Node | undefined;
 
-  let copiedNodeIds: string[];
+  let menu: {
+    id: string;
+    x: number;
+    y: number;
+  } | null = null;
+
   $: selectedNodeIds = $nodes
     .filter((node) => node.selected)
     .map((node) => node.id);
 
-  let id: string = "";
   function onDragOver(event: DragEvent) {
     event.preventDefault();
 
@@ -224,90 +230,26 @@
     }
   }
 
-  function onNodeClick(e) {
-    id = e.detail.node.id;
+  function handleContextMenu({ detail: { event, node } }) {
+    // Prevent native context menu from showing
+    event.preventDefault();
+
+    // Calculate position of the context menu. We want to make sure it
+    // doesn't get positioned off-screen.
+    menu = {
+      id: node.id,
+      x: event.layerX,
+      y: event.layerY,
+    };
   }
 
-  function on_key_down(event) {
-    const { key, ctrlKey, altKey, metaKey, repeat } = event;
-    // need to hanle this correctly, right now when holding down a key it does nothing, I want it to act like normal and send the key
-    if (repeat) {
-      console.log(repeat);
-      return;
-    }
-
-    if (metaKey) {
-      switch (key) {
-        case "c":
-          if (selectedNodeIds.length > 0) {
-            event.preventDefault();
-            copiedNodeIds = selectedNodeIds;
-          }
-          break;
-        // case "x":
-        //     if (selectedNodeIds.length > 0) {
-        //       event.preventDefault();
-        //       handleNodeCut();
-        //     }
-        //     break;
-        case "v":
-          if (copiedNodeIds.length > 0) {
-            event.preventDefault();
-            handleNodePaste(copiedNodeIds);
-            assignChildren();
-          }
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  // look: inefficient, could probably be done better. Reassign all children after any node relationship is modified
-  function assignChildren() {
-    console.log("test");
-
-    for (let i = 0; i < $nodes.length; i++) {
-      const nodeId = $nodes[i].id;
-      if ($nodeData[nodeId].children) {
-        $nodeData[nodeId].children = [];
-        for (let q = 0; q < $nodes.length; q++) {
-          if ($nodes[q].parentNode === nodeId) {
-            $nodeData[nodeId].children.push($nodes[q].id);
-          }
-        }
-      }
-    }
-  }
-
-  // todo: still bugs when trying to copy node with many layers of children
-  function handleNodePaste(nodeIds: string[], newParent?: string) {
-    let childAssignments: string[] = [];
-    nodeIds.forEach((nodeId) => {
-      const data = $nodeData[nodeId];
-      const node = $nodes[findNode(nodeId)];
-      $nodes[findNode(nodeId)].selected = false;
-      const type = node.type;
-      const parent = node.parentNode;
-      const pos = parent == "" ? node.computed.positionAbsolute : node.position;
-      const style = `width: ${node.computed?.width}px; height: ${node.computed?.height}px;`;
-
-      const returnedNode = newNode(
-        { ...data, children: [] },
-        newParent ? pos : { x: pos.x + 50, y: pos.y + 50 },
-        type,
-        newParent ? newParent : parent,
-        style,
-      );
-
-      if (data.children && data.children.length) {
-        handleNodePaste(data.children, returnedNode.id);
-      }
-    });
+  // Close the context menu if it's open whenever the window is clicked.
+  function handlePaneClick() {
+    menu = null;
   }
 </script>
 
-<svelte:window on:keydown={on_key_down} />
+<svelte:window on:keydown={(e) => on_key_down(e, selectedNodeIds)} />
 
 <Header />
 <Splitpanes
@@ -335,7 +277,9 @@
         on:nodedrag={onNodeDrag}
         on:nodedragstop={onNodeDragStop}
         on:drop={onDrop}
-        on:nodeclick={onNodeClick}
+        on:nodeclick={handlePaneClick}
+        on:nodecontextmenu={handleContextMenu}
+        on:paneclick={handlePaneClick}
       >
         <Background
           bgColor="#0f161d"
@@ -344,6 +288,14 @@
         />
         <Controls />
         <MiniMap />
+        {#if menu}
+          <ContextMenu
+            onClick={handlePaneClick}
+            id={menu.id}
+            x={menu.x}
+            y={menu.y}
+          />
+        {/if}
       </SvelteFlow>
     </main>
   </Pane>

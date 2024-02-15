@@ -88,4 +88,23 @@ function newNode(data: Object, pos: XYPosition, type: string, parentNodeId: stri
   return node;
 }
 
-export { nodes, nodeData, nodeArrayPosition, edges, leftSidebarSize, paneSize, draggingNodeType, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode };
+  // look: inefficient, could probably be done better. Reassign all children after any node relationship is modified
+  function assignChildren() {
+    const definedNodes = get(nodes);
+    const definedNodeData = get(nodeData);
+
+    for (let i = 0; i < definedNodes.length; i++) {
+      const nodeId = definedNodes[i].id;
+      if (definedNodeData[nodeId].children) {
+        definedNodeData[nodeId].children = [];
+        for (let q = 0; q < definedNodes.length; q++) {
+          if (definedNodes[q].parentNode === nodeId) {
+            definedNodeData[nodeId].children.push(definedNodes[q].id);
+          }
+        }
+      }
+    }
+    nodeData.set(definedNodeData);
+  }
+
+export { nodes, nodeData, nodeArrayPosition, edges, leftSidebarSize, paneSize, draggingNodeType, drawerOpen, showContent, id, incrementid, addNodes, findNode, sortNodes, newNode, assignChildren };
