@@ -1,8 +1,32 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-  import { nodeData } from "$lib/nodes-edges";
+  import {
+    nodeData,
+    newNode,
+    nodes,
+    findNode,
+    assignChildren,
+  } from "$lib/nodes-edges";
+  import { nodeTypeToDataMap } from "./nodeData";
   export let id: string;
   $$restProps;
+
+  let count = 0;
+
+  // look: super jank, should use d3 or something to place nodes in correct spot
+  function addSubnet() {
+    const type = "Subnetwork";
+    let pos = $nodes[findNode(id)].position;
+
+    newNode(
+      { ...nodeTypeToDataMap[type] },
+      { x: pos.x, y: pos.y + 100 * count },
+      type,
+      id,
+    );
+    assignChildren();
+    count += 1;
+  }
 </script>
 
 <NodeTemplate type="Network" provider="compute" {id}>
@@ -44,10 +68,13 @@
     <option>REGIONAL</option>
     <option>GLOBAL</option>
   </select>
+  <button on:click={addSubnet}>add subnet</button>
 </NodeTemplate>
 
 <style>
   :global(.svelte-flow__node-Network) {
+    width: 800px;
+    height: 300px;
     background-color: rgba(131, 131, 131, 0.539);
     border: 3px solid rgb(200, 200, 200);
     border-radius: 1rem;

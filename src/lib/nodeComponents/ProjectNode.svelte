@@ -37,6 +37,8 @@
 
 <style>
   :global(.svelte-flow__node-Project) {
+    width: 1000px;
+    height: 700px;
     background-color: rgb(255, 255, 255);
     border: 5px solid rgb(71, 112, 224);
     border-radius: 1rem;

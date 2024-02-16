@@ -16,8 +16,6 @@
     console.log(source);
 
     if (source.type == "Subnetwork") {
-      console.log("in");
-
       $nodeData[connection[0].target].subnetwork = source.id;
       console.log($nodes[findNode(connection[0].target)]);
     }

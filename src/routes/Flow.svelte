@@ -18,20 +18,20 @@
     nodes,
     nodeData,
     edges,
-    findNode,
-    newNode,
-    draggingNodeType,
     leftSidebarSize,
     paneSize,
-    assignChildren
   } from "$lib/nodes-edges";
-  import { nodeTypeToDataMap } from "$lib/nodeComponents/nodeData";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
   import { Pane, Splitpanes } from "svelte-splitpanes";
+  import {
+    handleDragOver,
+    handleDrop,
+    onNodeDrag,
+    onNodeDragStop,
+  } from "$lib/interactions";
 
-  const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
-  let intersectedRef: Node | undefined;
+  const { screenToFlowPosition } = useSvelteFlow();
 
   let menu: {
     id: string;
@@ -45,154 +45,23 @@
 
   function onDragOver(event: DragEvent) {
     event.preventDefault();
-
-    if (event.dataTransfer && $draggingNodeType !== "") {
-      event.dataTransfer.dropEffect = "move";
-      const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
-      dragIntersection(pos.x, pos.y, undefined, $draggingNodeType, undefined);
-    }
+    handleDragOver(
+      event,
+      screenToFlowPosition({ x: event.clientX, y: event.clientY }),
+    );
   }
 
-  // TODO: not sure how to move this to another file because it can't be a svelte file because idk how to export a function, it can't be a ts file because it uses useSvelteFlow which requires a svelte file or more specifically to be a child of a svelteflow instance
   function onDrop(event: DragEvent): void {
     event.preventDefault();
-    $draggingNodeType = "";
-
-    if (!event.dataTransfer) {
-      return;
-    }
-
-    const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
-    const type = event.dataTransfer.getData("application/svelteflow");
-
-    console.log(type);
-
-    const data = { ...nodeTypeToDataMap[type] };
-
-    if (data) {
-      const node = newNode(data, pos, type);
-      dropIntersection(node.id, type);
-    } else {
-      console.log("unknown type");
-    }
-  }
-
-  function onNodeDrag({ detail: { node } }) {
-    // when I drag I only want to check if the dragged node is intersecting with potential parents (ex: when dragging a network, don't have subnets be "available" intersections)
-
-    // calculate the center point of the node from position and dimensions
-
-    const centerX: number =
-      node.computed?.positionAbsolute.x + node.computed.width / 2;
-    const centerY: number =
-      node.computed?.positionAbsolute.y + node.computed.height / 2;
-
-    dragIntersection(centerX, centerY, node.id, node.type, node.parentNode);
-  }
-
-  function onNodeDragStop({ detail: { node } }) {
-    dropIntersection(node.id, node.type);
-  }
-
-  function dragIntersection(
-    pointX: number,
-    pointY: number,
-    id: string | undefined,
-    type: string,
-    parentNode: string | undefined,
-  ) {
-    // find a node where the center point is inside
-    const intersections = $nodes.map((n) => {
-      if (
-        pointX > n.computed.positionAbsolute.x &&
-        pointX < n.computed.positionAbsolute.x + n.computed.width &&
-        pointY > n.computed.positionAbsolute.y &&
-        pointY < n.computed.positionAbsolute.y + n.computed.height &&
-        n.id !== id // this is needed, otherwise we would always find the dragged node
-      ) {
-        return n;
-      }
-    });
-
-    // console.log(intersections);
-
-    if (type === "Project") {
-      intersectedRef = intersections.findLast((n) => {
-        if (n !== undefined) {
-          return n.type == "Folder" ? n : undefined;
-        }
-      });
-    } else if (type === "Network" || type === "Instance" || type === "Bucket") {
-      intersectedRef = intersections.findLast((n) => {
-        if (n !== undefined) {
-          return n.type === "Project" ? n : undefined;
-        }
-      });
-    } else if (type === "Subnetwork") {
-      intersectedRef = intersections.findLast((n) => {
-        if (n !== undefined) {
-          return n.type === "Network" ? n : undefined;
-        }
-      });
-    }
-
-    $nodes.forEach(
-      (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
+    handleDrop(
+      event,
+      screenToFlowPosition({ x: event.clientX, y: event.clientY }),
     );
-    if (intersectedRef && intersectedRef.id !== parentNode) {
-      intersectedRef.class = "highlight";
-    }
-
-    $nodes = $nodes;
-  }
-
-  function dropIntersection(id: string, type: string) {
-    const nodeArrayPosition = findNode(id);
-
-    // if there is an intersection and the node is not intersected with a parent
-    if (
-      intersectedRef &&
-      intersectedRef.id !== $nodes[findNode(id)].parentNode
-    ) {
-      let originalParentPositionAbs = { x: 0, y: 0 };
-      // assign parent to node
-      const parentNodeId = findNode(intersectedRef.id);
-      if (
-        intersectedRef.type == "Project" ||
-        (intersectedRef.type == "Network" && type == "Subnetwork")
-      ) {
-        // if a node has a parent already, remove the node (data.child) from the parent
-        if ($nodes[nodeArrayPosition].parentNode !== "") {
-          const originalParent =
-            $nodes[findNode($nodes[nodeArrayPosition].parentNode)];
-          originalParentPositionAbs = originalParent.computed.positionAbsolute;
-        }
-        $nodes[nodeArrayPosition].parentNode = intersectedRef.id;
-      }
-
-      $nodes[nodeArrayPosition].position = {
-        x:
-          $nodes[nodeArrayPosition].position.x +
-          (originalParentPositionAbs.x -
-            $nodes[parentNodeId].computed.positionAbsolute.x),
-        y:
-          $nodes[nodeArrayPosition].position.y +
-          (originalParentPositionAbs.y -
-            $nodes[parentNodeId].computed.positionAbsolute.y),
-      };
-      assignChildren();
-    }
-    $nodes.forEach(
-      (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
-    );
-    $nodes = $nodes;
   }
 
   // TODO: still need to process edges, currently only looking at nodes
   async function onBeforeDelete(e: { nodes: Node[]; edges: Edge[] }) {
     // TODO: also remove children once element is deleted
-    // console.log(e);
-
     let del = {
       nodes: [] as Node[],
       edges: [] as Edge[],
