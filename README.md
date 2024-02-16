@@ -13,3 +13,6 @@ make sure it's pointing to the correct python file (should probably change that 
 
 kube-api route for crossplane resources
 http://localhost:8001/apis/storage.gcp.upbound.io/v1beta1
+
+
+[splitpanes](https://orefalo.github.io/svelte-splitpanes/examples/styling/splitters)

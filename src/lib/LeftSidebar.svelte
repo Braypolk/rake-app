@@ -86,7 +86,14 @@
     >
       BackendService
     </div> -->
-  <!-- END OF NODES -->
+    <div
+        class="for blob"
+        on:dragstart={(event) => onDragStart(event, "For")}
+        draggable={true}
+        >
+            For
+        </div>
+<!-- END OF NODES -->
 </div>
 
 <style>

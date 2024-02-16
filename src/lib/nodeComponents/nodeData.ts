@@ -113,6 +113,10 @@ export let backendserviceData = {
     timeoutSec: "",
 };
 
+export let forData = {
+  var: 0,
+};
+
 export const nodeTypeToDataMap = {
     Project: projectData,
     Network: networkData,
@@ -123,4 +127,5 @@ export const nodeTypeToDataMap = {
     InstanceGroup: instancegroupData,
     Router: routerData,
     BackendService: backendserviceData,
+    For: forData,
 };

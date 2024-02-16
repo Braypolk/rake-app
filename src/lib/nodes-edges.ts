@@ -23,6 +23,7 @@ const draggingNodeType: Writable<string> = writable<string>('');
 
 // Define sorting rules based on the node type
 const sortOrder = {
+  'For': 0,
   'Project': 1,
   'Network': 2,
   'Subnetwork': 3,
@@ -32,7 +33,7 @@ const sortOrder = {
   'InstanceGroup': 99,
   'Router': 99,
   'BackendService': 99,
-  // END OF SORT ORDER
+// END OF SORT ORDER
 };
 
 function addNodes(newNodes: Node[]) {

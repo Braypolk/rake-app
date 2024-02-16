@@ -1,0 +1,60 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+  name: for.logic.rake.dev
+spec:
+  group: logic.rake.dev
+  names:
+    kind: For
+    listKind: VPNTunnelList
+    plural: fors
+    singular: for
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: VPNTunnel is the Schema for the VPNTunnels API. VPN tunnel resource.
+        properties:
+          spec:
+            description: VPNTunnelSpec defines the desired state of VPNTunnel
+            properties:
+              forProvider:
+                properties:
+                  var:
+                    description: an whole number specifying how many times to loop over everything inside
+                    type: number
+                REF:
+                  description:
+                    description: An optional description of this resource.
+                    type: string
+                  ikeVersion:
+                    description: IKE protocol version to use when establishing the
+                      VPN tunnel with peer VPN gateway. Acceptable IKE versions are
+                      1 or 2. Default version is 2.
+                    type: number
+                  localTrafficSelector:
+                    description: Local traffic selector to use when establishing the
+                      VPN tunnel with peer VPN gateway. The value should be a CIDR
+                      formatted string, for example 192.168.0.0/16. The ranges should
+                      be disjoint. Only IPv4 is supported.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
