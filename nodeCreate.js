@@ -39,8 +39,7 @@ function generateInputField(propertyName, propertyDetails) {
         return `<input 
         class="nodrag" 
         type="text" 
-        on:input={(evt) => { $nodeData[id].${propertyName} = evt.target?.value;}}
-        value={$nodeData[id].${propertyName}}
+        bind:value={$nodeData[id].${propertyName}}
     />`;
     }
 }

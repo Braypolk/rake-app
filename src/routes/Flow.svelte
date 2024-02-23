@@ -28,6 +28,7 @@
     handleDragOver,
     handleDrop,
     onNodeDrag,
+    onNodeDragStart,
     onNodeDragStop,
   } from "$lib/interactions";
 
@@ -85,8 +86,14 @@
       }
     });
     $nodes = $nodes;
-
     return del;
+  }
+
+  function onDelete(e: { nodes: Node[]; edges: Edge[] }) {
+    e.nodes.forEach(({id}) => {
+      console.log(id);
+      delete $nodeData[id];
+    });
   }
 
   function handleSplitterClick(e) {
@@ -140,9 +147,14 @@
         defaultEdgeOptions={{ type: "smoothstep" }}
         minZoom={0.2}
         maxZoom={4}
+        panOnScroll={true}
+        selectionOnDrag={true}
+        panOnDrag={[1,2]}
         proOptions={{ hideAttribution: true }}
         onbeforedelete={(e) => onBeforeDelete(e)}
+        ondelete={(e) => onDelete(e)}
         on:dragover={onDragOver}
+        on:nodedragstart={onNodeDragStart}
         on:nodedrag={onNodeDrag}
         on:nodedragstop={onNodeDragStop}
         on:drop={onDrop}

@@ -114,7 +114,10 @@ export let backendserviceData = {
 };
 
 export let forData = {
-  var: 0,
+    varType: false,
+    num: 1,
+    var: "",
+    children: [],
 };
 
 export const nodeTypeToDataMap = {

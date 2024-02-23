@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { incrementid, nodes, nodeData, findNode } from "$lib/nodes-edges";
+  import { generateNewId, nodes, nodeData, findNode } from "$lib/nodes-edges";
   import { Handle, Position, type NodeProps } from "@xyflow/svelte";
 
-  export let type: 'source' | 'target';
+  export let type: "source" | "target";
 
   export let targetPosition: NodeProps["targetPosition"] = Position.Left;
   export let sourcePosition: NodeProps["sourcePosition"] = Position.Right;
@@ -11,7 +11,7 @@
   // from source to target
   function handleConnect(connection) {
     console.log(connection);
-    
+
     const source = $nodes[findNode(connection[0].source)];
     console.log(source);
 
@@ -23,9 +23,9 @@
 </script>
 
 <Handle
-  type={type}
-  position={type == 'target' ? targetPosition : sourcePosition}
-  id={incrementid()}
+  {type}
+  position={type == "target" ? targetPosition : sourcePosition}
+  id={generateNewId()}
   {isConnectable}
   style="height: 50px; width: 15px; border-radius: 5px"
   onconnect={handleConnect}

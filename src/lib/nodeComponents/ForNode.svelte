@@ -9,16 +9,28 @@
   <div class="flex flex-wrap">
     <div class="property">
       <span class="property-var">var</span>
-      <span class="info-icon" title="an whole number specifying how many times to loop over everything inside">ℹ</span>
-    <input
-            class="nodrag"
-            type="number"
-            on:input={(evt) => {
-                $nodeData[id].var = evt.target?.value;
-            }}
-            value={$nodeData[id].var}
-        />
-      </div>
+      <span
+        class="info-icon"
+        title="an whole number specifying how many times to loop over everything inside"
+        >ℹ</span
+      >
+
+      <select
+        id="varTypeSelection"
+        bind:value={$nodeData[id].varType}
+        
+      >
+        <option value={true}>Variable</option>
+        <option value={false}>Number</option>
+      </select>
+
+      {#if $nodeData[id].varType}
+      <!-- This can now be an auto fill field of all defined variables -->
+        <input class="nodrag" bind:value={$nodeData[id].var} />
+      {:else}
+        <input class="nodrag" type="number" min=1 bind:value={$nodeData[id].num} />
+      {/if}
+    </div>
   </div>
 </NodeTemplate>
 

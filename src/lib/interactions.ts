@@ -1,10 +1,10 @@
 import type { XYPosition, Node } from "@xyflow/svelte";
-import { assignChildren, draggingNodeType, findNode, newNode, nodes } from "./nodes-edges";
+import { assignChildren, draggingNodeType, findNode, newNode, nodes, nodeData, findChildren, sortNodes } from "./nodes-edges";
 import { get } from "svelte/store";
 import { nodeTypeToDataMap } from "./nodeComponents/nodeData";
 
 let intersectedRef: Node | undefined;
-
+let childNodes: { [key: string]: string } = {};
 export function handleDragOver(event: DragEvent, pos: XYPosition): void {
     event.preventDefault();
 
@@ -26,14 +26,18 @@ export function handleDrop(event: DragEvent, pos: XYPosition): void {
     const data = { ...nodeTypeToDataMap[type] };
 
     if (data) {
-        const node = newNode(data, pos, type);
-        dropIntersection(node.id, type);
+        const createdNode = newNode(nodes, data, pos, type);
+        dropIntersection(createdNode.id, type);
     } else {
         console.log("unknown type");
     }
 }
 
-export function onNodeDrag({ detail: { node } }) {
+export function onNodeDragStart({ detail: { node } }: { detail: { node: Node } }) {
+    childNodes = findChildren(get(nodes), node.id);
+}
+
+export function onNodeDrag({ detail: { node } }: { detail: { node: Node } }) {
     // when I drag I only want to check if the dragged node is intersecting with potential parents (ex: when dragging a network, don't have subnets be "available" intersections)
 
     // calculate the center point of the node from position and dimensions
@@ -46,7 +50,7 @@ export function onNodeDrag({ detail: { node } }) {
     dragIntersection(centerX, centerY, node.id, node.type, node.parentNode);
 }
 
-export function onNodeDragStop({ detail: { node } }) {
+export function onNodeDragStop({ detail: { node } }: { detail: { node: Node } }) {
     dropIntersection(node.id, node.type);
 }
 
@@ -54,12 +58,14 @@ function dragIntersection(
     pointX: number,
     pointY: number,
     id: string | undefined,
-    type: string,
+    draggedNodeType: string,
     parentNode: string | undefined,
 ) {
     let allNodes = get(nodes);
+    let allNodeData = get(nodeData);
     // find a node where the center point is inside
-    const intersections = allNodes.map((n) => {
+    // todo: this should probably be changed to find nodes that are intersecting at all, or a certain percentage is intersecting
+    const intersections = allNodes.filter((n) => {
         if (
             pointX > n.computed.positionAbsolute.x &&
             pointX < n.computed.positionAbsolute.x + n.computed.width &&
@@ -67,33 +73,49 @@ function dragIntersection(
             pointY < n.computed.positionAbsolute.y + n.computed.height &&
             n.id !== id // this is needed, otherwise we would always find the dragged node
         ) {
-            return n;
+            return true;
         }
     });
 
-    if (type === "Project") {
-        intersectedRef = intersections.findLast((n) => {
-            if (n !== undefined) {
-                return n.type == "Folder" ? n : undefined;
+    intersectedRef = intersections.findLast((intersectedNode) => {
+        // console.log(intersectedNode);
+
+        // check if dragged node is intersecting with any nodes that are already part of its hierarchy
+        if (!childNodes[intersectedNode.id]) {
+            // if for is being dragged and is intersected with another suitable node, hightlight the intersected node so it can become the parent when dropped
+            if (draggedNodeType === "For") {
+                if (allNodeData[intersectedNode.id].children && intersectedNode.parentNode !== id) {
+                    return intersectedNode
+                }
             }
-        });
-    } else if (type === "Network" || type === "Instance" || type === "Bucket") {
-        intersectedRef = intersections.findLast((n) => {
-            if (n !== undefined) {
-                return n.type === "Project" ? n : undefined;
+            else if (draggedNodeType === "Project") {
+                // todo: need to check the parent of the For to see if it's aleady in a project
+                if (intersectedNode.type == "For" && intersectedNode.parentNode !== id) {
+                    return intersectedNode
+                }
+                return intersectedNode.type === "Folder" ? intersectedNode : undefined;
             }
-        });
-    } else if (type === "Subnetwork") {
-        intersectedRef = intersections.findLast((n) => {
-            if (n !== undefined) {
-                return n.type === "Network" ? n : undefined;
+            else if (draggedNodeType === "Network" || draggedNodeType === "Instance" || draggedNodeType === "Bucket") {
+                if (intersectedNode.type == "For" && intersectedNode.parentNode !== id) {
+
+                    return intersectedNode
+                }
+                return intersectedNode.type === "Project" ? intersectedNode : undefined;
             }
-        });
-    }
+            else if (draggedNodeType === "Subnetwork") {
+                if (intersectedNode.type == "For" && intersectedNode.parentNode !== id) {
+                    return intersectedNode
+                }
+                return intersectedNode.type === "Network" ? intersectedNode : undefined;
+            }
+        }
+        return undefined
+    });
 
     allNodes.forEach(
         (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
     );
+
     if (intersectedRef && intersectedRef.id !== parentNode) {
         intersectedRef.class = "highlight";
     }
@@ -101,11 +123,13 @@ function dragIntersection(
 }
 
 function dropIntersection(id: string, type: string) {
+    console.log('drop');
+
     let allNodes = get(nodes);
 
     const nodeArrayPosition = findNode(id);
 
-    // if there is an intersection and the node is not intersected with a parent
+    // if there is an intersection and the node is not intersected with a parent assign the node to the parent
     if (
         intersectedRef &&
         intersectedRef.id !== allNodes[findNode(id)].parentNode
@@ -113,18 +137,14 @@ function dropIntersection(id: string, type: string) {
         let originalParentPositionAbs = { x: 0, y: 0 };
         // assign parent to node
         const parentNodeId = findNode(intersectedRef.id);
-        if (
-            intersectedRef.type == "Project" ||
-            (intersectedRef.type == "Network" && type == "Subnetwork")
-        ) {
-            // if a node has a parent already, remove the node (data.child) from the parent
-            if (allNodes[nodeArrayPosition].parentNode !== "") {
-                const originalParent =
-                    allNodes[findNode(allNodes[nodeArrayPosition].parentNode)];
-                originalParentPositionAbs = originalParent.computed.positionAbsolute;
-            }
-            allNodes[nodeArrayPosition].parentNode = intersectedRef.id;
+        // if a node has a parent already, remove the node (data.child) from the parent
+        if (allNodes[nodeArrayPosition].parentNode !== "") {
+            const originalParent =
+                allNodes[findNode(allNodes[nodeArrayPosition].parentNode)];
+            originalParentPositionAbs = originalParent.computed.positionAbsolute;
         }
+        allNodes[nodeArrayPosition].parentNode = intersectedRef.id;
+        // }
 
         allNodes[nodeArrayPosition].position = {
             x:
@@ -137,9 +157,13 @@ function dropIntersection(id: string, type: string) {
                     allNodes[parentNodeId].computed.positionAbsolute.y),
         };
         assignChildren();
+        sortNodes();
     }
+
+    // remove highlight from all nodes and reset intersectedRef
     allNodes.forEach(
         (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
     );
     nodes.set(allNodes);
+    intersectedRef = undefined;
 }

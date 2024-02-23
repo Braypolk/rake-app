@@ -18,7 +18,8 @@
     const type = "Subnetwork";
     let pos = $nodes[findNode(id)].position;
 
-    newNode(
+    const createdNode = newNode(
+      nodes,
       { ...nodeTypeToDataMap[type] },
       { x: pos.x, y: pos.y + 100 * count },
       type,
@@ -58,13 +59,7 @@
   />
 
   <label for="routingMode">Routing Mode:</label>
-  <select
-    id="routingMode"
-    value={$nodeData[id].routingMode}
-    on:change={(evt) => {
-      $nodeData[id].routingMode = evt.target?.value;
-    }}
-  >
+  <select id="routingMode" bind:value={$nodeData[id].routingMode}>
     <option>REGIONAL</option>
     <option>GLOBAL</option>
   </select>

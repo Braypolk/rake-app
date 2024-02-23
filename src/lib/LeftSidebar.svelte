@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { drawerOpen, draggingNodeType } from "$lib/nodes-edges";
+  import { leftSidebarSize, draggingNodeType } from "$lib/nodes-edges";
 
   const onDragStart = (event: DragEvent, nodeType: string) => {
     if (!event.dataTransfer) {
@@ -15,8 +15,9 @@
 
 <svelte:window
   on:keydown={(e) => {
+    // may need more logic so it doesn't fire anytime esc is pressed
     if (e.key === "Escape") {
-      $drawerOpen = false;
+      $leftSidebarSize = 0;
     }
   }}
 />
