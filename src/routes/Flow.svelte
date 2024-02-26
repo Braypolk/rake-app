@@ -77,7 +77,6 @@
           }
         }
       } else if ($nodeData[n.id].status === "synced") {
-        console.log("change to pendingDelete");
         $nodeData[n.id].status = "pendingDelete";
         n.class = "pendingDelete";
       } else {
@@ -91,7 +90,6 @@
 
   function onDelete(e: { nodes: Node[]; edges: Edge[] }) {
     e.nodes.forEach(({id}) => {
-      console.log(id);
       delete $nodeData[id];
     });
   }

@@ -68,17 +68,14 @@
         const { flow, message } = res.body;
 
         if (flow) {
-          const { x, y, zoom, nodes, edges } = flow;
+          const { x, y, zoom, nodes: flowNodes, edges: flowEdges } = flow;
+          $nodes = flowNodes;
 
-          $nodes = nodes;
-          console.log($nodeData);
-          
           $nodes.forEach((node: Node) => {
             $nodeData[node.id] = node.data;
-          });
-          sortNodes();
-          
-          $edges = edges;
+          });          
+          sortNodes(nodes, nodeData);
+          $edges = flowEdges;
           // todo: do the same for edges as was done with nodeData
 
           fitView();
@@ -97,7 +94,6 @@
     // change all status to syncing
     // TODO: should probably change to be only changing status to items that have been added or changed
     $nodes.forEach(({ id }) => {
-      console.log(id);
       $nodeData[id].status = "pendingDelete" ? "deleting" : "deploying";
     });
 
@@ -117,11 +113,9 @@
 
   async function runPythonFile(resources: Node[]) {
     try {
-      console.log("before prune", resources);
       let filteredResources = resources.filter(
         (resource) => resource.data.status !== "deleting",
       );
-      console.log("after prune", filteredResources);
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -134,7 +128,6 @@
       if (response.ok) {
         // Handle successful response
         const result = await response.json();
-        console.log(result);
         return "success";
       } else {
         // Handle error response

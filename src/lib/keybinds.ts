@@ -19,6 +19,7 @@ export function handleNodePaste(nodeIds: string[], newParent?: string) {
 
         const createdNode = newNode(
             nodes,
+            nodeData,
             { ...data },
             newParent ? pos : { x: pos.x, y: pos.y + (node.computed?.height * timesPasted) },
             type,
@@ -56,7 +57,7 @@ export function on_key_down(event: KeyboardEvent & { currentTarget: EventTarget 
                     event.preventDefault();
                     timesPasted++;
                     handleNodePaste(copiedNodeIds);
-                    assignChildren();
+                    assignChildren(nodes, nodeData);
                 }
                 break;
             default:

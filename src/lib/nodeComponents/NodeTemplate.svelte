@@ -59,9 +59,7 @@
             `http://localhost:8001/apis/${provider}.gcp.upbound.io/v1beta1/${typelower}s/${$nodeData[id].name}/status`,
           );
           if (!response.ok) {
-            console.log($nodeData[id].status);
             if ($nodeData[id].status == "deleting") {
-              console.log("deleted");
               $nodes.splice(findNode(id), 1);
               // todo: also remove any edges connected to this node or try to use the svelte flow deleteNodes hook
               $nodes = $nodes;
@@ -73,10 +71,6 @@
             // bug: something here is not being set correctly and it is preemtivly being set to synced
             const clusterStatus = await response.json();
             if (clusterStatus.status) {
-              // console.log(
-              //   clusterStatus.status.conditions[0].reason,
-              //   clusterStatus.status.conditions[0].status,
-              // );
               if (clusterStatus.status.conditions[0].status) {
                 $nodeData[id].status = "synced";
               }

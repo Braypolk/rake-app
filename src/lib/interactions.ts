@@ -26,7 +26,7 @@ export function handleDrop(event: DragEvent, pos: XYPosition): void {
     const data = { ...nodeTypeToDataMap[type] };
 
     if (data) {
-        const createdNode = newNode(nodes, data, pos, type);
+        const createdNode = newNode(nodes, nodeData, data, pos, type);
         dropIntersection(createdNode.id, type);
     } else {
         console.log("unknown type");
@@ -78,8 +78,6 @@ function dragIntersection(
     });
 
     intersectedRef = intersections.findLast((intersectedNode) => {
-        // console.log(intersectedNode);
-
         // check if dragged node is intersecting with any nodes that are already part of its hierarchy
         if (!childNodes[intersectedNode.id]) {
             // if for is being dragged and is intersected with another suitable node, hightlight the intersected node so it can become the parent when dropped
@@ -123,8 +121,6 @@ function dragIntersection(
 }
 
 function dropIntersection(id: string, type: string) {
-    console.log('drop');
-
     let allNodes = get(nodes);
 
     const nodeArrayPosition = findNode(id);
@@ -156,8 +152,8 @@ function dropIntersection(id: string, type: string) {
                 (originalParentPositionAbs.y -
                     allNodes[parentNodeId].computed.positionAbsolute.y),
         };
-        assignChildren();
-        sortNodes();
+        assignChildren(nodes, nodeData);
+        sortNodes(nodes, nodeData);
     }
 
     // remove highlight from all nodes and reset intersectedRef

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { nodes, edges, assignChildren } from "./nodes-edges";
+  import { nodes, edges, assignChildren, nodeData } from "./nodes-edges";
   import { handleNodePaste } from "./keybinds";
 
   export let onClick: () => void;
@@ -10,7 +10,7 @@
 
   function duplicateNode() {
     handleNodePaste([id]);
-    assignChildren();
+    assignChildren(nodes, nodeData);
   }
 </script>
 

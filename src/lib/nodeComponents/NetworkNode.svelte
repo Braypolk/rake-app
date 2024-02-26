@@ -20,12 +20,13 @@
 
     const createdNode = newNode(
       nodes,
+      nodeData,
       { ...nodeTypeToDataMap[type] },
       { x: pos.x, y: pos.y + 100 * count },
       type,
       id,
     );
-    assignChildren();
+    assignChildren(nodes, nodeData);
     count += 1;
   }
 </script>

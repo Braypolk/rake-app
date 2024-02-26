@@ -61,17 +61,16 @@ export function findChildren(nodes: Node[], parentId: string) {
   return children;
 }
 
-export function sortNodes() {
-  console.log("sortNodes");
+export function sortNodes(passedNodes: Writable<Node[]>, passedNodeData: Writable<{ [id: string]: any; }>) {
+  let definedNodes = get(passedNodes);
+  let definedNodeData = get(passedNodeData);
 
-  let definedNodes = get(nodes);
-  let definedNodeData = get(nodeData);
   // Create a map to store the nodes by their ID for quick access
   const nodeMap = new Map<string, any>();
   definedNodes.forEach(node => nodeMap.set(node.id, node));
 
   // Helper function to recursively add nodes to the sorted array
-  function addWithChildren(nodeId: string, sortedNodes: any[], visited: Set<string>, nodeData) {
+  function addWithChildren(nodeId: string, sortedNodes: any[], visited: Set<string>, helperPassedNodeData: { [id: string]: any; }) {
     if (visited.has(nodeId)) {
       return; // Avoid cycles in the hierarchy
     }
@@ -82,8 +81,8 @@ export function sortNodes() {
       // Add the current node
       sortedNodes.push(node);
       // Add all children recursively, ensuring we check if children exists
-      const children = nodeData[nodeId] && nodeData[nodeId].children ? nodeData[nodeId].children : [];
-      children.forEach(childId => addWithChildren(childId, sortedNodes, visited, nodeData));
+      const children = helperPassedNodeData[nodeId] && helperPassedNodeData[nodeId].children ? helperPassedNodeData[nodeId].children : [];
+      children.forEach((childId: string) => addWithChildren(childId, sortedNodes, visited, helperPassedNodeData));
     }
   }
 
@@ -95,14 +94,11 @@ export function sortNodes() {
   // Start with nodes that have no parent (top-level nodes)
   definedNodes.forEach(node => {
     if (!node.parentNode) {
-      addWithChildren(node.id, sortedNodes, visited, definedNodeData);
+     addWithChildren(node.id, sortedNodes, visited, definedNodeData);
     }
   });
-  console.log("sortedNodes", sortedNodes);
-  
-  nodes.set(sortedNodes);
-  console.log("nodes", get(nodes));
 
+  nodes.set(sortedNodes);
 }
 
 export function generateNewId() {
@@ -113,7 +109,7 @@ export function findNode(id: string): number {
   return get(nodes).findIndex(n => n.id === id)
 }
 
-export function newNode(passedNodes: Writable<Node[]>, data: Object, pos: XYPosition, type: string, parentNodeId: string = "", style: string = "", selected: boolean = false): Node {
+export function newNode(passedNodes: Writable<Node[]>, passedNodeData: Writable<{ [id: string]: any; }>, data: Object, pos: XYPosition, type: string, parentNodeId: string = "", style: string = "", selected: boolean = false): Node {
   const newId = generateNewId();
   const createdNode: Node = {
     id: newId,
@@ -130,22 +126,23 @@ export function newNode(passedNodes: Writable<Node[]>, data: Object, pos: XYPosi
 
   passedNodes.update((currentNodes) => [...currentNodes, createdNode]);
 
-  nodeData.update((currentData: { [id: string]: {} }) => {
+  passedNodeData.update((currentData: { [id: string]: {} }) => {
     currentData[newId] = { ...data, status: "unsynced" };
     if (parentNodeId !== "") {
       currentData[parentNodeId].children.push(newId);
     }
     return currentData;
   });
-  sortNodes();
+  sortNodes(nodes, nodeData);
+
 
   return createdNode;
 }
 
 // look: inefficient, could probably be done better. Reassign all children after any node relationship is modified
-export function assignChildren() {
-  const definedNodes = get(nodes);
-  const definedNodeData = get(nodeData);
+export function assignChildren(passedNodes: Writable<Node[]>, passedNodeData: Writable<{ [id: string]: any; }>) {
+  const definedNodes = get(passedNodes);
+  const definedNodeData = get(passedNodeData);
 
   // Loop through each defined node
   for (let i = 0; i < definedNodes.length; i++) {
