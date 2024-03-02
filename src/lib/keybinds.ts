@@ -1,39 +1,37 @@
-import { nodeData, nodes, findNode, newNode, assignChildren } from '$lib/nodes-edges';
-import { get } from 'svelte/store';
+import { nodeData, nodes, findNode, newNode, assignChildren, sortNodes } from '$lib/nodes-edges';
+import { get, type Writable } from 'svelte/store';
+import type { Node } from '@xyflow/svelte';
 
 let copiedNodeIds: string[] = [];
-let timesPasted = 0;
+let timesPasted = 1;
 // todo: when selected nodes contains nodes with its children I don't want to copy the children because the parent will already copy all child nodes recursively
-export function handleNodePaste(nodeIds: string[], newParent?: string) {
+export function handleNodePaste(timesPasted: number, passedNodes: Writable<Node[]>, passedNodeData: Writable<{ [id: string]: any; }>, nodeIds: string[], newParent?: string) {
     nodeIds.forEach((nodeId) => {
-        const data = get(nodeData)[nodeId];
-        const curentNodes = get(nodes);
+        const data = get(passedNodeData)[nodeId];
 
-        const nodeIndex = findNode(nodeId); // Replace with your actual implementation to find the node index
-        const node = curentNodes[nodeIndex];
-        curentNodes[nodeIndex].selected = false;
+        const nodeIndex = findNode(nodeId, passedNodes);
+        const node = get(passedNodes)[nodeIndex];
+        get(passedNodes)[nodeIndex].selected = false;
         const type = node.type;
         const parent = node.parentNode;
         const pos = parent == "" ? node.computed.positionAbsolute : node.position;
         const style = `width: ${node.computed?.width}px; height: ${node.computed?.height}px;`;
 
         const createdNode = newNode(
-            nodes,
-            nodeData,
+            passedNodes,
+            passedNodeData,
             { ...data },
             newParent ? pos : { x: pos.x, y: pos.y + (node.computed?.height * timesPasted) },
             type,
             newParent ? newParent : parent,
             style,
         );
-        nodes.set
 
         if (data.children && data.children.length) {
-            handleNodePaste(data.children, createdNode.id);
+            handleNodePaste(timesPasted, passedNodes, passedNodeData, data.children, createdNode.id);
         }
     });
 }
-
 
 export function on_key_down(event: KeyboardEvent & { currentTarget: EventTarget & Window; }, selectedNodeIds: string[]) {
     const { key, ctrlKey, altKey, metaKey, repeat } = event;
@@ -48,16 +46,20 @@ export function on_key_down(event: KeyboardEvent & { currentTarget: EventTarget 
             case "c":
                 if (selectedNodeIds.length > 0) {
                     event.preventDefault();
-                    timesPasted = 0;
+                    timesPasted = 1;
                     copiedNodeIds = selectedNodeIds;
                 }
                 break;
             case "v":
                 if (copiedNodeIds.length > 0) {
                     event.preventDefault();
-                    timesPasted++;
-                    handleNodePaste(copiedNodeIds);
+                    handleNodePaste(timesPasted, nodes, nodeData, copiedNodeIds);
+                    nodes.set(get(nodes));
+                    nodeData.set(get(nodeData));
                     assignChildren(nodes, nodeData);
+                    nodes.set(get(nodes));
+                    nodeData.set(get(nodeData));
+                    timesPasted++;
                 }
                 break;
             default:

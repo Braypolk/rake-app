@@ -1,1 +1,157 @@
-{"nodes":[{"id":"a58e1b5b866d8","type":"For","data":{"varType":false,"num":1,"var":"","children":["c5794d9a6384c"],"status":"unsynced"},"position":{"x":37.816250606045514,"y":-55.22499820430937},"parentNode":"","class":"","style":"","selected":false,"computed":{"positionAbsolute":{"x":37.816250606045514,"y":-55.22499820430937},"width":1163,"height":930},"dragging":false,"height":930,"width":1163},{"id":"c5794d9a6384c","type":"Project","data":{"name":"thing stuff","children":[],"folderId":"","status":"unsynced"},"position":{"x":51.27875296288971,"y":134.97687378790863},"parentNode":"a58e1b5b866d8","class":"Project","style":"","selected":true,"computed":{"positionAbsolute":{"x":89.09500356893523,"y":79.75187558359926},"width":1000,"height":700},"dragging":false}],"edges":[],"viewport":{"x":13.399007847341295,"y":113.47707612462506,"zoom":0.6589541155319314}}
+{
+    "nodes": [
+        {
+            "id": "49951b2dc9364",
+            "type": "For",
+            "data": {
+                "varType": false,
+                "num": 2,
+                "var": "",
+                "children": [
+                    "80384012cffe"
+                ],
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 0.3046875,
+                "y": 17
+            },
+            "parentNode": "",
+            "class": "",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 0.3046875,
+                    "y": 17
+                },
+                "width": 1115,
+                "height": 936
+            },
+            "dragging": false,
+            "height": 936,
+            "width": 1115
+        },
+        {
+            "id": "80384012cffe",
+            "type": "Project",
+            "data": {
+                "name": "",
+                "children": [
+                    "0ff4618cb2bc8",
+                    "7cb115e6fae73"
+                ],
+                "folderId": "",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 58.14279057853795,
+                "y": 119.79335130018325
+            },
+            "parentNode": "49951b2dc9364",
+            "class": "",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 58.44747807853795,
+                    "y": 136.79335130018325
+                },
+                "width": 1000,
+                "height": 700
+            }
+        },
+        {
+            "id": "0ff4618cb2bc8",
+            "type": "Bucket",
+            "data": {
+                "name": "",
+                "location": "US",
+                "publicState": false,
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 90.22960966646303,
+                "y": 120.30614622195071
+            },
+            "parentNode": "80384012cffe",
+            "class": "Bucket",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 148.677087745001,
+                    "y": 257.09949752213396
+                },
+                "width": 428,
+                "height": 94
+            }
+        },
+        {
+            "id": "7cb115e6fae73",
+            "type": "For",
+            "data": {
+                "varType": false,
+                "num": 2,
+                "var": "",
+                "children": [
+                    "d2a33743ccf52"
+                ],
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 87.22195601091428,
+                "y": 270.6888289993891
+            },
+            "parentNode": "80384012cffe",
+            "class": "",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 145.66943408945224,
+                    "y": 407.48218029957235
+                },
+                "width": 857,
+                "height": 332
+            },
+            "height": 332,
+            "width": 857
+        },
+        {
+            "id": "d2a33743ccf52",
+            "type": "Instance",
+            "data": {
+                "name": "",
+                "subnetwork": "",
+                "machineType": "e2-medium",
+                "bootDisk": "debian-cloud/debian-11",
+                "zone": "us-central1-a",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 18.04592193329256,
+                "y": 144.36737546634077
+            },
+            "parentNode": "7cb115e6fae73",
+            "class": "Instance",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 163.7153560227448,
+                    "y": 551.8495557659131
+                },
+                "width": 819,
+                "height": 94
+            },
+            "dragging": false
+        }
+    ],
+    "edges": [],
+    "viewport": {
+        "x": -27.799963968792667,
+        "y": 168.90635953976647,
+        "zoom": 1.0240335652707877
+    }
+}

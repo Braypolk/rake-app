@@ -3,13 +3,18 @@ import type { Node, Edge, XYPosition } from "@xyflow/svelte";
 
 let id = '';
 
+export const renderedNodes: Writable<Node[]> = writable<Node[]>([]);
+export const renderedNodeData: Writable<{ [id: string]: any }> = writable<{ [id: string]: any }>({});
+
 export const nodes: Writable<Node[]> = writable<Node[]>([]);
+export const nodeData: Writable<{ [id: string]: any }> = writable<{ [id: string]: any }>({});
+
 export const edges: Writable<Edge[]> = writable<Edge[]>([]);
+
 export const leftSidebarSize: Writable<number> = writable<number>(10);
 export const paneSize: Writable<number> = writable<number>(0);
 
 // contains the data for each node with a key of id
-export const nodeData: Writable<{ [id: string]: any }> = writable<{ [id: string]: any }>({});
 
 // todo: also need to do edges
 
@@ -44,12 +49,12 @@ const sortOrder = {
 // }
 
 // recursively find the children of a node given its id
-export function findChildren(nodes: Node[], parentId: string) {
+export function findChildren(passedNodes: Node[], parentId: string) {
   let children: { [key: string]: string } = {};
 
   // Helper function to recursively find children with type annotation for parameter
   const findChildNodes = (id: string) => {
-    nodes.forEach((node: Node) => {
+    passedNodes.forEach((node: Node) => {
       if (node.parentNode === id) {
         children[node.id] = node.parentNode; // Store the node ID as the value, or change to another string property
         findChildNodes(node.id); // Recursively find children
@@ -94,19 +99,19 @@ export function sortNodes(passedNodes: Writable<Node[]>, passedNodeData: Writabl
   // Start with nodes that have no parent (top-level nodes)
   definedNodes.forEach(node => {
     if (!node.parentNode) {
-     addWithChildren(node.id, sortedNodes, visited, definedNodeData);
+      addWithChildren(node.id, sortedNodes, visited, definedNodeData);
     }
   });
 
-  nodes.set(sortedNodes);
+  passedNodes.set(sortedNodes);
 }
 
 export function generateNewId() {
   return Math.random().toString(16).slice(2).toString();
 }
 
-export function findNode(id: string): number {
-  return get(nodes).findIndex(n => n.id === id)
+export function findNode(id: string, passedNodes: Writable<Node[]> = nodes): number {
+  return get(passedNodes).findIndex(n => n.id === id)
 }
 
 export function newNode(passedNodes: Writable<Node[]>, passedNodeData: Writable<{ [id: string]: any; }>, data: Object, pos: XYPosition, type: string, parentNodeId: string = "", style: string = "", selected: boolean = false): Node {
@@ -124,7 +129,11 @@ export function newNode(passedNodes: Writable<Node[]>, passedNodeData: Writable<
     // origin: [0.5, 0.5],
   };
 
-  passedNodes.update((currentNodes) => [...currentNodes, createdNode]);
+  passedNodes.update((currentNodes) => {
+    return [...currentNodes, createdNode]
+  });
+
+  data.children = [];
 
   passedNodeData.update((currentData: { [id: string]: {} }) => {
     currentData[newId] = { ...data, status: "unsynced" };
@@ -133,9 +142,7 @@ export function newNode(passedNodes: Writable<Node[]>, passedNodeData: Writable<
     }
     return currentData;
   });
-  sortNodes(nodes, nodeData);
-
-
+  sortNodes(passedNodes, passedNodeData);
   return createdNode;
 }
 
@@ -160,5 +167,5 @@ export function assignChildren(passedNodes: Writable<Node[]>, passedNodeData: Wr
       }
     }
   }
-  nodeData.set(definedNodeData);
+  passedNodeData.set(definedNodeData);
 }

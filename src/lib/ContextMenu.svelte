@@ -1,16 +1,32 @@
 <script lang="ts">
-  import { nodes, edges, assignChildren, nodeData } from "./nodes-edges";
+  import {
+    nodes,
+    edges,
+    assignChildren,
+    nodeData,
+    findNode,
+  } from "./nodes-edges";
   import { handleNodePaste } from "./keybinds";
+    import type { XYPosition } from "@xyflow/svelte";
 
   export let onClick: () => void;
   export let id: string;
   export let x: number;
   export let y: number;
 
-
   function duplicateNode() {
-    handleNodePaste([id]);
+    handleNodePaste(1, nodes, nodeData, [id]);
     assignChildren(nodes, nodeData);
+  }
+
+  function ungroup() {
+    const arrPos = findNode(id);
+    const parent: string = $nodes[arrPos].parentNode!;
+    const canvasPos: XYPosition = $nodes[arrPos].computed.positionAbsolute
+
+    $nodeData[parent].children = $nodeData[parent].children.filter((c) => c !== id);
+    $nodes[arrPos].parentNode = "";
+    $nodes[arrPos].position = canvasPos;
   }
 </script>
 
@@ -19,6 +35,9 @@
     <small>node: {id}</small>
   </p>
   <button on:click={duplicateNode}>duplicate</button>
+  {#if $nodes[findNode(id)].parentNode}
+    <button on:click={ungroup}>ungroup</button>
+  {/if}
 </div>
 
 <style>
@@ -28,7 +47,6 @@
     box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
     position: absolute;
     widows: 100px;
-    height: 100px;
     z-index: 10;
   }
 

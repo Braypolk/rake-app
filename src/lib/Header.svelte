@@ -9,11 +9,10 @@
     leftSidebarSize,
   } from "$lib/nodes-edges";
   import { useSvelteFlow, type Node } from "@xyflow/svelte";
-  import {renderForLoop} from "$lib/logic";
+  import Logic from "$lib/logic.svelte";
   const { toObject, fitView, setViewport } = useSvelteFlow();
 
   async function onSave() {
-    renderForLoop();
     const flow = toObject();
 
     // for each node in flow, I want to insert nodeData into the flow.node.data object
@@ -73,7 +72,7 @@
 
           $nodes.forEach((node: Node) => {
             $nodeData[node.id] = node.data;
-          });          
+          });
           sortNodes(nodes, nodeData);
           $edges = flowEdges;
           // todo: do the same for edges as was done with nodeData
@@ -205,7 +204,10 @@
         }}>Content View</button
       >
       <button class="px-5 text-left" on:click={onSave}>Save</button>
-      <button class="px-5 text-left" on:click={() => console.log($nodes)}>printnodes</button>
+      <button class="px-5 text-left" on:click={() => console.log($nodes)}
+        >printnodes</button
+      >
+      <Logic />
     </div>
     <button
       class="px-5 my-2 text-left bg-primary-500 text-black rounded-md"
