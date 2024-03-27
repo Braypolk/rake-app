@@ -1,20 +1,20 @@
 {
     "nodes": [
         {
-            "id": "49951b2dc9364",
-            "type": "For",
+            "id": "413faf51680e",
+            "type": "Project",
             "data": {
-                "varType": false,
-                "num": 2,
-                "var": "",
+                "name": "xr-mcp-bray-test",
                 "children": [
-                    "80384012cffe"
+                    "0758ab0cab73b",
+                    "135d34ff449af"
                 ],
+                "folderId": "xr-mcp-bray-test",
                 "status": "unsynced"
             },
             "position": {
-                "x": 0.3046875,
-                "y": 17
+                "x": 22.788329336628976,
+                "y": 52.06225677251058
             },
             "parentNode": "",
             "class": "",
@@ -22,127 +22,96 @@
             "selected": false,
             "computed": {
                 "positionAbsolute": {
-                    "x": 0.3046875,
-                    "y": 17
-                },
-                "width": 1115,
-                "height": 936
-            },
-            "dragging": false,
-            "height": 936,
-            "width": 1115
-        },
-        {
-            "id": "80384012cffe",
-            "type": "Project",
-            "data": {
-                "name": "",
-                "children": [
-                    "0ff4618cb2bc8",
-                    "7cb115e6fae73"
-                ],
-                "folderId": "",
-                "status": "unsynced"
-            },
-            "position": {
-                "x": 58.14279057853795,
-                "y": 119.79335130018325
-            },
-            "parentNode": "49951b2dc9364",
-            "class": "",
-            "style": "",
-            "selected": false,
-            "computed": {
-                "positionAbsolute": {
-                    "x": 58.44747807853795,
-                    "y": 136.79335130018325
+                    "x": 22.788329336628976,
+                    "y": 52.06225677251058
                 },
                 "width": 1000,
                 "height": 700
-            }
+            },
+            "dragging": false
         },
         {
-            "id": "0ff4618cb2bc8",
+            "id": "0758ab0cab73b",
             "type": "Bucket",
             "data": {
-                "name": "",
+                "name": "some-test-bucket-bray-123",
                 "location": "US",
                 "publicState": false,
-                "status": "unsynced"
+                "status": "unsynced",
+                "children": []
             },
             "position": {
-                "x": 90.22960966646303,
-                "y": 120.30614622195071
+                "x": 28.399060984840844,
+                "y": 135.4493166048386
             },
-            "parentNode": "80384012cffe",
+            "parentNode": "413faf51680e",
             "class": "Bucket",
             "style": "",
             "selected": false,
             "computed": {
                 "positionAbsolute": {
-                    "x": 148.677087745001,
-                    "y": 257.09949752213396
+                    "x": 51.18739032146982,
+                    "y": 187.51157337734918
                 },
                 "width": 428,
                 "height": 94
-            }
+            },
+            "dragging": false
         },
         {
-            "id": "7cb115e6fae73",
-            "type": "For",
+            "id": "135d34ff449af",
+            "type": "Network",
             "data": {
-                "varType": false,
-                "num": 2,
-                "var": "",
+                "name": "test-network-bray-1",
                 "children": [
-                    "d2a33743ccf52"
+                    "08bf1b983905b"
                 ],
+                "description": "a demo network",
+                "routingMode": "REGIONAL",
                 "status": "unsynced"
             },
             "position": {
-                "x": 87.22195601091428,
-                "y": 270.6888289993891
+                "x": 46.09201060094625,
+                "y": 263.82184742783005
             },
-            "parentNode": "80384012cffe",
+            "parentNode": "413faf51680e",
             "class": "",
             "style": "",
             "selected": false,
             "computed": {
                 "positionAbsolute": {
-                    "x": 145.66943408945224,
-                    "y": 407.48218029957235
+                    "x": 68.88033993757523,
+                    "y": 315.88410420034063
                 },
-                "width": 857,
-                "height": 332
+                "width": 800,
+                "height": 300
             },
-            "height": 332,
-            "width": 857
+            "dragging": false
         },
         {
-            "id": "d2a33743ccf52",
-            "type": "Instance",
+            "id": "08bf1b983905b",
+            "type": "Subnetwork",
             "data": {
-                "name": "",
-                "subnetwork": "",
-                "machineType": "e2-medium",
-                "bootDisk": "debian-cloud/debian-11",
-                "zone": "us-central1-a",
-                "status": "unsynced"
+                "name": "test-subnet-bray-1",
+                "ipCidrRange": "10.0.0.0/24",
+                "region": "us-central1",
+                "status": "unsynced",
+                "children": []
             },
             "position": {
-                "x": 18.04592193329256,
-                "y": 144.36737546634077
+                "x": 18.988395484594008,
+                "y": 137.9823405213832
             },
-            "parentNode": "7cb115e6fae73",
-            "class": "Instance",
+            "parentNode": "135d34ff449af",
+            "class": "Subnetwork",
             "style": "",
             "selected": false,
             "computed": {
                 "positionAbsolute": {
-                    "x": 163.7153560227448,
-                    "y": 551.8495557659131
+                    "x": 87.86873542216924,
+                    "y": 453.86644472172384
                 },
-                "width": 819,
+                "width": 736,
                 "height": 94
             },
             "dragging": false
@@ -150,8 +119,8 @@
     ],
     "edges": [],
     "viewport": {
-        "x": -27.799963968792667,
-        "y": 168.90635953976647,
-        "zoom": 1.0240335652707877
+        "x": 20.854034881110692,
+        "y": 75.37410685524873,
+        "zoom": 0.7663636363636364
     }
 }

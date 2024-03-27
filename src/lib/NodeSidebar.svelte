@@ -1,7 +1,10 @@
 <script lang="ts">
   import { nodes, nodeData } from "$lib/nodes-edges";
 
-  export let selectedNodeIds;
+  // todo: this is duplicate code from flow.svelte. Done to make the render nodes button work correctly
+  $: selectedNodeIds = $nodes
+    .filter((node) => node.selected)
+    .map((node) => node.id);
 </script>
 
 <div>

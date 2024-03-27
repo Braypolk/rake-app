@@ -5,6 +5,7 @@
     findNode,
     nodeData,
     nodes,
+    variables,
   } from "./nodes-edges";
   import { handleNodePaste } from "./keybinds";
   import { useSvelteFlow, type Node } from "@xyflow/svelte";
@@ -17,6 +18,11 @@
   function renderForLoop() {
     $renderedNodes = JSON.parse(JSON.stringify($nodes));
     $renderedNodeData = JSON.parse(JSON.stringify($nodeData));
+
+    for (let i = 0; i < $renderedNodes.length; i++) {
+      $renderedNodes[i].selected = false;
+      $nodes[i].selected = false;
+    }
 
     for (let i = 0; i < $nodes.length; i++) {
       if ($nodes[i].parentNode === "") {
@@ -33,29 +39,24 @@
               dfsRecursive(adjacentNode);
             });
           }
-          
-          const parentNodeId: string = $nodes[findNode(nodeId)].parentNode; //7c
+
+          const parentNodeId: string = $nodes[findNode(nodeId)].parentNode;
           const parentNodeData = $nodeData[parentNodeId];
-          console.log('blah', nodeId, "parentnodeid", parentNodeId);
-          
 
           if (parentNodeData) {
             // if parentnode is a for node
             if (parentNodeData.num) {
+              console.log(parentNodeData);
               if (parentNodeData.num > 1) {
                 for (let index = 1; index < parentNodeData.num; index++) {
                   // todo: not handling parentnodeid correctly, duplicated nodes are being assigned to the old parent
-                  handleNodePaste(
-                    index,
-                    renderedNodes,
-                    renderedNodeData,
-                    [nodeId]
-                  );
+                  handleNodePaste(index, renderedNodes, renderedNodeData, [
+                    nodeId,
+                  ]);
                 }
               }
               console.log(JSON.parse(JSON.stringify($renderedNodeData)));
             }
-            
           }
         };
         dfsRecursive($nodes[i].id);
@@ -63,33 +64,34 @@
     }
 
     // remove for loops from $renderedNodes and renderedNodeData
-    // [...$renderedNodes].forEach((node) => {
-    //   if (node.type === "For") {
-    //     let children: string[] = $renderedNodeData[node.id].children;
+    const tempRenderedNodes = $renderedNodes;
+    tempRenderedNodes.forEach((node) => {
+      if (node.type === "For") {
+        // get children, assign to parent, update parents children, delete for
+        let children: string[] = $renderedNodeData[node.id].children;
+        children.forEach((child) => {
+          if (node.parentNode) {
+            $renderedNodes[findNode(child, renderedNodes)].parentNode =
+              node.parentNode;
+            $renderedNodeData[node.parentNode].children.push(child);
+          } else {
+            $renderedNodes[findNode(child, renderedNodes)].parentNode = "";
+          }
+        });
+        console.log(
+          JSON.parse(JSON.stringify($renderedNodes)),
+          JSON.parse(JSON.stringify($renderedNodeData)),
+        );
 
-    //     delete $renderedNodeData[node.id];
+        $renderedNodes.splice(findNode(node.id, renderedNodes), 1);
+        delete $renderedNodeData[node.id];
 
-    //     $renderedNodes = $renderedNodes.filter((item) => {
-    //       // remove for node from array
-    //       if (item.id !== node.id) {
-    //         return true;
-    //       }
-
-    //     //   const parentNodeId = item.parentNode;
-    //     //   // remove for loop id for parent's children array and assign for loop's children to new parent
-    //     //   if ($renderedNodeData[parentNodeId]) {
-    //     //     $renderedNodes = $renderedNodeData[parentNodeId].children.filter(
-    //     //       (item) => item.id !== node.id,
-    //     //     );
-    //     //     $renderedNodeData[parentNodeId].children = [
-    //     //       ...$renderedNodeData[parentNodeId].children,
-    //     //       ...children,
-    //     //     ];
-    //     //   }
-    //     });
-    //   }
-    // });
-    // console.log($renderedNodeData, $renderedNodes);
+        console.log(
+          JSON.parse(JSON.stringify($renderedNodes)),
+          JSON.parse(JSON.stringify($renderedNodeData)),
+        );
+      }
+    });
   }
 
   function handleCheck(e) {

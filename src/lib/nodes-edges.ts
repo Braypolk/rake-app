@@ -13,8 +13,21 @@ export const edges: Writable<Edge[]> = writable<Edge[]>([]);
 
 export const leftSidebarSize: Writable<number> = writable<number>(10);
 export const paneSize: Writable<number> = writable<number>(0);
+export const varPaneSize: Writable<number> = writable<number>(20);
 
-// contains the data for each node with a key of id
+type VarsType = {
+  name: string;
+  type: 'string' | 'boolean' | 'number';
+  value: string | boolean | number;
+};
+
+const initialData: VarsType[] = [
+  { name: 'example', type: 'string', value: 'hello' },
+  { name: 'another', type: 'boolean', value: true },
+  { name: 'yetAnother', type: 'number', value: 2 },
+];
+
+export const variables = writable(initialData);
 
 // todo: also need to do edges
 

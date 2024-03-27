@@ -7,6 +7,7 @@
     showContent,
     sortNodes,
     leftSidebarSize,
+    varPaneSize,
   } from "$lib/nodes-edges";
   import { useSvelteFlow, type Node } from "@xyflow/svelte";
   import Logic from "$lib/logic.svelte";
@@ -20,6 +21,8 @@
       node.data = $nodeData[node.id];
     });
 
+    console.log(flow.nodes);
+    
     flow.nodes.forEach((node) => {
       // console.log(node.id, node.data.children);
       // console.log(node.data.children);
@@ -73,7 +76,7 @@
           $nodes.forEach((node: Node) => {
             $nodeData[node.id] = node.data;
           });
-          sortNodes(nodes, nodeData);
+          // sortNodes(nodes, nodeData);
           $edges = flowEdges;
           // todo: do the same for edges as was done with nodeData
 
@@ -90,10 +93,12 @@
   }
 
   const deploy = async () => {
+    onSave();
     // change all status to syncing
     // TODO: should probably change to be only changing status to items that have been added or changed
     $nodes.forEach(({ id }) => {
-      $nodeData[id].status = "pendingDelete" ? "deleting" : "deploying";
+      $nodeData[id].status =
+        $nodeData[id].status === "pendingDelete" ? "deleting" : "deploying";
     });
 
     const resources = $nodes.map((node) => {
@@ -106,11 +111,11 @@
     const relationships = $edges.map((edge) => {});
 
     // TODO: uncomment when I actually want to test running things
-    const result = await runPythonFile(resources);
+    const result = await sendToApi(resources);
     onSave();
   };
 
-  async function runPythonFile(resources: Node[]) {
+  async function sendToApi(resources: Node[]) {
     try {
       let filteredResources = resources.filter(
         (resource) => resource.data.status !== "deleting",
@@ -191,6 +196,9 @@
           />
         </svg>
       </button>
+      <button class="btn btn-sm px-2 mx-2" on:click={() => $varPaneSize = $varPaneSize > 0 ? 0 : 10}>
+        {'{'}x{'}'}
+    </button>
     </div>
 
     <div class="flex w-full justify-center align-center">

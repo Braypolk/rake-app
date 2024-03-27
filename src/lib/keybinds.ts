@@ -42,17 +42,32 @@ export function on_key_down(event: KeyboardEvent & { currentTarget: EventTarget 
     }
 
     if (metaKey || ctrlKey) {
+        let activeElement;
         switch (key) {
             case "c":
+                activeElement = document.activeElement;
+                if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
+                    // Allow the default behavior to proceed for input elements
+                    console.log('blah');
+
+                    return;
+                }
                 if (selectedNodeIds.length > 0) {
-                    event.preventDefault();
+                    // event.preventDefault();
                     timesPasted = 1;
                     copiedNodeIds = selectedNodeIds;
                 }
                 break;
             case "v":
+                activeElement = document.activeElement;
+                if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
+                    // Allow the default behavior to proceed for input elements
+                    console.log('blashth');
+
+                    return;
+                }
                 if (copiedNodeIds.length > 0) {
-                    event.preventDefault();
+                    // event.preventDefault();
                     handleNodePaste(timesPasted, nodes, nodeData, copiedNodeIds);
                     nodes.set(get(nodes));
                     nodeData.set(get(nodeData));

@@ -13,6 +13,7 @@
   import NodeSidebar from "$lib/NodeSidebar.svelte";
   import Header from "$lib/Header.svelte";
   import ContextMenu from "$lib/ContextMenu.svelte";
+  import VarPanel from "$lib/VarPanel.svelte";
   import { on_key_down } from "$lib/keybinds";
   import {
     nodes,
@@ -20,6 +21,7 @@
     edges,
     leftSidebarSize,
     paneSize,
+    varPaneSize,
   } from "$lib/nodes-edges";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
@@ -89,12 +91,14 @@
   }
 
   function onDelete(e: { nodes: Node[]; edges: Edge[] }) {
-    e.nodes.forEach(({id}) => {
+    e.nodes.forEach(({ id }) => {
       delete $nodeData[id];
     });
   }
 
   function handleSplitterClick(e) {
+    console.log(e.detail);
+
     const index = e.detail.index;
 
     if (index == 1) {
@@ -136,49 +140,63 @@
     <LeftSidebar />
   </Pane>
   <Pane>
-    <main class="h-90 p-0 m-0 w-full h-full flex flex-col">
-      <SvelteFlow
-        class="text-on-primary-token"
-        {nodeTypes}
-        {nodes}
-        {edges}
-        defaultEdgeOptions={{ type: "smoothstep" }}
-        minZoom={0.2}
-        maxZoom={4}
-        panOnScroll={true}
-        selectionOnDrag={true}
-        panOnDrag={[1,2]}
-        proOptions={{ hideAttribution: true }}
-        onbeforedelete={(e) => onBeforeDelete(e)}
-        ondelete={(e) => onDelete(e)}
-        on:dragover={onDragOver}
-        on:nodedragstart={onNodeDragStart}
-        on:nodedrag={onNodeDrag}
-        on:nodedragstop={onNodeDragStop}
-        on:drop={onDrop}
-        on:nodeclick={handlePaneClick}
-        on:nodecontextmenu={handleContextMenu}
-        on:paneclick={handlePaneClick}
-      >
-        <Background
-          bgColor="#0f161d"
-          patternClass="opacity-10"
-          variant={BackgroundVariant.Lines}
-        />
-        <Controls />
-        <MiniMap />
-        {#if menu}
-          <ContextMenu
-            onClick={handlePaneClick}
-            id={menu.id}
-            x={menu.x}
-            y={menu.y}
-          />
-        {/if}
-      </SvelteFlow>
-    </main>
+    <Splitpanes
+      theme="rake-theme"
+      dblClickSplitter={false}
+      on:splitter-click={() => {
+        $varPaneSize = $varPaneSize > 0 ? 0 : 10;
+      }}
+      horizontal
+    >
+      <Pane bind:size={$varPaneSize} snapSize={3}>
+        <VarPanel />
+      </Pane>
+      <Pane>
+        <main class="h-90 p-0 m-0 w-full h-full flex flex-col">
+          <SvelteFlow
+            class="text-on-primary-token"
+            {nodeTypes}
+            {nodes}
+            {edges}
+            defaultEdgeOptions={{ type: "smoothstep" }}
+            minZoom={0.2}
+            maxZoom={4}
+            panOnScroll={true}
+            selectionOnDrag={true}
+            panOnDrag={[1, 2]}
+            proOptions={{ hideAttribution: true }}
+            onbeforedelete={(e) => onBeforeDelete(e)}
+            ondelete={(e) => onDelete(e)}
+            on:dragover={onDragOver}
+            on:nodedragstart={onNodeDragStart}
+            on:nodedrag={onNodeDrag}
+            on:nodedragstop={onNodeDragStop}
+            on:drop={onDrop}
+            on:nodeclick={handlePaneClick}
+            on:nodecontextmenu={handleContextMenu}
+            on:paneclick={handlePaneClick}
+          >
+            <Background
+              bgColor="#0f161d"
+              patternClass="opacity-10"
+              variant={BackgroundVariant.Lines}
+            />
+            <Controls />
+            <MiniMap />
+            {#if menu}
+              <ContextMenu
+                onClick={handlePaneClick}
+                id={menu.id}
+                x={menu.x}
+                y={menu.y}
+              />
+            {/if}
+          </SvelteFlow>
+        </main>
+      </Pane>
+    </Splitpanes>
   </Pane>
   <Pane bind:size={$paneSize} maxSize={50} snapSize={8}>
-    <NodeSidebar {selectedNodeIds} />
+    <NodeSidebar />
   </Pane>
 </Splitpanes>

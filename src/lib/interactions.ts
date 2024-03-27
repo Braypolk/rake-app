@@ -128,38 +128,37 @@ function dropIntersection(id: string, type: string) {
     // if there is an intersection and the node is not intersected with a parent assign the node to the parent
     if (
         intersectedRef &&
-        intersectedRef.id !== allNodes[findNode(id)].parentNode
+        intersectedRef.id !== get(nodes)[findNode(id)].parentNode
     ) {
         let originalParentPositionAbs = { x: 0, y: 0 };
         // assign parent to node
         const parentNodeId = findNode(intersectedRef.id);
         // if a node has a parent already, remove the node (data.child) from the parent
-        if (allNodes[nodeArrayPosition].parentNode !== "") {
+        if (get(nodes)[nodeArrayPosition].parentNode !== "") {
             const originalParent =
-                allNodes[findNode(allNodes[nodeArrayPosition].parentNode)];
+                get(nodes)[findNode(get(nodes)[nodeArrayPosition].parentNode)];
             originalParentPositionAbs = originalParent.computed.positionAbsolute;
         }
-        allNodes[nodeArrayPosition].parentNode = intersectedRef.id;
+        get(nodes)[nodeArrayPosition].parentNode = intersectedRef.id;
         // }
 
-        allNodes[nodeArrayPosition].position = {
+        get(nodes)[nodeArrayPosition].position = {
             x:
-                allNodes[nodeArrayPosition].position.x +
+                get(nodes)[nodeArrayPosition].position.x +
                 (originalParentPositionAbs.x -
-                    allNodes[parentNodeId].computed.positionAbsolute.x),
+                    get(nodes)[parentNodeId].computed.positionAbsolute.x),
             y:
-                allNodes[nodeArrayPosition].position.y +
+                get(nodes)[nodeArrayPosition].position.y +
                 (originalParentPositionAbs.y -
-                    allNodes[parentNodeId].computed.positionAbsolute.y),
+                    get(nodes)[parentNodeId].computed.positionAbsolute.y),
         };
         assignChildren(nodes, nodeData);
         sortNodes(nodes, nodeData);
     }
 
     // remove highlight from all nodes and reset intersectedRef
-    allNodes.forEach(
+    get(nodes).forEach(
         (n) => (n.class = n.class?.replace(/\bhighlight\b/, "").trim()),
     );
-    nodes.set(allNodes);
     intersectedRef = undefined;
 }

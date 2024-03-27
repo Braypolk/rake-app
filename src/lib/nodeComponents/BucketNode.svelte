@@ -14,11 +14,6 @@
       $nodeData[id].name = evt.target?.value;
     }}
     value={$nodeData[id].name}
-    on:keydown={(evt) => {
-      if (evt.key === "Delete" || evt.key === "Backspace") {
-        evt.stopPropagation();
-      }
-    }}
   />
 
   <label for="location">Location:</label>

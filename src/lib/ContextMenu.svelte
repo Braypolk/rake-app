@@ -7,7 +7,7 @@
     findNode,
   } from "./nodes-edges";
   import { handleNodePaste } from "./keybinds";
-    import type { XYPosition } from "@xyflow/svelte";
+  import type { XYPosition } from "@xyflow/svelte";
 
   export let onClick: () => void;
   export let id: string;
@@ -22,11 +22,22 @@
   function ungroup() {
     const arrPos = findNode(id);
     const parent: string = $nodes[arrPos].parentNode!;
-    const canvasPos: XYPosition = $nodes[arrPos].computed.positionAbsolute
+    const canvasPos: XYPosition = $nodes[arrPos].computed.positionAbsolute;
 
-    $nodeData[parent].children = $nodeData[parent].children.filter((c) => c !== id);
+    $nodeData[parent].children = $nodeData[parent].children.filter(
+      (c) => c !== id,
+    );
     $nodes[arrPos].parentNode = "";
     $nodes[arrPos].position = canvasPos;
+  }
+
+  function ungroupChildren() {
+    $nodeData[id].children.forEach((child: string) => {
+      const tempPos = $nodes[findNode(child)].computed?.positionAbsolute;
+      $nodes[findNode(child)].parentNode = "";
+      $nodes[findNode(child)].position = tempPos;
+    });
+    $nodeData[id].children = [];
   }
 </script>
 
@@ -36,7 +47,10 @@
   </p>
   <button on:click={duplicateNode}>duplicate</button>
   {#if $nodes[findNode(id)].parentNode}
-    <button on:click={ungroup}>ungroup</button>
+    <button on:click={ungroup}>Ungroup from parent</button>
+  {/if}
+  {#if $nodeData[id].children && $nodeData[id].children.length > 0}
+    <button on:click={ungroupChildren}>Ungroup children</button>
   {/if}
 </div>
 

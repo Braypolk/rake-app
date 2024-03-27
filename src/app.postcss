@@ -9,6 +9,9 @@ html, body { @apply h-full overflow-hidden; }
 .splitpanes.rake-theme .splitpanes__pane {
     @apply bg-surface-800
 }
+.splitpanes.rake-theme .splitpanes__pane {
+    overflow: auto;
+}
 
 .splitpanes.rake-theme .splitpanes__splitter {
     @apply bg-surface-500
@@ -71,4 +74,35 @@ html, body { @apply h-full overflow-hidden; }
 .rake-theme.splitpanes--vertical>.splitpanes__splitter:after,
 .rake-theme .splitpanes--vertical>.splitpanes__splitter:after {
     margin-left: 1px;
+}
+
+
+
+
+
+
+
+.rake-theme.splitpanes--horizontal>.splitpanes__splitter,
+.rake-theme .splitpanes--horizontal>.splitpanes__splitter {
+    height: 7px;
+    cursor: row-resize;
+}
+
+.rake-theme.splitpanes--horizontal>.splitpanes__splitter:before,
+.rake-theme.splitpanes--horizontal>.splitpanes__splitter:after,
+.rake-theme .splitpanes--horizontal>.splitpanes__splitter:before,
+.rake-theme .splitpanes--horizontal>.splitpanes__splitter:after {
+    transform: translateX(-50%);
+    height: 1px;
+    width: 30px;
+}
+
+.rake-theme.splitpanes--horizontal>.splitpanes__splitter:before,
+.rake-theme .splitpanes--horizontal>.splitpanes__splitter:before {
+    margin-top: -2px;
+}
+
+.rake-theme.splitpanes--horizontal>.splitpanes__splitter:after,
+.rake-theme .splitpanes--horizontal>.splitpanes__splitter:after {
+    margin-top: 1px;
 }
