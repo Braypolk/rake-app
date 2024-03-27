@@ -46,16 +46,33 @@
           if (parentNodeData) {
             // if parentnode is a for node
             if (parentNodeData.num) {
-              console.log(parentNodeData);
-              if (parentNodeData.num > 1) {
-                for (let index = 1; index < parentNodeData.num; index++) {
+              if (parentNodeData.varType) {
+                const varIndex = $variables.findIndex((n) => {
+                  console.log(parentNodeData.var, n.name);
+                  return n.name === parentNodeData.var;
+                });
+
+                for (
+                  let index = 1;
+                  index < $variables[varIndex].value;
+                  index++
+                ) {
                   // todo: not handling parentnodeid correctly, duplicated nodes are being assigned to the old parent
                   handleNodePaste(index, renderedNodes, renderedNodeData, [
                     nodeId,
                   ]);
                 }
+              } else {
+                if (parentNodeData.num > 1) {
+                  for (let index = 1; index < parentNodeData.num; index++) {
+                    // todo: not handling parentnodeid correctly, duplicated nodes are being assigned to the old parent
+                    handleNodePaste(index, renderedNodes, renderedNodeData, [
+                      nodeId,
+                    ]);
+                  }
+                }
+                console.log(JSON.parse(JSON.stringify($renderedNodeData)));
               }
-              console.log(JSON.parse(JSON.stringify($renderedNodeData)));
             }
           }
         };

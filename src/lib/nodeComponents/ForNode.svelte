@@ -5,8 +5,12 @@
   $$restProps;
 
   let varIndex: number = 0;
-  $: $nodeData[id].var = $variables[varIndex].name;
   $: test = $variables.filter((v) => v.type === "number");
+
+  $: {
+    $nodeData[id].var = test[varIndex].name;
+    $nodeData = $nodeData;
+  }
 </script>
 
 <NodeTemplate type="For" provider="compute" {id}>
@@ -28,7 +32,7 @@
         <select bind:value={varIndex}>
           {#each test as { name, type }, index}
             <!-- {#if type === "number"} -->
-              <option value={index}>{name}</option>
+            <option value={index}>{name}</option>
             <!-- {/if} -->
           {/each}
         </select>
