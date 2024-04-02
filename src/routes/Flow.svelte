@@ -97,8 +97,6 @@
   }
 
   function handleSplitterClick(e) {
-    console.log(e.detail);
-
     const index = e.detail.index;
 
     if (index == 1) {

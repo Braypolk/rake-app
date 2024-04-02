@@ -1,6 +1,7 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
   import { nodeData, variables } from "$lib/nodes-edges";
+  import Fuse from "$lib/fuse.svelte";
   export let id: string;
   $$restProps;
 
@@ -15,6 +16,7 @@
 
 <NodeTemplate type="For" provider="compute" {id}>
   <div class="flex flex-wrap">
+    <Fuse searchList={test} />
     <div class="property">
       <span class="property-var">var</span>
       <span
