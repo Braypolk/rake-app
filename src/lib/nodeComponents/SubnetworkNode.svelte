@@ -1,21 +1,21 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
   import CustomHandle from "./CustomHandle.svelte";
-  import { subnetworkData } from "./nodeData";
-
-  export let data = subnetworkData;
+  import { nodeData } from "$lib/nodes-edges";
+  export let id: string;
+  $$restProps;
 </script>
 
-<CustomHandle type="target"/>
-<NodeTemplate type="Subnetwork" provider="compute" {data}>
+<CustomHandle type="target" />
+<NodeTemplate type="Subnetwork" provider="compute" {id}>
   <label for="subnetwork-name">Name</label>
   <input
     id="subnetwork-name"
     class="nodrag"
     on:input={(evt) => {
-      data.name = evt.target?.value;
+      $nodeData[id].name = evt.target?.value;
     }}
-    value={data.name}
+    value={$nodeData[id].name}
     on:keydown={(evt) => {
       if (evt.key === "Delete" || evt.key === "Backspace") {
         evt.stopPropagation();
@@ -28,9 +28,9 @@
     id="ipCidrRange"
     class="nodrag"
     on:input={(evt) => {
-      data.ipCidrRange = evt.target?.value;
+      $nodeData[id].ipCidrRange = evt.target?.value;
     }}
-    value={data.ipCidrRange}
+    value={$nodeData[id].ipCidrRange}
     on:keydown={(evt) => {
       if (evt.key === "Delete" || evt.key === "Backspace") {
         evt.stopPropagation();
@@ -43,7 +43,7 @@
     id="region"
     class="nodrag"
     on:change={(evt) => {
-      data.location = evt.target?.value;
+      $nodeData[id].location = evt.target?.value;
     }}
   >
     <option>us-central1</option>
@@ -88,8 +88,7 @@
     <option>us-west4</option>
   </select>
 </NodeTemplate>
-<CustomHandle type="source"/>
-
+<CustomHandle type="source" />
 
 <style>
   :global(.svelte-flow__node-Subnetwork) {

@@ -1,30 +1,26 @@
 <script lang="ts">
   import NodeTemplate from "./NodeTemplate.svelte";
-  import { bucketData } from "./nodeData";
-  export let data = bucketData;
+  import { nodeData } from "$lib/nodes-edges";
+  export let id: string;
+  $$restProps;
 </script>
 
-<NodeTemplate type="Bucket" provider="storage" {data}>
+<NodeTemplate type="Bucket" provider="storage" {id}>
   <label for="bucket-name">Name</label>
   <input
     id="bucket-name"
     class="nodrag"
     on:input={(evt) => {
-      data.name = evt.target?.value;
+      $nodeData[id].name = evt.target?.value;
     }}
-    value={data.name}
-    on:keydown={(evt) => {
-      if (evt.key === "Delete" || evt.key === "Backspace") {
-        evt.stopPropagation();
-      }
-    }}
+    value={$nodeData[id].name}
   />
 
   <label for="location">Location:</label>
   <select
     id="location"
     on:change={(evt) => {
-      data.location = evt.target?.value;
+      $nodeData[id].location = evt.target?.value;
     }}
   >
     <option>US</option>
@@ -37,7 +33,7 @@
       type="checkbox"
       name="publicState"
       on:change={(evt) => {
-        data.publicState = evt.target?.checked;
+        $nodeData[id].publicState = evt.target?.checked;
       }}
     />Public
   </div>

@@ -9,7 +9,30 @@ export function jsonToCrossplane(resources) {
 
     resources.forEach(item => {
         let resource = {};
+        console.log(item['type']);
+        console.log(item);
         switch (item['type']) {
+            case 'Project':
+                resource = {
+                    'apiVersion': 'cloudplatform.gcp.upbound.io/v1beta1',
+                    'kind': 'Project',
+                    'metadata': {
+                        'name': item['data']['name'],
+                        'namespace': 'dev',
+                    },
+                    'spec': {
+                        'deletionPolicy': 'Delete',
+                        'forProvider': {
+                            'name': item['data']['name'],
+                            'projectId': item['data']['name'],
+                            'folderId': item['data']['folderId'],
+                        },
+                        'providerConfigRef': {
+                            'name': 'default',
+                        }
+                    },
+                }
+                break;
             case 'Bucket':
                 resource = {
                     'apiVersion': 'storage.gcp.upbound.io/v1beta1',

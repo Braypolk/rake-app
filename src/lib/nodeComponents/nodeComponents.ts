@@ -7,6 +7,7 @@ import FirewallNode from './FirewallNode.svelte';
 import InstanceGroupNode from './InstanceGroupNode.svelte';
 import RouterNode from './RouterNode.svelte';
 import BackendServiceNode from './BackendServiceNode.svelte';
+import ForNode from './ForNode.svelte';
 
 export const nodeTypes = {
   Project: ProjectNode,
@@ -18,4 +19,5 @@ export const nodeTypes = {
   InstanceGroup: InstanceGroupNode,
   Router: RouterNode,
   BackendService: BackendServiceNode,
+  For: ForNode,
 };

@@ -5,149 +5,196 @@
     Background,
     BackgroundVariant,
     useSvelteFlow,
+    type Node,
+    type Edge,
+    MiniMap,
   } from "@xyflow/svelte";
-  import Sidebar from "./Sidebar.svelte";
-  import { nodes, edges, findNode, newNode } from "$lib/nodes-edges";
-  import { nodeTypeToDataMap } from "$lib/nodeComponents/nodeData";
+  import LeftSidebar from "$lib/LeftSidebar.svelte";
+  import NodeSidebar from "$lib/NodeSidebar.svelte";
+  import Header from "$lib/Header.svelte";
+  import ContextMenu from "$lib/ContextMenu.svelte";
+  import VarPanel from "$lib/VarPanel.svelte";
+  import { on_key_down } from "$lib/keybinds";
+  import {
+    nodes,
+    nodeData,
+    edges,
+    leftSidebarSize,
+    paneSize,
+    varPaneSize,
+  } from "$lib/nodes-edges";
   import { nodeTypes } from "$lib/nodeComponents/nodeComponents";
   import "@xyflow/svelte/dist/style.css";
+  import { Pane, Splitpanes } from "svelte-splitpanes";
+  import {
+    handleDragOver,
+    handleDrop,
+    onNodeDrag,
+    onNodeDragStart,
+    onNodeDragStop,
+  } from "$lib/interactions";
 
-  const { screenToFlowPosition, getIntersectingNodes } = useSvelteFlow();
-  let intersectedRef: Node;
+  const { screenToFlowPosition } = useSvelteFlow();
+
+  let menu: {
+    id: string;
+    x: number;
+    y: number;
+  } | null = null;
+
+  $: selectedNodeIds = $nodes
+    .filter((node) => node.selected)
+    .map((node) => node.id);
 
   function onDragOver(event: DragEvent) {
     event.preventDefault();
-
-    if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = "move";
-    }
+    handleDragOver(
+      event,
+      screenToFlowPosition({ x: event.clientX, y: event.clientY }),
+    );
   }
 
-  // TODO: not sure how to move this to another file because it can't be a svelte file because idk how to export a function, it can't be a ts file because it uses useSvelteFlow which requires a svelte file or more specifically to be a child of a svelteflow instance
   function onDrop(event: DragEvent): void {
     event.preventDefault();
-    if (!event.dataTransfer) {
-      return;
-    }
-
-    const pos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
-    const type = event.dataTransfer.getData("application/svelteflow");
-    const data = nodeTypeToDataMap[type];
-
-    if (data) {
-      newNode(data, pos, type);
-    } else {
-      console.log("unknown type");
-    }
+    handleDrop(
+      event,
+      screenToFlowPosition({ x: event.clientX, y: event.clientY }),
+    );
   }
 
-  function onNodeDrag({ detail: { node } }) {
-    // when I drag I only want to check if the dragged node is intersecting with potential parents (ex: when dragging a network, don't have subnets be "available" intersections)
-
-    // calculate the center point of the node from position and dimensions
-    const centerX = node.computed?.positionAbsolute.x + node.computed.width / 2;
-    const centerY =
-      node.computed?.positionAbsolute.y + node.computed.height / 2;
-
-    // find a node where the center point is inside
-    const intersections = $nodes.map((n) => {
-      if (
-        centerX > n.computed?.positionAbsolute.x &&
-        centerX < n.computed?.positionAbsolute.x + n.computed.width &&
-        centerY > n.computed?.positionAbsolute.y &&
-        centerY < n.computed?.positionAbsolute.y + n.computed.height &&
-        n.id !== node.id // this is needed, otherwise we would always find the dragged node
-      ) {
-        return n;
+  // TODO: still need to process edges, currently only looking at nodes
+  async function onBeforeDelete(e: { nodes: Node[]; edges: Edge[] }) {
+    // TODO: also remove children once element is deleted
+    let del = {
+      nodes: [] as Node[],
+      edges: [] as Edge[],
+    };
+    e.nodes.forEach((n) => {
+      if ($nodeData[n.id].status === "unsynced") {
+        del.nodes.push(n);
+        if (n.parentNode !== "") {
+          const index = $nodeData[n.parentNode].children.indexOf(n.id);
+          if (index > -1) {
+            $nodeData[n.parentNode].children.splice(index, 1);
+          }
+        }
+      } else if ($nodeData[n.id].status === "synced") {
+        $nodeData[n.id].status = "pendingDelete";
+        n.class = "pendingDelete";
+      } else {
+        // todo: have some error that tells user that the resources is currently being processed
+        console.log("Resource is currently being processed");
       }
     });
-
-    if (node.type === "Project") {
-      intersectedRef = intersections.findLast((n) => {
-        if (n !== undefined) {
-          return n.type == "Folder" ? n : null;
-        }
-      });
-    } else if (node.type === "Network") {
-      intersectedRef = intersections.findLast((n) => {
-        if (n !== undefined) {
-          return n.type === "Project" ? n : null;
-        }
-      });
-    } else if (node.type === "Subnetwork") {
-      intersectedRef = intersections.findLast((n) => {
-        if (n !== undefined) {
-          return n.type === "Network" ? n : null;
-        }
-      });
-    }
-
-    $nodes.forEach((n) => (n.class = ""));
-    if (intersectedRef && intersectedRef.id !== node.parentNode) {
-      intersectedRef.class = "highlight";
-    }
-
     $nodes = $nodes;
+    return del;
   }
 
-  function onNodeDragStop({ detail: { node, event } }) {
-    const nodePosition = findNode(node.id);
+  function onDelete(e: { nodes: Node[]; edges: Edge[] }) {
+    e.nodes.forEach(({ id }) => {
+      delete $nodeData[id];
+    });
+  }
 
-    if (intersectedRef) {
-      // assign parent to node
-      const parentNodeId = findNode(intersectedRef.id);
-      if (
-        intersectedRef.type == "Project" ||
-        (intersectedRef.type == "Network" && node.type == "Subnetwork")
-      ) {
-        // if a node has a parent already, remove the node (data.child) from the parent
-        if ($nodes[nodePosition].parentNode !== "") {
-          delete $nodes[findNode($nodes[nodePosition].parentNode)].data
-            .children[node.id];
-        }
-        $nodes[nodePosition].parentNode = intersectedRef.id;
-        $nodes[parentNodeId].data.children[node.id] = nodePosition;
+  function handleSplitterClick(e) {
+    const index = e.detail.index;
 
-      }
-      // minus position of parent so that the position goes to where it is dropped
-      // $nodes[nodePosition].position = {
-      //   x: $nodes[nodePosition].position.x - $nodes[parentNodeId].position.x,
-      //   y: $nodes[nodePosition].position.y - $nodes[parentNodeId].position.y,
-      // };
+    if (index == 1) {
+      $leftSidebarSize = $leftSidebarSize > 0 ? 0 : 10;
+    } else if (index == 2) {
+      $paneSize = $paneSize > 0 ? 0 : 20;
     }
-    $nodes.forEach((n) => (n.class = ""));
-    $nodes = $nodes;
+  }
+
+  function handleContextMenu({ detail: { event, node } }) {
+    // Prevent native context menu from showing
+    event.preventDefault();
+
+    // Calculate position of the context menu. We want to make sure it
+    // doesn't get positioned off-screen.
+    menu = {
+      id: node.id,
+      x: event.layerX,
+      y: event.layerY,
+    };
+  }
+
+  // Close the context menu if it's open whenever the window is clicked.
+  function handlePaneClick() {
+    menu = null;
   }
 </script>
 
-<main>
-  <Sidebar />
-  <SvelteFlow
-    class="text-on-primary-token"
-    {nodeTypes}
-    {nodes}
-    {edges}
-    minZoom={0.2}
-    maxZoom={4}
-    proOptions={{ hideAttribution: true }}
-    on:dragover={onDragOver}
-    on:nodedrag={onNodeDrag}
-    on:nodedragstop={onNodeDragStop}
-    on:drop={onDrop}
-  >
-    <Background bgColor="#0f161d" variant={BackgroundVariant.Cross} />
-    <Controls />
-    <!-- <MiniMap /> -->
-  </SvelteFlow>
-</main>
+<svelte:window on:keydown={(e) => on_key_down(e, selectedNodeIds)} />
 
-<style>
-  main {
-    padding: 0;
-    margin: 0;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-</style>
+<Header />
+<Splitpanes
+  theme="rake-theme"
+  style="height: calc(100% - 3rem);"
+  dblClickSplitter={false}
+  on:splitter-click={handleSplitterClick}
+>
+  <Pane bind:size={$leftSidebarSize} maxSize={20} snapSize={3}>
+    <LeftSidebar />
+  </Pane>
+  <Pane>
+    <Splitpanes
+      theme="rake-theme"
+      dblClickSplitter={false}
+      on:splitter-click={() => {
+        $varPaneSize = $varPaneSize > 0 ? 0 : 10;
+      }}
+      horizontal
+    >
+      <Pane bind:size={$varPaneSize} snapSize={3}>
+        <VarPanel />
+      </Pane>
+      <Pane>
+        <main class="h-90 p-0 m-0 w-full h-full flex flex-col">
+          <SvelteFlow
+            class="text-on-primary-token"
+            {nodeTypes}
+            {nodes}
+            {edges}
+            defaultEdgeOptions={{ type: "smoothstep" }}
+            minZoom={0.2}
+            maxZoom={4}
+            panOnScroll={true}
+            selectionOnDrag={true}
+            panOnDrag={[1, 2]}
+            proOptions={{ hideAttribution: true }}
+            onbeforedelete={(e) => onBeforeDelete(e)}
+            ondelete={(e) => onDelete(e)}
+            on:dragover={onDragOver}
+            on:nodedragstart={onNodeDragStart}
+            on:nodedrag={onNodeDrag}
+            on:nodedragstop={onNodeDragStop}
+            on:drop={onDrop}
+            on:nodeclick={handlePaneClick}
+            on:nodecontextmenu={handleContextMenu}
+            on:paneclick={handlePaneClick}
+          >
+            <Background
+              bgColor="#0f161d"
+              patternClass="opacity-10"
+              variant={BackgroundVariant.Lines}
+            />
+            <Controls />
+            <MiniMap />
+            {#if menu}
+              <ContextMenu
+                onClick={handlePaneClick}
+                id={menu.id}
+                x={menu.x}
+                y={menu.y}
+              />
+            {/if}
+          </SvelteFlow>
+        </main>
+      </Pane>
+    </Splitpanes>
+  </Pane>
+  <Pane bind:size={$paneSize} maxSize={50} snapSize={8}>
+    <NodeSidebar />
+  </Pane>
+</Splitpanes>

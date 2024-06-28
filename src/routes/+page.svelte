@@ -1,14 +1,11 @@
 <script>
   import { SvelteFlowProvider } from "@xyflow/svelte";
-
   import Flow from "./Flow.svelte";
 </script>
 
-<div>
-  <SvelteFlowProvider>
-    <Flow />
-  </SvelteFlowProvider>
-</div>
+<SvelteFlowProvider>
+  <Flow />
+</SvelteFlowProvider>
 
 <style>
   :global(body) {

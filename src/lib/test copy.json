@@ -1,1 +1,126 @@
-{"nodes":[{"id":"70c1e8c40d731","type":"Project","data":{"name":"xr-mcp-bray-test","folderIdRef":"              ","status":"syncing"},"position":{"x":827.3763420211928,"y":457.6074375217561},"class":"bg-gray-200","computed":{"positionAbsolute":{"x":827.3763420211928,"y":457.6074375217561},"width":1515,"height":779},"selected":true,"dragging":false,"style":"width: 1515px; height: 779px;"},{"id":"6a05b149f3413","type":"Network","data":{"name":"test-network-thing2","description":"blah","routingMode":"REGIONAL","status":"synced"},"position":{"x":718.7621507188128,"y":16.249021691509597},"parentNode":"70c1e8c40d731","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1546.1384927400056,"y":473.8564592132657},"width":763,"height":338},"selected":false,"dragging":false,"style":"width: 763px; height: 338px;"},{"id":"3301c93253a93","type":"Network","data":{"name":"test-network-thing1","description":"some description","routingMode":"REGIONAL","status":"synced"},"position":{"x":192.239023172966,"y":15.56331227563635},"parentNode":"70c1e8c40d731","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1019.6153651941588,"y":473.17074979739243},"width":503,"height":337},"selected":false,"dragging":false,"style":"width: 503px; height: 337px;"},{"id":"90f313b91dae3","type":"Subnetwork","data":{"name":"test-subnet-thing2","ipCidrRange":"10.1.0.0/24","region":"us-central1","status":"synced"},"position":{"x":190.5601174520291,"y":38.19710517578608},"parentNode":"6a05b149f3413","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1736.6986101920347,"y":512.0535643890518},"width":196,"height":228},"selected":false,"dragging":false},{"id":"a4036dcb96e07","type":"Subnetwork","data":{"name":"test-subnet-thing3","ipCidrRange":"10.2.0.0/24","region":"us-central1","status":"synced"},"position":{"x":453.2061561040577,"y":35.36047750567343},"parentNode":"6a05b149f3413","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1999.3446488440634,"y":509.2169367189391},"width":196,"height":228},"selected":false,"dragging":false},{"id":"1ccaa6507584e","type":"Subnetwork","data":{"name":"test-subnet-thing1","ipCidrRange":"10.0.0.0/24","region":"us-central1","status":"synced"},"position":{"x":189.4803019114205,"y":21.53356852589718},"parentNode":"3301c93253a93","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1209.0956671055792,"y":494.7043183232896},"width":196,"height":228},"selected":false,"dragging":false},{"id":"b8cce67ccb44c","type":"Instance","data":{"name":"test-insance","subnetwork":"a4036dcb96e07","machineType":"e2-medium","bootDisk":"debian-cloud/debian-11","zone":"us-central1-a","status":"syncing"},"position":{"x":444.66856592013596,"y":378.084813288614},"parentNode":"70c1e8c40d731","class":"bg-gray-200","computed":{"positionAbsolute":{"x":1272.0449079413288,"y":835.6922508103701},"width":149,"height":324},"selected":false,"dragging":false},{"id":"752a6a53be71a","type":"Bucket","data":{"name":"bray-bucket-of-tests","location":"US","publicState":false,"status":"synced"},"position":{"x":43.13251579702006,"y":420.271561567582},"parentNode":"70c1e8c40d731","class":"bg-gray-200","computed":{"positionAbsolute":{"x":870.5088578182128,"y":877.8789990893381},"width":149,"height":204},"selected":false,"dragging":false}],"edges":[],"viewport":{"x":-1177.327385723448,"y":-760.8328454685102,"zoom":1.1292847294782358}}
+{
+    "nodes": [
+        {
+            "id": "413faf51680e",
+            "type": "Project",
+            "data": {
+                "name": "xr-mcp-bray-test",
+                "children": [
+                    "0758ab0cab73b",
+                    "135d34ff449af"
+                ],
+                "folderId": "xr-mcp-bray-test",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 22.788329336628976,
+                "y": 52.06225677251058
+            },
+            "parentNode": "",
+            "class": "",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 22.788329336628976,
+                    "y": 52.06225677251058
+                },
+                "width": 1000,
+                "height": 700
+            },
+            "dragging": false
+        },
+        {
+            "id": "0758ab0cab73b",
+            "type": "Bucket",
+            "data": {
+                "name": "some-test-bucket-bray-123",
+                "location": "US",
+                "publicState": false,
+                "status": "unsynced",
+                "children": []
+            },
+            "position": {
+                "x": 28.399060984840844,
+                "y": 135.4493166048386
+            },
+            "parentNode": "413faf51680e",
+            "class": "Bucket",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 51.18739032146982,
+                    "y": 187.51157337734918
+                },
+                "width": 428,
+                "height": 94
+            },
+            "dragging": false
+        },
+        {
+            "id": "135d34ff449af",
+            "type": "Network",
+            "data": {
+                "name": "test-network-bray-1",
+                "children": [
+                    "08bf1b983905b"
+                ],
+                "description": "a demo network",
+                "routingMode": "REGIONAL",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 46.09201060094625,
+                "y": 263.82184742783005
+            },
+            "parentNode": "413faf51680e",
+            "class": "",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 68.88033993757523,
+                    "y": 315.88410420034063
+                },
+                "width": 800,
+                "height": 300
+            },
+            "dragging": false
+        },
+        {
+            "id": "08bf1b983905b",
+            "type": "Subnetwork",
+            "data": {
+                "name": "test-subnet-bray-1",
+                "ipCidrRange": "10.0.0.0/24",
+                "region": "us-central1",
+                "status": "unsynced",
+                "children": []
+            },
+            "position": {
+                "x": 18.988395484594008,
+                "y": 137.9823405213832
+            },
+            "parentNode": "135d34ff449af",
+            "class": "Subnetwork",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 87.86873542216924,
+                    "y": 453.86644472172384
+                },
+                "width": 736,
+                "height": 94
+            },
+            "dragging": false
+        }
+    ],
+    "edges": [],
+    "viewport": {
+        "x": 20.854034881110692,
+        "y": 75.37410685524873,
+        "zoom": 0.7663636363636364
+    }
+}

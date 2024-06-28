@@ -2,11 +2,15 @@ import fs from 'fs';
 import YAML from 'yaml';
 
 // Replace 'input.yaml' with the path to your YAML file
-const yamlFilePath = '/Users/braypolkinghorne/Documents/code/Rake/provider-gcp/package/crds/compute.gcp.upbound.io_vpntunnels.yaml';
+// const yamlFilePath = '/Users/braypolkinghorne/Documents/code/Rake/provider-gcp/package/crds/compute.gcp.upbound.io_vpntunnels.yaml';
+const yamlFilePath = '/Users/braypolkinghorne/Documents/code/Rake/rake-app/test.yaml';
 const yamlContent = fs.readFileSync(yamlFilePath, 'utf8');
 
 const doc = YAML.parse(yamlContent);
 const kind = doc.spec.names.kind;
+const group = doc.spec.group;
+const singular = doc.spec.names.singular;
+const plural = doc.spec.names.plural;
 console.log(kind);
 const properties = doc.spec.versions[0].schema.openAPIV3Schema.properties.spec.properties.forProvider.properties;
 
@@ -17,57 +21,78 @@ function generateInputField(propertyName, propertyDetails) {
             type="checkbox"
             name="${propertyName}State"
             on:change={(evt) => {
-                data.${propertyName} = evt.target?.checked;
+                $nodeData[id].${propertyName} = evt.target?.checked;
             }}
         />`;
-    } else {
+    }
+    else if (propertyDetails.type === 'number') {
+        return `<input
+            class="nodrag"
+            type="number"
+            on:input={(evt) => {
+                $nodeData[id].${propertyName} = evt.target?.value;
+            }}
+            value={$nodeData[id].${propertyName}}
+        />`;
+    }
+    else {
         return `<input 
         class="nodrag" 
         type="text" 
-        on:input={(evt) => { data.${propertyName} = evt.target?.value;}}
-        value={data.${propertyName}}
-        on:keydown={(evt) => {
-            if (evt.key === "Delete" || evt.key === "Backspace") {
-                evt.stopPropagation();
-            }
-        }}
+        bind:value={$nodeData[id].${propertyName}}
     />`;
     }
 }
 
-let scriptMarkup = `<script>
-    import NodeTemplate from "$lib/nodeComponents/NodeTemplate.svelte";
-    import { ${kind.toLowerCase()}Data } from "$lib/nodeComponents/nodeData";
-    export let data = ${kind.toLowerCase()}Data;
+let scriptMarkup = `<script lang="ts">
+    import NodeTemplate from "./NodeTemplate.svelte";
+    import { nodeData } from "$lib/nodes-edges";
+    export let id: string;
+    $$restProps;
 </script>`;
 
-const nodeData = {name:""};
+const nodeData = { name: "" };
 Object.entries(properties).map(([propertyName, propertyDetails]) => {
-    nodeData[propertyName] = propertyDetails.type === 'boolean' ? false : ''
+    switch (propertyDetails.type) {
+        case 'boolean':
+            nodeData[propertyName] = false;
+            break;
+        case 'string':
+            nodeData[propertyName] = '';
+            break;
+        case 'number':
+            nodeData[propertyName] = 0;
+            break;
+        default:
+            nodeData[propertyName] = '';
+            break;
+    }
 });
 
 console.log(nodeData);
 
 // Generate the markup for each property
 let propertiesMarkup = Object.entries(properties).map(([propertyName, propertyDetails]) => {
-    return `
+    return (propertyName == 'name' || propertyName == 'description') ? `
     <div class="property">
       <span class="property-${propertyName}">${propertyName}</span>
       <span class="info-icon" title="${propertyDetails.description || ''}">ℹ</span>
       ${generateInputField(propertyName, propertyDetails)}
     </div>
-  `;
+  ` : '';
 }).join('\n');
 
 // Combine everything into the Svelte component's code
 let svelteComponent = `${scriptMarkup}
 
-<NodeTemplate type="${kind}" provider="compute" data={data}>
+<NodeTemplate type="${kind}" provider="compute" {id}>
 ${propertiesMarkup}
 </NodeTemplate>
 
 <style>
   :global(.svelte-flow__node-${kind}) {
+    width: auto;
+    height: auto;
     background-color: rgba(131, 131, 131, 0.539);
     border: 3px solid rgb(200, 200, 200);
     border-radius: 1rem;
@@ -167,7 +192,7 @@ if (nodeTypeToDataMapRegex.test(fileContent)) {
 
 
 
-filePath = '/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/nodeComponents/nodeComponents.js';
+filePath = '/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/nodeComponents/nodeComponents.ts';
 
 
 
@@ -241,7 +266,7 @@ if (nodeTypeToDataMapRegex.test(fileContent)) {
 
 
 
-filePath = '/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/routes/Sidebar.svelte';
+filePath = '/Users/braypolkinghorne/Documents/code/Rake/rake-app/src/lib/LeftSidebar.svelte';
 
 // Read the current content of the file
 fileContent = fs.readFileSync(filePath, 'utf8');

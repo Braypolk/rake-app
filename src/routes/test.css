@@ -8,11 +8,27 @@
     border-color: #ff0072 !important;
 }
 
-.svelte-flow__edges	{
+
+.pendingDelete {
+    background: rgba(240, 167, 167, 0.544) !important;
+    border: 3px solid rgb(255, 0, 0) !important;
+}
+
+.svelte-flow__edges {
     z-index: 99 !important;
+}
+
+.svelte-flow__edge-path {
+    stroke: rgb(35, 156, 255) !important;
 }
 
 .moveable-line {
     height: 0 !important;
 }
 
+.instance,
+.svelte-flow__node-Instance {
+    background-color: rgba(255, 152, 50, 0.712);
+    border: 3px solid rgb(160, 160, 160);
+    border-radius: 1rem;
+}
