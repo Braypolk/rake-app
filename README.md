@@ -1,5 +1,7 @@
 # Deploy gcp resources through a visual canvas
 
+[overview landing site](https://rake-landing-eight.vercel.app/)
+
 ## Everything to start
 - start rancher desktop
 - minikube start --extra-config "apiserver.cors-allowed-origins=["http://\*"]" --profile management --kubernetes-version=v1.28.4
