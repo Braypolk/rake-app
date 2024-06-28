@@ -1,1 +1,154 @@
-{"nodes":[{"id":"413faf51680e","type":"Project","data":{"name":"xr-mcp-bray-test","children":["135d34ff449af","77fda8dc619a8","0758ab0cab73b"],"folderId":"xr-mcp-bray-test","status":"unsynced"},"position":{"x":22.788329336628976,"y":52.06225677251058},"parentNode":"","class":"","style":"","selected":false,"computed":{"positionAbsolute":{"x":22.788329336628976,"y":52.06225677251058},"width":1000,"height":700},"dragging":false},{"id":"135d34ff449af","type":"Network","data":{"name":"test-network-bray-1","children":["08bf1b983905b"],"description":"a demo network","routingMode":"REGIONAL","status":"unsynced"},"position":{"x":46.09201060094625,"y":263.82184742783005},"parentNode":"413faf51680e","class":"","style":"","selected":false,"computed":{"positionAbsolute":{"x":68.88033993757523,"y":315.88410420034063},"width":800,"height":300},"dragging":false},{"id":"08bf1b983905b","type":"Subnetwork","data":{"name":"test-subnet-bray-1","ipCidrRange":"10.0.0.0/24","region":"us-central1","status":"unsynced","children":[]},"position":{"x":18.988395484594008,"y":137.9823405213832},"parentNode":"135d34ff449af","class":"Subnetwork","style":"","selected":false,"computed":{"positionAbsolute":{"x":87.86873542216924,"y":453.86644472172384},"width":736,"height":94},"dragging":false},{"id":"77fda8dc619a8","type":"For","data":{"varType":true,"num":1,"var":"yetAnother","children":[],"status":"unsynced"},"position":{"x":555.7329963235294,"y":64.70588235294119},"parentNode":"413faf51680e","class":"","style":"","selected":false,"computed":{"positionAbsolute":{"x":578.5213256601584,"y":116.76813912545177},"width":400,"height":200}},{"id":"0758ab0cab73b","type":"Bucket","data":{"name":"some-test-bucket-bray-123","location":"US","publicState":false,"status":"unsynced","children":[]},"position":{"x":506.340237455429,"y":248.3304833063948},"parentNode":"413faf51680e","class":"Bucket","style":"","selected":true,"computed":{"positionAbsolute":{"x":529.128566792058,"y":300.3927400789054},"width":428,"height":94},"dragging":false}],"edges":[],"viewport":{"x":20.854034881110692,"y":-4.125893144751274,"zoom":0.7663636363636364}}
+{
+    "nodes": [
+        {
+            "id": "413faf51680e",
+            "type": "Project",
+            "data": {
+                "name": "xr-mcp-bray-test",
+                "children": [
+                    "135d34ff449af",
+                    "77fda8dc619a8",
+                    "0758ab0cab73b"
+                ],
+                "folderId": "xr-mcp-bray-test",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 22.788329336628976,
+                "y": 52.06225677251058
+            },
+            "parentNode": "",
+            "class": "",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 22.788329336628976,
+                    "y": 52.06225677251058
+                },
+                "width": 1000,
+                "height": 700
+            },
+            "dragging": false
+        },
+        {
+            "id": "135d34ff449af",
+            "type": "Network",
+            "data": {
+                "name": "test-network-bray-1",
+                "children": [
+                    "08bf1b983905b"
+                ],
+                "description": "a demo network",
+                "routingMode": "REGIONAL",
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 46.09201060094625,
+                "y": 263.82184742783005
+            },
+            "parentNode": "413faf51680e",
+            "class": "",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 68.88033993757523,
+                    "y": 315.88410420034063
+                },
+                "width": 800,
+                "height": 300
+            },
+            "dragging": false
+        },
+        {
+            "id": "08bf1b983905b",
+            "type": "Subnetwork",
+            "data": {
+                "name": "test-subnet-bray-1",
+                "ipCidrRange": "10.0.0.0/24",
+                "region": "us-central1",
+                "status": "unsynced",
+                "children": []
+            },
+            "position": {
+                "x": 18.988395484594008,
+                "y": 137.9823405213832
+            },
+            "parentNode": "135d34ff449af",
+            "class": "Subnetwork",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 87.86873542216924,
+                    "y": 453.86644472172384
+                },
+                "width": 736,
+                "height": 94
+            },
+            "dragging": false
+        },
+        {
+            "id": "77fda8dc619a8",
+            "type": "For",
+            "data": {
+                "varType": true,
+                "num": 1,
+                "var": "yetAnother",
+                "children": [],
+                "status": "unsynced"
+            },
+            "position": {
+                "x": 555.7329963235294,
+                "y": 64.70588235294119
+            },
+            "parentNode": "413faf51680e",
+            "class": "",
+            "style": "",
+            "selected": false,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 578.5213256601584,
+                    "y": 116.76813912545177
+                },
+                "width": 400,
+                "height": 200
+            }
+        },
+        {
+            "id": "0758ab0cab73b",
+            "type": "Bucket",
+            "data": {
+                "name": "some-test-bucket-bray-123",
+                "location": "US",
+                "publicState": false,
+                "status": "unsynced",
+                "children": []
+            },
+            "position": {
+                "x": 506.340237455429,
+                "y": 248.3304833063948
+            },
+            "parentNode": "413faf51680e",
+            "class": "Bucket",
+            "style": "",
+            "selected": true,
+            "computed": {
+                "positionAbsolute": {
+                    "x": 529.128566792058,
+                    "y": 300.3927400789054
+                },
+                "width": 428,
+                "height": 94
+            },
+            "dragging": false
+        }
+    ],
+    "edges": [],
+    "viewport": {
+        "x": 20.854034881110692,
+        "y": -4.125893144751274,
+        "zoom": 0.7663636363636364
+    }
+}

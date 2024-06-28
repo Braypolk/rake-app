@@ -15,8 +15,8 @@
 
 <svelte:window
   on:keydown={(e) => {
-    // may need more logic so it doesn't fire anytime esc is pressed
-    if (e.key === "Escape") {
+    // todo: may need more logic so it doesn't fire anytime esc is pressed
+    if (e.key === "Escape" && document.activeElement.tagName == "BODY") {
       $leftSidebarSize = 0;
     }
   }}

@@ -16,7 +16,6 @@
 
 <NodeTemplate type="For" provider="compute" {id}>
   <div class="flex flex-wrap">
-    <Fuse searchList={test} />
     <div class="property">
       <span class="property-var">var</span>
       <span
@@ -24,7 +23,6 @@
         title="an whole number specifying how many times to loop over everything inside"
         >ℹ</span
       >
-
       <select id="varTypeSelection" bind:value={$nodeData[id].varType}>
         <option value={true}>Variable</option>
         <option value={false}>Number</option>
@@ -33,9 +31,9 @@
       {#if $nodeData[id].varType}
         <select bind:value={varIndex}>
           {#each test as { name, type }, index}
-            <!-- {#if type === "number"} -->
-            <option value={index}>{name}</option>
-            <!-- {/if} -->
+            {#if type === "number"}
+              <option value={index}>{name}</option>
+            {/if}
           {/each}
         </select>
         <span>({test[varIndex].value})</span>
@@ -47,7 +45,8 @@
           bind:value={$nodeData[id].num}
         />
       {/if}
-    </div>
+    </div>  
+    <Fuse type={["number"]} />
   </div>
 </NodeTemplate>
 

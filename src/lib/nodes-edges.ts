@@ -16,15 +16,16 @@ export const paneSize: Writable<number> = writable<number>(0);
 export const varPaneSize: Writable<number> = writable<number>(20);
 
 type VarsType = {
+  id: number;
   name: string;
   type: 'string' | 'boolean' | 'number';
   value: string | boolean | number;
 };
 
 const initialData: VarsType[] = [
-  { name: 'example', type: 'string', value: 'hello' },
-  { name: 'another', type: 'boolean', value: true },
-  { name: 'yetAnother', type: 'number', value: 2 },
+  { id: 1, name: 'example', type: 'string', value: 'hello' },
+  { id: 2, name: 'another', type: 'boolean', value: true },
+  { id: 3, name: 'yetAnother', type: 'number', value: 2 },
 ];
 
 export const variables = writable(initialData);
